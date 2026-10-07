@@ -141,3 +141,30 @@ class MaintenanceCommandsTest(CliTestCase):
         with contextlib.redirect_stdout(stdout):
             self.assertEqual(main([], prog="agentindex"), 2)
         self.assertIn("examples:", stdout.getvalue())
+
+
+class ImportCommandTest(CliTestCase):
+    def test_guide(self):
+        code, out, _ = self.run_cli("import", "--guide")
+        self.assertEqual(code, 0)
+        self.assertTrue(out.startswith("# Migrating a CLAUDE.md into the knowledge base"))
+        self.assertIn("## 1. Restructure the file", out)
+        self.assertNotIn("summary:", out)  # front matter is for the index, not the reader
+
+    def test_needs_a_file(self):
+        code, _, err = self.run_cli("import")
+        self.assertEqual(code, 2)
+        self.assertIn("--guide", err)
+
+    def test_reports_fixes_and_warnings(self):
+        source = str(self.write("CLAUDE.md", "Setup\n=====\n\n**Install**\n\nRun make.\n"))
+        code, out, _ = self.run_cli("import", source, "--dry-run")
+        self.assertEqual(code, 0)
+        self.assertIn("Converted 2 headings the index would not recognize:", out)
+        self.assertIn("line 4: **Install**  ->  ## Install", out)
+        self.assertIn("knowledge/install.md", out)
+        self.assertNotIn("Warning:", out)
+        self.write("CLAUDE.md", "Just some notes.\n")
+        code, out, _ = self.run_cli("import", source, "--dry-run")
+        self.assertIn("Warning: no headings to split at", out)
+        self.assertIn("`agentindex import --guide` explains how", out)

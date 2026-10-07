@@ -105,7 +105,10 @@ def build_parser(prog: str) -> argparse.ArgumentParser:
     p.add_argument("--no-mcp", action="store_true", help="do not register the MCP server")
 
     p = command("import", cmd_import, "split a large markdown file (e.g. CLAUDE.md) into docs")
-    p.add_argument("file", type=Path, help="markdown file to split")
+    p.add_argument("file", type=Path, nargs="?", help="markdown file to split")
+    p.add_argument(
+        "--guide", action="store_true", help="print the guide to preparing a file for import"
+    )
     p.add_argument("--level", type=int, default=2, help="split at headings of this level (2 = ##)")
     p.add_argument("--into", type=Path, help="target directory (default: the first source)")
     p.add_argument("--force", action="store_true", help="overwrite existing docs")
@@ -236,16 +239,30 @@ def cmd_init(args: argparse.Namespace, prog: str) -> int:
 
 
 def cmd_import(args: argparse.Namespace, prog: str) -> int:
-    from .scaffold import import_markdown, invocation, render_template
+    from .frontmatter import split_frontmatter
+    from .scaffold import TEMPLATES, import_markdown, invocation, render_template
 
+    if args.guide:
+        guide = (TEMPLATES / "migrating-claude-md.md").read_text(encoding="utf-8")
+        print(split_frontmatter(guide)[1].strip("\n"))
+        return 0
+    if args.file is None:
+        raise AgentIndexError("give the markdown file to import, or --guide")
     config = _config(args)
+    command = invocation(config.root)
     into = args.into or config.root / config.sources[0]
-    planned = import_markdown(
+    result = import_markdown(
         args.file, into, level=args.level, force=args.force, dry_run=args.dry_run
     )
+    planned = result["docs"]
     if not planned:
         print(f"Nothing to import: {args.file} has no text.")
         return 0
+    if result["fixes"]:
+        print(f"Converted {len(result['fixes'])} headings the index would not recognize:")
+        for fix in result["fixes"]:
+            print(f"  line {fix['line']}: {fix['before']}  ->  {fix['after']}")
+        print()
     width = max(len(_relative(p["path"], config.root)) for p in planned)
     print(f"{'Planned' if args.dry_run else 'Imported'} {len(planned)} docs from {args.file}:")
     for p in planned:
@@ -256,9 +273,16 @@ def cmd_import(args: argparse.Namespace, prog: str) -> int:
     docs = _relative(into, config.root)
     if not any(docs == s or docs.startswith(s.rstrip("/") + "/") for s in config.sources):
         print(f"\nNote: {docs}/ is not in the index sources ({', '.join(config.sources)}).")
+    if result["warnings"]:
+        print()
+        for warning in result["warnings"]:
+            print(f"Warning: {warning}")
+        print(
+            f"Restructure {args.file.name} and import again; `{command} import --guide`"
+            " explains how."
+        )
     if args.dry_run:
         return 0
-    command = invocation(config.root)
     print(
         "\nNext steps:\n"
         "  1. Review the new docs: sharpen each summary, add tags and keywords, and split or\n"
@@ -269,6 +293,7 @@ def cmd_import(args: argparse.Namespace, prog: str) -> int:
     )
     print(render_template("CLAUDE.md", command, docs))
     print(f"  4. Run `{command} check` and fix what it reports.")
+    print(f"\nThe full checklist: `{command} import --guide`.")
     return 0
 
 

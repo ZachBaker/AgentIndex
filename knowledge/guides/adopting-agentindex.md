@@ -34,28 +34,45 @@ It creates the following, and never overwrites anything:
 - a `.agentindex/` entry in `.gitignore`
 - an `agentindex` server in `.mcp.json` (skip it with `--no-mcp`)
 - a `CLAUDE.md` containing the pointer, if the repository has none
+- if the repository already has a CLAUDE.md that does not mention AgentIndex, a
+  `/migrate-claude-md` Claude Code skill in `.claude/skills/migrate-claude-md/` that walks an
+  agent through step 3; delete it once the migration is done
 
 ## 3. Migrate an existing CLAUDE.md
 
 ```bash
+agentindex import --guide               # the agent's checklist for the whole migration
 agentindex import CLAUDE.md --dry-run   # preview
 agentindex import CLAUDE.md             # one doc per "##" section
 ```
 
 `import` writes one doc per `##` section (`--level 3` splits more finely), each with title
 and summary front matter and its headings shifted up a level. Text before the first section
-becomes `overview.md`. Then:
+becomes `overview.md`. Before splitting, it converts headings the index would not see:
+setext headings (underlined with `===` or `---`) and short lines that are only bold text
+(`**Testing**`), which become a heading one level below their section. It lists each
+conversion, and warns when there is nothing to split at or a section is too long for one doc.
 
-1. **Curate.** Give every doc a summary that says what it answers, and add `tags` and
+Import only fixes formatting. Grouping scattered notes by topic and naming the topics
+takes judgement, so the agent running the migration does it, following the checklist from
+`agentindex import --guide` ([migrating-claude-md](../../agentindex/templates/migrating-claude-md.md)).
+AgentIndex itself never calls a model. In Claude Code, the `/migrate-claude-md` skill
+that `init` creates runs the same checklist. In outline:
+
+1. **Restructure first.** Move each topic under its own `##` heading with a descriptive
+   name, without rewriting or dropping text, and collect the rules that apply to every task
+   under one heading.
+2. **Import**, dry run first.
+3. **Curate.** Give every doc a summary that says what it answers, and add `tags` and
    `keywords`. Merge fragments, split mixed topics, and group docs into folders as the set
    grows (`architecture/`, `runbooks/`). The `writing-docs` doc has the details.
-2. **Keep the always-on rules.** A few rules apply to every task, such as "never push to
+4. **Keep the always-on rules.** A few rules apply to every task, such as "never push to
    main" or "run the linter before committing". Leave those in CLAUDE.md, because agents do
    not search for rules they do not know exist.
-3. **Replace the rest** with the pointer that `init` and `import` print. The template is
+5. **Replace the rest** with the pointer that `init` and `import` print. The template is
    [agentindex/templates/CLAUDE.md](../../agentindex/templates/CLAUDE.md).
-4. **Fill in `start-here`** with a short map of the project and its docs.
-5. Run `agentindex check` until it is clean.
+6. **Fill in `start-here`** with a short map of the project and its docs.
+7. Run `agentindex check` until it is clean.
 
 ## 4. Keep it healthy
 

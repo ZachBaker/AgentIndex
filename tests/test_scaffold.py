@@ -2,7 +2,7 @@ import json
 
 from agentindex import AgentIndexError, KnowledgeIndex, load_config
 from agentindex.frontmatter import parse_frontmatter, split_frontmatter
-from agentindex.scaffold import import_markdown, init
+from agentindex.scaffold import SKILL_PATH, import_markdown, init, normalize_headings
 from tests.helpers import ProjectTestCase
 
 BIG_CLAUDE_MD = """
@@ -56,6 +56,7 @@ class InitTest(ProjectTestCase):
         self.assertIn("`knowledge/`", claude_md)
         self.assertLess(len(claude_md.splitlines()), 20)
         self.assertEqual(result["notes"], [])
+        self.assertFalse((self.root / SKILL_PATH).exists())  # nothing to migrate
 
     def test_starter_docs_pass_check(self):
         init(self.root)
@@ -81,7 +82,11 @@ class InitTest(ProjectTestCase):
         self.assertEqual(
             (self.root / "CLAUDE.md").read_text(), "# Big file\n\nLots of knowledge.\n"
         )
-        self.assertIn("import CLAUDE.md", first["notes"][0])
+        self.assertIn("import --guide", first["notes"][0])
+        skill = (self.root / SKILL_PATH).read_text()
+        self.assertIn("name: migrate-claude-md", skill)
+        self.assertIn("agentindex import --guide", skill)
+        self.assertIn("docs/kb/", skill)
 
     def test_vendored_copy_uses_python_module(self):
         self.write("agentindex/__init__.py", "")
@@ -110,7 +115,7 @@ class ImportTest(ProjectTestCase):
     files = {"CLAUDE.md": BIG_CLAUDE_MD}
 
     def run_import(self, **kwargs):
-        return import_markdown(self.root / "CLAUDE.md", self.root / "knowledge", **kwargs)
+        return import_markdown(self.root / "CLAUDE.md", self.root / "knowledge", **kwargs)["docs"]
 
     def test_splits_sections_into_docs(self):
         planned = self.run_import()
@@ -161,8 +166,100 @@ class ImportTest(ProjectTestCase):
         names = [p["path"].name for p in self.run_import(level=3, dry_run=True)]
         self.assertIn("payments.md", names)
 
+    def test_nothing_to_split_at_warns(self):
+        self.write("CLAUDE.md", "# Notes\n\nSome text.\n\n### Deep\n\nMore text.\n")
+        result = import_markdown(self.root / "CLAUDE.md", self.root / "knowledge", dry_run=True)
+        self.assertEqual([p["path"].name for p in result["docs"]], ["overview.md"])
+        self.assertEqual(len(result["warnings"]), 1)
+        self.assertIn("try --level 3", result["warnings"][0])
+        self.write("CLAUDE.md", "Just a paragraph of notes.\n")
+        result = import_markdown(self.root / "CLAUDE.md", self.root / "knowledge", dry_run=True)
+        self.assertIn("add a '## Topic' heading", result["warnings"][0])
+
+    def test_long_section_warns(self):
+        self.write("CLAUDE.md", "## Short\n\nFine.\n\n## Huge\n\n" + "word " * 2600 + "\n")
+        result = import_markdown(self.root / "CLAUDE.md", self.root / "knowledge", dry_run=True)
+        self.assertEqual(len(result["warnings"]), 1)
+        self.assertIn("huge.md has 2601 words", result["warnings"][0])
+
     def test_bad_input(self):
         with self.assertRaises(AgentIndexError):
             import_markdown(self.root / "missing.md", self.root / "knowledge")
         with self.assertRaises(AgentIndexError):
             self.run_import(level=7)
+
+
+MESSY_CLAUDE_MD = """---
+owner: platform
+---
+Acme Guide
+==========
+
+Acme is a billing service.
+
+Commands
+--------
+
+Run `make test`.
+
+**Testing:**
+- unit tests live in `tests/`
+
+**Never push to main.**
+
+**Deploys**
+
+Use the deploy script.
+
+```markdown
+Not a heading
+-------------
+**Not a heading either**
+```
+"""
+
+
+class NormalizeHeadingsTest(ProjectTestCase):
+    files = {"CLAUDE.md": MESSY_CLAUDE_MD}
+
+    def test_setext_and_bold_lines_become_headings(self):
+        result = import_markdown(self.root / "CLAUDE.md", self.root / "knowledge")
+        self.assertEqual([p["path"].name for p in result["docs"]], ["overview.md", "commands.md"])
+        self.assertEqual(
+            [(f["line"], f["after"]) for f in result["fixes"]],
+            [(4, "# Acme Guide"), (9, "## Commands"), (14, "### Testing"), (19, "### Deploys")],
+        )
+        self.assertEqual(result["warnings"], [])
+        commands = (self.root / "knowledge/commands.md").read_text()
+        self.assertIn("\n# Commands\n", commands)
+        self.assertIn("\n## Testing\n- unit tests", commands)
+        self.assertIn("\n**Never push to main.**\n", commands)  # a rule, not a heading
+        self.assertIn("\n## Deploys\n", commands)
+        self.assertIn("Not a heading\n-------------\n**Not a heading either**", commands)
+        overview = (self.root / "knowledge/overview.md").read_text()
+        self.assertNotIn("Acme Guide", overview)  # the setext title was the file's title
+
+    def test_rules_that_are_not_headings(self):
+        lines = [
+            "Para line one",
+            "para line two",
+            "---",  # under a multi-line paragraph: left alone
+            "",
+            "- item",
+            "---",  # under a list item
+            "",
+            "Text before",
+            "**Bold right after text**",  # not at the start of a block
+            "",
+            "**This bold line has far too many words to be a heading**",
+            "",
+            "**Setup** and more text",
+        ]
+        out, fixes = normalize_headings(lines)
+        self.assertEqual((out, fixes), (lines, []))
+
+    def test_bold_headings_nest_under_the_current_section(self):
+        out, _ = normalize_headings(["## Ops", "", "**Deploys**", "", "**Rollback**", "", "x"])
+        self.assertEqual(out[2:5], ["### Deploys", "", "### Rollback"])
+        out, _ = normalize_headings(["**Setup**", "", "x"])
+        self.assertEqual(out[0], "## Setup")  # no section yet: a top-level topic
