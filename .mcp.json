@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "agentindex": {
+      "command": "python3",
+      "args": ["-m", "agentindex", "mcp"]
+    }
+  }
+}
