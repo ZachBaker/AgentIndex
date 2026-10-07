@@ -1,4 +1,5 @@
 import json
+import socket
 import threading
 import urllib.error
 import urllib.request
@@ -88,6 +89,33 @@ class HttpApiTest(ProjectTestCase):
         self.assertEqual(self.get_json("/search?q=x&limit=many")[0], 400)
         self.assertEqual(self.get_json("/sync")[0], 405)
         self.assertEqual(self.get_json("/search?q=x", method="POST")[0], 405)
+
+    def test_in_memory_database_is_rebuilt_for_each_request(self):
+        server = ApiServer(
+            ("127.0.0.1", 0), load_config(self.root, db=":memory:"), sync_interval=60
+        )
+        server.quiet = True
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        self.base = f"http://127.0.0.1:{server.server_address[1]}"
+        for _ in range(2):
+            self.assertEqual(self.get_json("/search?q=redis")[1]["total"], 1)
+        self.assertEqual(self.get_json("/docs/auth")[0], 200)
+
+    def test_ipv6_host(self):
+        try:
+            with socket.socket(socket.AF_INET6) as probe:
+                probe.bind(("::1", 0))
+        except OSError:
+            self.skipTest("IPv6 loopback is not available here")
+        server = ApiServer(("::1", 0), load_config(self.root))
+        server.quiet = True
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        self.base = f"http://[::1]:{server.server_address[1]}"
+        self.assertEqual(self.get_json("/health")[1]["status"], "ok")
 
     def test_sync_and_live_updates(self):
         status, body = self.get_json("/sync", method="POST")

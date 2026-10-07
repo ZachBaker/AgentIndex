@@ -24,6 +24,7 @@ import re
 _KEY = re.compile(r"^([A-Za-z_][\w-]*)[ \t]*:(?:[ \t]+(.*))?$")
 _ITEM = re.compile(r"^[ \t]*-(?:[ \t]+(.*))?$")
 _BLOCK_SCALAR = re.compile(r"^([|>])[+-]?$")
+_ESCAPES = {"n": "\n", "t": "\t"}  # other escaped characters stand for themselves
 
 
 def split_frontmatter(text: str) -> tuple[str | None, str, int, str | None]:
@@ -82,6 +83,8 @@ def _value(key: str, raw: str, nested: list[str], warnings: list[str]) -> str | 
             return "\n".join(text).strip()
         paragraphs = "\n".join(text).split("\n\n")
         return "\n".join(" ".join(p.split()) for p in paragraphs).strip()
+    # Outside block scalars, blank lines and whole-line comments carry nothing.
+    nested = [n for n in nested if n.strip() and not n.strip().startswith("#")]
     if raw.startswith("["):
         joined = " ".join([raw] + [_strip_comment(n.strip()) for n in nested])
         if not joined.rstrip().endswith("]"):
@@ -96,14 +99,14 @@ def _value(key: str, raw: str, nested: list[str], warnings: list[str]) -> str | 
         return " ".join(n.strip() for n in nested)
     if nested:
         # A plain scalar continued on indented lines folds into one line.
-        return " ".join([_scalar(raw)] + [_strip_comment(n.strip()) for n in nested if n.strip()])
+        return " ".join([_scalar(raw)] + [_strip_comment(n.strip()) for n in nested])
     return _scalar(raw)
 
 
 def _scalar(raw: str) -> str:
     raw = raw.strip()
     if len(raw) >= 2 and raw[0] == raw[-1] == '"':
-        return re.sub(r'\\(["\\/])', r"\1", raw[1:-1]).replace("\\n", "\n").replace("\\t", "\t")
+        return re.sub(r"\\(.)", lambda m: _ESCAPES.get(m.group(1), m.group(1)), raw[1:-1])
     if len(raw) >= 2 and raw[0] == raw[-1] == "'":
         return raw[1:-1].replace("''", "'")
     return raw

@@ -23,15 +23,16 @@ default. Code: [store.py](../../agentindex/store.py).
 | `sections_fts` | FTS5 table with heading, context (parent headings and doc title) and body. |
 | `meta` | `schema_version` and `last_sync`. |
 
-Both FTS5 tables use the `porter unicode61 remove_diacritics 2` tokenizer and share rowids
-with `documents` and `sections`.
+Both FTS5 tables use the `porter unicode61` tokenizer, which every SQLite with FTS5
+supports, and share rowids with `documents` and `sections`.
 
 ## Sync
 
 `sync()` runs before every query in a single `BEGIN IMMEDIATE` transaction. The MCP and
 HTTP servers run it at most once per second.
 
-1. Discover the source files, and delete the rows of files that no longer exist.
+1. Discover the source files. Delete the rows of files that no longer exist, and of
+   files whose id changed because `sources` did, so they are re-added under the new id.
 2. Skip each file whose size and mtime are unchanged. Otherwise hash it; if only its
    timestamp changed, record the new mtime and move on.
 3. Re-parse the changed files and replace all of their rows.

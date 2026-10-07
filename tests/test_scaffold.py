@@ -96,6 +96,11 @@ class InitTest(ProjectTestCase):
             init(self.root)
         self.assertEqual((self.root / ".mcp.json").read_text(), "{oops")
 
+    def test_mcp_json_with_a_byte_order_mark(self):
+        self.write(".mcp.json", '\ufeff{"mcpServers": {}}')
+        init(self.root)
+        self.assertIn("agentindex", json.loads((self.root / ".mcp.json").read_text())["mcpServers"])
+
     def test_no_mcp(self):
         init(self.root, mcp=False)
         self.assertFalse((self.root / ".mcp.json").exists())

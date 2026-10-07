@@ -52,6 +52,12 @@ class HeadingTest(unittest.TestCase):
             [h[2] for h in headings(text)], ["setup", "setup-1", "setup-2", "setup-1-1"]
         )
 
+    def test_slugs_follow_github_unicode_rules(self):
+        self.assertEqual(slugify("हिन्दी"), "हिन्दी")  # combining vowel signs are kept
+        self.assertEqual(slugify("Cafe\u0301 menu"), "cafe\u0301-menu")
+        self.assertEqual(slugify("O(n²) lookups"), "on-lookups")  # other numbers are dropped
+        self.assertEqual(slugify("🚀 Launch – now"), "-launch-–-now")
+
 
 class SectionTest(unittest.TestCase):
     TEXT = "Intro text.\n# Title\nAbout.\n## A\na text\n### A1\ndeep\n## B\nb text\n"
@@ -95,6 +101,33 @@ class LinkTest(unittest.TestCase):
                 ("ref.md", "", 6, False),
             ],
         )
+
+
+class CommentAndFootnoteTest(unittest.TestCase):
+    TEXT = (
+        "# Guide\n\nSee the cache docs.[^ttl]\n\n"
+        "[^ttl]: Configured by the varnish TTL setting.\n"
+        "[Deprecated]: use v2 instead\n"
+        "[Back to top](#)\n"
+        "<!--\n## Setup\nOld instructions with [a link](gone.md).\n-->\n"
+        "<!-- a one-line comment with [another](gone.md) -->\n"
+        "## Setup\nCurrent steps.\n"
+    )
+
+    def test_html_comments_hide_headings_and_links(self):
+        lines = self.TEXT.split("\n")
+        self.assertEqual(headings(self.TEXT), [(1, "Guide", "guide"), (2, "Setup", "setup")])
+        self.assertEqual(extract_links(lines), [])
+
+    def test_footnotes_and_label_lines_are_text(self):
+        text = searchable_text(self.TEXT)
+        self.assertIn("varnish TTL setting", text)
+        self.assertIn("use v2 instead", text)
+        self.assertNotIn("Old instructions", text)
+
+    def test_reference_definitions_still_work(self):
+        links = extract_links(['[ref]: docs/a.md "Title"', "[ref2]: <b c.md>"])
+        self.assertEqual([link.target for link in links], ["docs/a.md", "b c.md"])
 
 
 class TextTest(unittest.TestCase):

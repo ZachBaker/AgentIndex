@@ -2,13 +2,14 @@
 
 This is deliberately not a full CommonMark parser. It understands exactly what
 the index needs and is careful about the one thing that matters most: lines
-inside fenced code blocks (``# install deps`` in a shell snippet) are never
-mistaken for headings or links.
+inside fenced code blocks (``# install deps`` in a shell snippet) and HTML
+comments are never mistaken for headings or links.
 """
 
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from urllib.parse import unquote
 
@@ -24,27 +25,48 @@ _INLINE_LINK = re.compile(
     r"(!?)\[(?:[^\[\]\\]|\\.)*\]\(\s*(<[^>\n]*>|[^\s)]+)"
     r"(?:\s+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?\s*\)"
 )
-_REF_DEFINITION = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(<[^>\n]*>|\S+)")
+# [label]: target "optional title", but not footnotes ([^1]: text) or "[Note]: prose".
+_REF_DEFINITION = re.compile(
+    r"^ {0,3}\[(?!\^)[^\]]+\]:[ \t]*(<[^>\n]*>|\S+)"
+    r"(?:[ \t]+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?[ \t]*$"
+)
+_COMMENT_START = re.compile(r"^ {0,3}<!--")
 _CODE_SPAN = re.compile(r"(`+)(?:(?!\1).)+?\1")
 _SCHEME = re.compile(r"^(?:[A-Za-z][A-Za-z0-9+.-]*:|//)")
 _WORD = re.compile(r"[^\W_]+")
 
 
+# Line kinds yielded by iter_lines; anything but TEXT is not prose.
+TEXT, FENCE, CODE, COMMENT = "", "fence", "code", "comment"
+
+
 def iter_lines(lines: list[str]):
-    """Yield ``(index, line, in_code)``; fence lines and their contents are code."""
+    """Yield ``(index, line, kind)`` where kind is TEXT, FENCE (a code fence line),
+    CODE (inside a fence) or COMMENT (an HTML comment block, as CommonMark defines it).
+    """
     fence: tuple[str, int] | None = None
+    in_comment = False
     for i, line in enumerate(lines):
+        if in_comment:
+            in_comment = "-->" not in line
+            yield i, line, COMMENT
+            continue
         match = _FENCE.match(line)
         if fence is not None:
             closes = match and match.group(1)[0] == fence[0] and len(match.group(1)) >= fence[1]
             if closes and not match.group(2).strip():
                 fence = None
-            yield i, line, True
+                yield i, line, FENCE
+            else:
+                yield i, line, CODE
         elif match and not (match.group(1)[0] == "`" and "`" in match.group(2)):
             fence = (match.group(1)[0], len(match.group(1)))
-            yield i, line, True
+            yield i, line, FENCE
+        elif _COMMENT_START.match(line):
+            in_comment = "-->" not in line[line.index("<!--") + 4 :]
+            yield i, line, COMMENT
         else:
-            yield i, line, False
+            yield i, line, TEXT
 
 
 def plain_text(text: str) -> str:
@@ -72,8 +94,15 @@ def _strip_inline(s: str) -> str:
 
 
 def slugify(text: str) -> str:
-    """GitHub-style heading anchor: lowercase, punctuation dropped, spaces to dashes."""
-    return re.sub(r"[^\w\- ]", "", text.strip().lower()).replace(" ", "-")
+    """GitHub-style heading anchor, following github-slugger: lowercase; keep letters,
+    combining marks, digits, connectors (``_``), dashes and spaces; spaces become ``-``.
+    """
+    return "".join(ch for ch in text.strip().lower() if _in_slug(ch)).replace(" ", "-")
+
+
+def _in_slug(ch: str) -> bool:
+    category = unicodedata.category(ch)
+    return ch == " " or category[0] in "LM" or category in ("Nd", "Nl", "Pc", "Pd")
 
 
 class Slugger:
@@ -152,8 +181,8 @@ class ParsedDoc:
 def parse_headings(lines: list[str]) -> list[Heading]:
     slugger = Slugger()
     headings = []
-    for i, line, in_code in iter_lines(lines):
-        if in_code:
+    for i, line, kind in iter_lines(lines):
+        if kind:
             continue
         match = _HEADING.match(line)
         if match:
@@ -203,10 +232,11 @@ def extract_links(lines: list[str]) -> list[Link]:
             return
         target, _, anchor = target.partition("#")
         target = target.partition("?")[0]
-        links.append(Link(target, anchor, line, image))
+        if target or anchor:  # a bare "#" links to the top of the page
+            links.append(Link(target, anchor, line, image))
 
-    for i, line, in_code in iter_lines(lines):
-        if in_code:
+    for i, line, kind in iter_lines(lines):
+        if kind:
             continue
         line = _CODE_SPAN.sub(lambda m: " " * len(m.group(0)), line)
         for match in _INLINE_LINK.finditer(line):
@@ -220,12 +250,11 @@ def extract_links(lines: list[str]) -> list[Link]:
 def searchable_text(markdown: str) -> str:
     """Text for the full-text index: markup and link targets dropped, code kept."""
     out = []
-    for _, line, in_code in iter_lines(markdown.split("\n")):
-        if in_code:
-            if not _FENCE.match(line):
-                out.append(line)
+    for _, line, kind in iter_lines(markdown.split("\n")):
+        if kind == CODE:
+            out.append(line)
             continue
-        if _REF_DEFINITION.match(line) or _RULE.match(line):
+        if kind or _REF_DEFINITION.match(line) or _RULE.match(line):
             continue
         if "|" in line and _TABLE_RULE.match(line):
             continue
@@ -240,19 +269,10 @@ def searchable_text(markdown: str) -> str:
 def first_paragraph(lines: list[str]) -> str:
     """Plain text of the first prose paragraph (or first list item)."""
     para: list[str] = []
-    in_comment = False
-    for _, line, in_code in iter_lines(lines):
+    for _, line, kind in iter_lines(lines):
         stripped = line.strip()
-        if in_comment:
-            in_comment = "-->" not in stripped
-            continue
-        if stripped.startswith("<!--"):
-            in_comment = "-->" not in stripped
-            if para:
-                break
-            continue
         skip = (
-            in_code
+            kind
             or not stripped
             or _HEADING.match(line)
             or _RULE.match(line)

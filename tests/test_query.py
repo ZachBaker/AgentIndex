@@ -41,7 +41,7 @@ class ParseQueryTest(unittest.TestCase):
         q = parse_query("deploy -staging --verbose")
         self.assertEqual(q.excluded, ["staging"])
         self.assertIn("verbose", q.terms)
-        self.assertTrue(q.to_fts().endswith('NOT "staging"'))
+        self.assertTrue(q.to_fts().endswith('NOT ("staging")'))
 
     def test_empty_and_exclusion_only_queries_fail(self):
         for text in ("", "   "):
@@ -51,6 +51,12 @@ class ParseQueryTest(unittest.TestCase):
             parse_query("-foo").to_fts()
         with self.assertRaises(QueryError):
             parse_query("?!").to_fts()
+
+    def test_many_exclusions_stay_flat(self):
+        conn = sqlite3.connect(":memory:")
+        conn.execute("CREATE VIRTUAL TABLE t USING fts5(a)")
+        expression = parse_query("deploy " + " ".join(f"-x{i}" for i in range(300))).to_fts()
+        conn.execute("SELECT * FROM t WHERE t MATCH ?", (expression,)).fetchall()
 
     def test_terms_are_capped(self):
         q = parse_query(" ".join(f"word{i}" for i in range(40)))

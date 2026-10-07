@@ -144,6 +144,8 @@ class McpServer:
         request_id = message.get("id")
         notification = "id" not in message
         method = message["method"]
+        if not isinstance(method, str):
+            return None if notification else _error(request_id, INVALID_REQUEST, "bad method")
         params = message.get("params") or {}
         try:
             if not isinstance(params, dict):
@@ -180,7 +182,7 @@ class McpServer:
 
     def _call_tool(self, params: dict) -> dict:
         name = params.get("name")
-        handler = self._tools.get(name)
+        handler = self._tools.get(name) if isinstance(name, str) else None
         if handler is None:
             raise _RpcError(INVALID_PARAMS, f"unknown tool: {name!r}")
         arguments = params.get("arguments") or {}
@@ -228,7 +230,7 @@ def _integer(args: dict, name: str, default: int) -> int:
         raise ValueError(f"'{name}' must be an integer")
     try:
         return int(value)
-    except ValueError:
+    except (ValueError, OverflowError):  # "x", NaN, Infinity
         raise ValueError(f"'{name}' must be an integer") from None
 
 
@@ -254,21 +256,24 @@ def serve_stdio(server: McpServer, stdin: BinaryIO, stdout: BinaryIO) -> None:
         line = raw.strip()
         if not line:
             continue
-        try:
-            message = json.loads(line)
-        except ValueError:
-            reply: object = _error(None, PARSE_ERROR, "parse error: invalid JSON")
-        else:
-            if isinstance(message, list):  # JSON-RPC batch (older protocol versions)
-                replies = [r for r in map(server.handle, message) if r is not None]
-                reply = replies or (
-                    None if message else _error(None, INVALID_REQUEST, "empty batch")
-                )
-            else:
-                reply = server.handle(message)
+        reply = _reply(server, line)
         if reply is not None:
-            stdout.write(json.dumps(reply, ensure_ascii=False).encode("utf-8") + b"\n")
+            # ASCII escapes keep the output valid even if a request smuggled in a
+            # lone surrogate ("\ud83d") that the reply echoes back.
+            stdout.write(json.dumps(reply).encode("ascii") + b"\n")
             stdout.flush()
+
+
+def _reply(server: McpServer, line: bytes) -> object:
+    try:
+        message = json.loads(line)
+    except (ValueError, RecursionError):  # RecursionError: absurdly deep nesting
+        return _error(None, PARSE_ERROR, "parse error: invalid JSON")
+    if isinstance(message, list):  # JSON-RPC batch (older protocol versions)
+        if not message:
+            return _error(None, INVALID_REQUEST, "empty batch")
+        return [r for r in map(server.handle, message) if r is not None] or None
+    return server.handle(message)
 
 
 def run(config: Config) -> int:

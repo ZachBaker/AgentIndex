@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import socket
 import sys
 import threading
 import time
@@ -35,12 +36,16 @@ class ApiServer(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(self, address: tuple[str, int], config: Config, sync_interval: float = 1.0):
+        if ":" in address[0]:
+            self.address_family = socket.AF_INET6
         super().__init__(address, _Handler)
         self.config = config
         self.sync_interval = sync_interval
         self.quiet = False
         self._sync_lock = threading.Lock()
         self._synced_at: float | None = None
+        # Every request opens its own connection, and each in-memory database starts empty.
+        self._always_sync = config.db_path == ":memory:"
 
     def open_index(self, force_sync: bool = False) -> KnowledgeIndex:
         """A per-request index (SQLite connections are per-thread), synced if due."""
@@ -49,7 +54,7 @@ class ApiServer(ThreadingHTTPServer):
             with self._sync_lock:
                 now = time.monotonic()
                 due = self._synced_at is None or now - self._synced_at >= self.sync_interval
-                if force_sync or due:
+                if force_sync or due or self._always_sync:
                     index.sync()
                     self._synced_at = now
         except BaseException:
@@ -153,7 +158,7 @@ def _int(params: dict, name: str, default: int) -> int:
 def serve(config: Config, host: str = "127.0.0.1", port: int = 8765, quiet: bool = False) -> None:
     server = ApiServer((host, port), config)
     server.quiet = quiet
-    url = f"http://{host}:{server.server_address[1]}"
+    url = f"http://{f'[{host}]' if ':' in host else host}:{server.server_address[1]}"
     print(f"agentindex API serving {config.root} at {url}", file=sys.stderr)
     print(f"  try: curl '{url}/search?q=getting+started'", file=sys.stderr)
     if not _is_loopback(host):

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -34,7 +35,7 @@ def main(argv: list[str] | None = None, prog: str | None = None) -> int:
     _utf8_output()
     try:
         return args.handler(args, prog)
-    except AgentIndexError as exc:
+    except (AgentIndexError, OSError, sqlite3.Error) as exc:  # OSError: unwritable --db etc.
         return _fail(args, exc)
     except KeyboardInterrupt:
         return 130
@@ -282,7 +283,7 @@ def _emit(args: argparse.Namespace, result: dict, render_text) -> None:
         print(render_text(result))
 
 
-def _fail(args: argparse.Namespace, exc: AgentIndexError) -> int:
+def _fail(args: argparse.Namespace, exc: Exception) -> int:
     suggestions = exc.suggestions if isinstance(exc, NotFoundError) else []
     if getattr(args, "json", False):
         print(json.dumps({"error": str(exc), "suggestions": suggestions}, indent=2))
@@ -307,10 +308,8 @@ def _prog() -> str:
 
 
 def _utf8_output() -> None:
-    # Docs are UTF-8; do not crash on a narrower console encoding (e.g. Windows pipes).
+    # Docs are UTF-8: write UTF-8 even where the console default is narrower (Windows
+    # pipes), and never crash on a character that cannot be encoded.
     for stream in (sys.stdout, sys.stderr):
-        if hasattr(stream, "reconfigure") and (stream.encoding or "").lower() not in (
-            "utf-8",
-            "utf8",
-        ):
+        if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="replace")

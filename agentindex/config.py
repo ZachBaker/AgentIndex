@@ -70,7 +70,7 @@ def load_config(root: str | os.PathLike | None = None, db: str | None = None) ->
 
 def _apply_file(config: Config, path: Path) -> None:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8-sig"))  # tolerate a BOM
     except (OSError, ValueError) as exc:
         raise ConfigError(f"{path}: {exc}") from None
     if not isinstance(data, dict):

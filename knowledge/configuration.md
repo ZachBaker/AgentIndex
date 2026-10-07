@@ -34,8 +34,10 @@ Unknown keys are an error, which catches typos like `source`.
 
 A doc's id is its path relative to its source directory, without the extension:
 `knowledge/architecture/overview.md` is `architecture/overview`. A file listed directly as a
-source gets its file name as its id (`writing-docs`). If two files would get the same id, the
-second is skipped and `check` reports an error. Hidden files and directories, `node_modules`
+source gets its file name as its id (`writing-docs`). If sources overlap, a file is indexed
+once, under the first source listed that contains it. If two files would get the same id,
+the second is skipped and `check` reports an error. Changing `sources` re-indexes files
+whose ids change. Hidden files and directories, `node_modules`
 and `__pycache__` are never indexed.
 
 ## Finding the project root

@@ -119,6 +119,16 @@ class MaintenanceCommandsTest(CliTestCase):
         self.assertEqual(code, 2)
         self.assertIn(".agentindex.json", err)
 
+    def test_environment_errors_are_reported_not_raised(self):
+        self.write("blocker", "a file where a directory should be")
+        db = str(self.root / "blocker" / "index.db")
+        code, out, err = self.run_cli("--db", db, "list")
+        self.assertEqual((code, out), (2, ""))
+        self.assertTrue(err.startswith("error: "), err)
+        code, out, _ = self.run_cli("--db", db, "list", "--json")
+        self.assertEqual(code, 2)
+        self.assertIn("error", json.loads(out))
+
     def test_global_options_work_after_the_command(self):
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):

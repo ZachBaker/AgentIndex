@@ -376,3 +376,30 @@ class ConfigFileTest(ProjectTestCase):
         self.open_index().sync()
         with sqlite3.connect(self.root / ".agentindex/index.db") as conn:
             self.assertEqual(conn.execute("SELECT id FROM documents").fetchall(), [("a",)])
+
+
+class SourceChangesTest(ProjectTestCase):
+    files = {"docs/v1/setup.md": "# Setup v1\n", "docs/adr/one.md": "# ADR one\n"}
+
+    def test_overlapping_sources_index_each_file_once(self):
+        self.write(".agentindex.json", '{"sources": ["docs", "docs/adr", "docs/v1/setup.md"]}')
+        index = self.open_index()
+        self.assertEqual([d["id"] for d in index.list_docs()["documents"]], ["adr/one", "v1/setup"])
+        self.assertEqual(index.check()["errors"], 0)
+
+    def test_ids_follow_changes_to_the_sources(self):
+        self.write(".agentindex.json", '{"sources": ["docs/v1"]}')
+        self.assertEqual([d["id"] for d in self.open_index().list_docs()["documents"]], ["setup"])
+        self.write(".agentindex.json", '{"sources": ["docs"]}')
+        self.write("docs/setup.md", "# Setup now\n")
+        index = self.open_index(auto_sync=False)
+        report = index.sync()
+        self.assertEqual(report.duplicates, [])
+        self.assertEqual(
+            [d["id"] for d in index.list_docs()["documents"]], ["adr/one", "setup", "v1/setup"]
+        )
+        self.assertEqual(index.read("v1/setup")["title"], "Setup v1")
+
+    def test_config_with_a_byte_order_mark(self):
+        self.write(".agentindex.json", '\ufeff{"sources": ["docs"]}')
+        self.assertEqual(load_config(self.root).sources, ["docs"])

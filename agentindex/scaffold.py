@@ -80,7 +80,8 @@ def init(root: Path, docs: str | None = None, mcp: bool = True) -> dict:
     if mcp:
         mcp_path = root / ".mcp.json"
         try:
-            data = json.loads(mcp_path.read_text(encoding="utf-8")) if mcp_path.exists() else {}
+            text = mcp_path.read_text(encoding="utf-8-sig") if mcp_path.exists() else "{}"
+            data = json.loads(text)
         except ValueError as exc:
             raise AgentIndexError(
                 f"{mcp_path} is not valid JSON ({exc}); fix it and retry"
@@ -183,8 +184,8 @@ def _shift_headings(lines: list[str], shift: int) -> list[str]:
     if shift <= 0:
         return list(lines)
     out = []
-    for _, line, in_code in iter_lines(lines):
-        match = None if in_code else _HEADING_HASHES.match(line)
+    for _, line, kind in iter_lines(lines):
+        match = None if kind else _HEADING_HASHES.match(line)
         if match:
             level = max(1, len(match.group(2)) - shift)
             line = match.group(1) + "#" * level + line[match.end() :]

@@ -33,7 +33,7 @@ from .query import parse_query
 # Bump whenever the schema or the parsing rules change: existing databases are
 # then rebuilt from the markdown sources on next use.
 SCHEMA_VERSION = "1"
-TOKENIZER = "porter unicode61 remove_diacritics 2"
+TOKENIZER = "porter unicode61"
 # Field weights; each field's term frequency saturates separately, so a title
 # hit is worth ~3 body mentions, not ~1 (see knowledge/architecture/search-ranking.md).
 DOC_WEIGHTS = (3.0, 2.0, 1.5, 1.5, 1.5, 1.0)  # title, keywords, tags, summary, headings, body
@@ -164,7 +164,7 @@ class KnowledgeIndex:
         try:
             return self._connect(path)
         except sqlite3.DatabaseError as exc:
-            if "fts5" in str(exc) or "locked" in str(exc):
+            if "locked" in str(exc):
                 raise
             # Only a cache of the markdown sources: if it is corrupt, start over.
             for suffix in ("", "-wal", "-shm"):
@@ -210,10 +210,11 @@ class KnowledgeIndex:
             conn.execute("COMMIT")
         except sqlite3.OperationalError as exc:
             conn.execute("ROLLBACK")
-            if "fts5" in str(exc):
+            if "fts5" in str(exc) or "tokenizer" in str(exc):
                 raise AgentIndexError(
-                    "this Python's SQLite library was built without FTS5 full-text search;"
-                    " use a Python from python.org, Homebrew, uv, or your OS package manager"
+                    f"this Python's SQLite ({sqlite3.sqlite_version}) lacks FTS5 full-text"
+                    f" search ({exc}); use a Python from python.org, Homebrew, uv, or a"
+                    " recent OS package"
                 ) from None
             raise
         except BaseException:
@@ -227,11 +228,14 @@ class KnowledgeIndex:
         root = self.config.root
         files: list[SourceFile] = []
         missing: list[str] = []
+        seen: set[str] = set()  # sources may overlap; the first one listed wins
         for source in self.config.sources:
             base = root / source
             if base.is_file():
-                if base.suffix.lower() in DOC_SUFFIXES:
-                    files.append(SourceFile(base, base.relative_to(root).as_posix(), base.stem))
+                rel = base.relative_to(root).as_posix()
+                if base.suffix.lower() in DOC_SUFFIXES and rel not in seen:
+                    seen.add(rel)
+                    files.append(SourceFile(base, rel, base.stem))
                 continue
             if not base.is_dir():
                 missing.append(source)
@@ -245,7 +249,8 @@ class KnowledgeIndex:
                         continue
                     path = Path(dirpath, name)
                     rel = path.relative_to(root).as_posix()
-                    if not self._excluded(rel):
+                    if rel not in seen and not self._excluded(rel):
+                        seen.add(rel)
                         doc_id = PurePosixPath(path.relative_to(base).as_posix()).with_suffix("")
                         files.append(SourceFile(path, rel, doc_id.as_posix()))
         return files, missing
@@ -273,7 +278,7 @@ class KnowledgeIndex:
         started = time.monotonic()
         report = SyncReport()
         files, report.missing_sources = self.discover()
-        present = {f.rel for f in files}
+        wanted_ids = {f.rel: f.doc_id for f in files}
         conn = self.conn
         conn.execute("BEGIN IMMEDIATE")
         try:
@@ -283,11 +288,14 @@ class KnowledgeIndex:
                     "SELECT rowid, id, path, hash, mtime_ns, size FROM documents"
                 )
             }
-            for path, row in existing.items():
-                if path not in present:
+            # Drop files that are gone, and files whose id changed because the
+            # sources did (they are re-added under their new id below).
+            for path, row in list(existing.items()):
+                if wanted_ids.get(path) != row["id"]:
                     self._delete(row["rowid"])
                     report.removed.append(row["id"])
-            owners = {row["id"]: path for path, row in existing.items() if path in present}
+                    del existing[path]
+            owners = {row["id"]: path for path, row in existing.items()}
             for source in files:
                 self._sync_file(source, existing.get(source.rel), owners, report, force)
             conn.execute(

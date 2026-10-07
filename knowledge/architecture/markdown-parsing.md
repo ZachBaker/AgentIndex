@@ -11,8 +11,9 @@ related: [architecture/database]
 Parsing lives in [markdown.py](../../agentindex/markdown.py) and
 [frontmatter.py](../../agentindex/frontmatter.py). It is not a full CommonMark parser. It
 extracts what the index needs and is strict about the one thing that matters most: lines
-inside fenced code blocks are never headings or links, so `# install deps` in a shell
-snippet does not start a section.
+inside fenced code blocks and HTML comments are never headings or links, so
+`# install deps` in a shell snippet does not start a section, and a commented-out
+`## Old setup` does not either. Comments are also left out of the index.
 
 ## Front matter
 
@@ -38,8 +39,9 @@ The recognized keys are `title`, `summary` (or `description`), `tags` (lowercase
 
 ATX headings (`#` to `######` followed by a space) outside code fences start sections.
 Setext headings, underlined with `===` or `---`, are not recognized. Anchors follow
-GitHub's rules: lowercase, punctuation removed, spaces turned into `-`, and repeated
-headings numbered `-1`, `-2` and so on. So anchors copied from GitHub work.
+GitHub's rules (github-slugger): lowercase; keep letters, combining marks, digits, `_`
+and dashes; drop other punctuation and symbols; turn spaces into `-`; number repeated
+headings `-1`, `-2` and so on. So anchors copied from GitHub work, in any script.
 
 A section's own text runs to the next heading of any level, and that is what gets indexed
 and scored. Reading a section returns it with all of its subsections, up to the next
@@ -48,8 +50,9 @@ without an anchor.
 
 ## Links
 
-Inline links, images and reference definitions with relative targets are recorded, and
-external URLs are ignored. Targets resolve relative to the doc, or to the root when they
+Inline links, images and reference definitions (`[label]: target "title"`) with relative
+targets are recorded, and external URLs and bare `#` links are ignored. Footnotes
+(`[^1]: text`) and lines like `[Note]: prose` are text, not links. Targets resolve relative to the doc, or to the root when they
 start with `/`. Links to markdown files feed "Links to" and "Linked from" when a doc is
 read. Links to any other path are verified by `check`, which keeps references to code
 honest when files move.

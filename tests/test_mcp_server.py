@@ -105,6 +105,15 @@ class HandlerTest(McpTestCase):
         self.assertIsNone(self.server.handle({"jsonrpc": "2.0", "id": 5, "result": {}}))
         self.assertIsNone(self.server.handle({"jsonrpc": "2.0", "method": "tools/list"}))
 
+    def test_malformed_requests_get_the_right_errors(self):
+        bad_method = self.server.handle({"jsonrpc": "2.0", "id": 1, "method": 7})
+        self.assertEqual(bad_method["error"]["code"], -32600)
+        bad_name = self.call("tools/call", {"name": ["search_docs"], "arguments": {}})
+        self.assertEqual(bad_name["error"]["code"], -32602)
+        error, text = self.tool("search_docs", query="redis", limit=float("inf"))
+        self.assertTrue(error)
+        self.assertIn("'limit' must be an integer", text)
+
 
 class StdioTest(McpTestCase):
     def test_end_to_end_over_stdio(self):
@@ -128,6 +137,15 @@ class StdioTest(McpTestCase):
             },
             "this is not json",
             [{"jsonrpc": "2.0", "id": 3, "method": "ping"}],
+            # A lone surrogate is valid JSON; echoing it must not crash the server.
+            {
+                "jsonrpc": "2.0",
+                "id": 4,
+                "method": "tools/call",
+                "params": {"name": "search_docs", "arguments": {"query": "redis \ud83d"}},
+            },
+            "[" * 100_000,  # nesting deep enough to exhaust the JSON parser's recursion
+            {"jsonrpc": "2.0", "id": 5, "method": "ping"},
         ]
         stdin = "\n".join(m if isinstance(m, str) else json.dumps(m) for m in messages) + "\n"
         env = {**os.environ, "PYTHONPATH": str(REPO_ROOT), "PYTHONIOENCODING": "utf-8"}
@@ -140,8 +158,11 @@ class StdioTest(McpTestCase):
         )
         self.assertEqual(proc.returncode, 0, proc.stderr.decode())
         replies = [json.loads(line) for line in proc.stdout.decode("utf-8").splitlines()]
-        self.assertEqual(len(replies), 4)  # no reply to the notification
+        self.assertEqual(len(replies), 7)  # no reply to the notification
         self.assertEqual(replies[0]["result"]["serverInfo"]["name"], "agentindex")
         self.assertIn("1. auth — Auth", replies[1]["result"]["content"][0]["text"])
         self.assertEqual(replies[2]["error"]["code"], -32700)
         self.assertEqual(replies[3], [{"jsonrpc": "2.0", "id": 3, "result": {}}])
+        self.assertIn('match "redis \ud83d"', replies[4]["result"]["content"][0]["text"])
+        self.assertEqual(replies[5]["error"]["code"], -32700)
+        self.assertEqual(replies[6], {"jsonrpc": "2.0", "id": 5, "result": {}})

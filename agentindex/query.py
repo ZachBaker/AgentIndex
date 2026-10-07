@@ -76,8 +76,9 @@ class ParsedQuery:
         if not parts:
             raise QueryError("the query has no search terms (only exclusions or punctuation)")
         expression = " AND ".join(parts)
-        for term in self.excluded:
-            expression = f"({expression}) NOT {_quote([term])}"
+        if self.excluded:  # one flat group: nesting a NOT per term overflows FTS5's parser
+            excluded = " OR ".join(_quote([term]) for term in self.excluded)
+            expression = f"({expression}) NOT ({excluded})"
         return expression
 
 

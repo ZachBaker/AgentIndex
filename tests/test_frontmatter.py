@@ -76,6 +76,15 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(len(warnings), 4)
         self.assertIn("line 3", warnings[0])  # file line: block starts on line 2
 
+    def test_block_list_with_comment_and_blank_lines(self):
+        data, warnings = self.parse("tags:\n  - ops\n  # - legacy\n\n  - deploy\ntitle: X\n")
+        self.assertEqual((data["tags"], data["title"], warnings), (["ops", "deploy"], "X", []))
+
+    def test_escapes_are_decoded_once(self):
+        data, _ = self.parse('path: "C:\\\\tools\\\\new"\nmsg: "a\\nb \\"q\\""\n')
+        self.assertEqual(data["path"], "C:\\tools\\new")
+        self.assertEqual(data["msg"], 'a\nb "q"')
+
 
 if __name__ == "__main__":
     unittest.main()
