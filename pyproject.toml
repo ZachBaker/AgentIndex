@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentindex"
+dynamic = ["version"]
+description = "A searchable knowledge base for coding agents: markdown docs indexed in SQLite FTS5, served over a CLI, MCP and HTTP."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["agents", "claude", "mcp", "knowledge-base", "search", "sqlite", "fts5"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Environment :: Console",
+    "Topic :: Software Development :: Documentation",
+]
+
+[project.urls]
+Repository = "https://github.com/ZachBaker/AgentIndex"
+
+[project.scripts]
+agentindex = "agentindex.cli:main"
+
+[tool.setuptools]
+packages = ["agentindex"]
+
+[tool.setuptools.package-data]
+agentindex = ["templates/*.md"]
+
+[tool.setuptools.dynamic]
+version = { attr = "agentindex.__version__" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I", "SIM"]

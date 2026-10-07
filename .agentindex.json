@@ -1,0 +1,4 @@
+{
+  "//": "Indexed by AgentIndex itself. writing-docs ships to other repos via init, so it is indexed straight from the template.",
+  "sources": ["knowledge", "agentindex/templates/writing-docs.md"]
+}
