@@ -1,4 +1,8 @@
 {
-  "//": "Indexed by AgentIndex itself. writing-docs ships to other repos via init, so it is indexed straight from the template.",
-  "sources": ["knowledge", "agentindex/templates/writing-docs.md"]
+  "//": "Indexed by AgentIndex itself. writing-docs and migrating-claude-md ship to other repos (via init and import --guide), so they are indexed straight from the templates.",
+  "sources": [
+    "knowledge",
+    "agentindex/templates/writing-docs.md",
+    "agentindex/templates/migrating-claude-md.md"
+  ]
 }

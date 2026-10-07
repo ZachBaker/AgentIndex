@@ -9,10 +9,19 @@ from pathlib import Path
 from .config import CONFIG_FILE, load_config
 from .errors import AgentIndexError
 from .frontmatter import split_frontmatter
-from .markdown import first_paragraph, iter_lines, parse_headings, shorten, word_count
+from .markdown import TEXT, first_paragraph, iter_lines, parse_headings, shorten, word_count
+from .store import LONG_DOC_WORDS
 
 TEMPLATES = Path(__file__).with_name("templates")
+SKILL_PATH = ".claude/skills/migrate-claude-md/SKILL.md"
 _HEADING_HASHES = re.compile(r"^( {0,3})(#{1,6})(?=[ \t]|$)")
+# Setext headings: a line of text underlined with === (level 1) or --- (level 2).
+_SETEXT_UNDERLINE = re.compile(r"^ {0,3}(=+|-+)[ \t]*$")
+# Lines that are not a one-line paragraph, so a --- under them is not a setext underline.
+_NOT_PARAGRAPH = re.compile(r"^(?: {4}|\t|\s*(?:[>|#]|(?:[-*+]|\d+[.)])(?:\s|$)))")
+# A line that is only bold text, such as "**Testing**" or "**Testing:**", used as a heading.
+_BOLD_LINE = re.compile(r"^\*\*(?=\S)([^*]+?)(?<=\S)\*\*[ \t]*:?[ \t]*$")
+_BOLD_HEADING_MAX_WORDS = 8
 # The opening line Claude Code's /init writes into every CLAUDE.md; not knowledge.
 _BOILERPLATE = re.compile(r"^\s*This file provides guidance to Claude Code\b", re.IGNORECASE)
 
@@ -104,10 +113,20 @@ def init(root: Path, docs: str | None = None, mcp: bool = True) -> dict:
     elif "agentindex" in claude_md.read_text(encoding="utf-8", errors="replace").lower():
         actions.append("kept CLAUDE.md (it already mentions agentindex)")
     else:
+        skill = root / SKILL_PATH
+        if skill.exists():
+            actions.append(f"kept {SKILL_PATH}")
+        else:
+            skill.parent.mkdir(parents=True, exist_ok=True)
+            skill.write_text(render_template("migrate-skill.md", command, docs), encoding="utf-8")
+            actions.append(
+                f"created {SKILL_PATH} (the /migrate-claude-md skill; delete it after migrating)"
+            )
         notes.append(
-            f"CLAUDE.md already exists. Move its knowledge into {docs}/ with"
-            f" `{command} import CLAUDE.md`, then replace it with the pointer below,"
-            " keeping only rules that every task must follow."
+            f"CLAUDE.md already exists. Move its knowledge into {docs}/ by following"
+            f" `{command} import --guide` (or ask Claude Code to run /migrate-claude-md),"
+            " then replace it with the pointer below, keeping only rules that every task"
+            " must follow."
         )
     return {
         "root": str(root),
@@ -121,21 +140,27 @@ def init(root: Path, docs: str | None = None, mcp: bool = True) -> dict:
 
 def import_markdown(
     source: Path, into: Path, level: int = 2, force: bool = False, dry_run: bool = False
-) -> list[dict]:
+) -> dict:
     """Split ``source`` at headings of ``level`` (and above) into one doc per section.
 
-    Each new doc gets a title and summary in front matter, and its headings are
-    shifted so the section heading becomes the doc's ``# Title``. Text before
-    the first split becomes ``overview.md``. Existing files are skipped unless
-    ``force`` is set.
+    Headings the indexer would not see are converted first: setext headings
+    (underlined with ``===`` or ``---``) and short lines that are only bold text,
+    which become a heading one level below the section they are in. Each new doc
+    gets a title and summary in front matter, and its headings are shifted so the
+    section heading becomes the doc's ``# Title``. Text before the first split
+    becomes ``overview.md``. Existing files are skipped unless ``force`` is set.
+
+    Returns ``{"docs": [...], "fixes": [...], "warnings": [...]}``: the docs with
+    their status, the heading conversions (with 1-based file line numbers), and
+    problems worth fixing in the source before importing for real.
     """
     if not source.is_file():
         raise AgentIndexError(f"{source} is not a file")
     if not 1 <= level <= 6:
         raise AgentIndexError("the split level must be between 1 and 6")
     text = source.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
-    _, body, _, _ = split_frontmatter(text)
-    lines = body.split("\n")
+    _, body, offset, _ = split_frontmatter(text)
+    lines, fixes = normalize_headings(body.split("\n"), offset)
     headings = parse_headings(lines)
     doc_title = headings[0] if headings and headings[0].level == 1 and level > 1 else None
     breaks = [h for h in headings if h.level <= level and h is not doc_title]
@@ -156,11 +181,31 @@ def import_markdown(
                 (heading.text, _shift_headings(lines[heading.line : end], heading.level - 1))
             )
 
+    warnings: list[str] = []
+    if chunks and not breaks:
+        deeper = sorted({h.level for h in headings if h.level > level and h is not doc_title})
+        if deeper:
+            warnings.append(
+                f"no headings at level {level} or above, so everything went into overview.md;"
+                f" try --level {deeper[0]}"
+            )
+        else:
+            warnings.append(
+                "no headings to split at, so everything went into overview.md;"
+                " add a '## Topic' heading above each topic first"
+            )
+
     planned: list[dict] = []
     used: set[str] = set()
     for title, content in chunks:
         name = _filename(title, used)
         target = into / name
+        words = word_count("\n".join(content))
+        if words > LONG_DOC_WORDS:
+            warnings.append(
+                f"{name} has {words} words; split that section into several topics so agents"
+                " can read just the part they need"
+            )
         if target.exists() and not force:
             status = "exists, skipped"
         elif dry_run:
@@ -169,15 +214,59 @@ def import_markdown(
             status = "overwrote" if target.exists() else "created"
             into.mkdir(parents=True, exist_ok=True)
             target.write_text(_doc_text(title, content), encoding="utf-8")
-        planned.append(
-            {
-                "path": target,
-                "title": title,
-                "words": word_count("\n".join(content)),
-                "status": status,
-            }
-        )
-    return planned
+        planned.append({"path": target, "title": title, "words": words, "status": status})
+    return {"docs": planned, "fixes": fixes, "warnings": warnings}
+
+
+def normalize_headings(lines: list[str], offset: int = 0) -> tuple[list[str], list[dict]]:
+    """Rewrite setext and bold-line headings as ATX (``#``) headings.
+
+    The indexer only understands ATX headings, so without this a CLAUDE.md
+    that uses the other styles would import as one undivided doc. Lines inside
+    code fences and HTML comments are left alone, and the line count does not
+    change (a setext underline becomes a blank line). Returns the new lines
+    and one ``{"line", "before", "after"}`` record per conversion, with line
+    numbers counted from 1 and shifted by ``offset`` (the front matter).
+    """
+    out = list(lines)
+    fixes: list[dict] = []
+    kinds = [kind for _, _, kind in iter_lines(lines)]
+    context = 1  # level of the latest real heading; bold headings nest under it
+    underlined = -1  # index of the setext underline just consumed
+
+    def starts_block(i: int) -> bool:
+        return i < 0 or not out[i].strip() or bool(_HEADING_HASHES.match(out[i]))
+
+    def record(i: int, before: str) -> None:
+        fixes.append({"line": offset + i + 1, "before": before, "after": out[i]})
+
+    for i, line in enumerate(lines):
+        if kinds[i] != TEXT or i == underlined:
+            continue
+        heading = _HEADING_HASHES.match(line)
+        if heading:
+            context = len(heading.group(2))
+            continue
+        nxt = i + 1
+        underline = nxt < len(lines) and kinds[nxt] == TEXT and _SETEXT_UNDERLINE.match(lines[nxt])
+        if underline and line.strip() and not _NOT_PARAGRAPH.match(line) and starts_block(i - 1):
+            context = 1 if underline.group(1)[0] == "=" else 2
+            out[i] = "#" * context + " " + line.strip()
+            out[nxt] = ""
+            underlined = nxt
+            record(i, f"{line.strip()} / {lines[nxt].strip()}")
+            continue
+        bold = _BOLD_LINE.match(line)
+        if bold and starts_block(i - 1) and _is_heading_text(bold.group(1)):
+            out[i] = "#" * min(context + 1, 6) + " " + bold.group(1).strip().rstrip(":").rstrip()
+            record(i, line.strip())
+    return out, fixes
+
+
+def _is_heading_text(text: str) -> bool:
+    """Short and not a sentence: "**Testing**" is a heading, "**Never push to main.**" is not."""
+    text = text.strip()
+    return word_count(text) <= _BOLD_HEADING_MAX_WORDS and not text.endswith((".", "!", "?"))
 
 
 def _shift_headings(lines: list[str], shift: int) -> list[str]:

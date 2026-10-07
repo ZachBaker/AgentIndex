@@ -19,6 +19,7 @@ QUESTIONS = [
     ("run the tests", "development/testing"),
     ("python version compatibility", "development/conventions"),
     ("migrate an existing claude.md", "guides/adopting-agentindex"),
+    ("restructure claude.md headings before import", "migrating-claude-md"),
     ("http endpoints", "interfaces/http-api"),
     ("exit codes", "interfaces/cli"),
     ("code fences", "architecture/markdown-parsing"),

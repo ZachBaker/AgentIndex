@@ -45,7 +45,9 @@ If a release breaks, roll back the deploy with `deploy --rollback`.
 - **Three interfaces, one core.** A CLI, an MCP server (native `search_docs`, `read_doc`
   and `list_docs` tools in Claude Code), and an HTTP JSON API.
 - **Migration in one command.** `agentindex import CLAUDE.md` splits an existing CLAUDE.md
-  into one doc per section.
+  into one doc per section, fixing heading styles the index would not see. For the parts that
+  need judgement, `agentindex import --guide` prints a checklist for the agent doing the
+  migration (or run the `/migrate-claude-md` skill that `init` adds).
 - **A linter for CI.** `agentindex check` catches broken links to docs and code, duplicate
   ids, and docs missing a title or summary.
 - **No dependencies.** Python 3.9+ standard library only. Install it, or vendor the

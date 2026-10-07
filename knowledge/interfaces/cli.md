@@ -28,7 +28,8 @@ before or after the command: `--root <dir>` and `--db <path>`
 | `sync [--force] [--json]` | Update the index now. Never required, since every command syncs first. |
 | `status [--json]` | Root, config, sources, database location and counts. |
 | `init [--dir DIR] [--no-mcp]` | Set up a repository. See [adopting AgentIndex](../guides/adopting-agentindex.md). |
-| `import FILE [--level 2] [--into DIR] [--dry-run] [--force]` | Split a large markdown file, such as a CLAUDE.md, into one doc per section. |
+| `import FILE [--level 2] [--into DIR] [--dry-run] [--force]` | Split a large markdown file, such as a CLAUDE.md, into one doc per section. Converts setext and bold-line headings first, and warns when there is nothing to split at or a section is too long. |
+| `import --guide` | Print the checklist an agent follows to restructure, import and curate a CLAUDE.md ([migrating-claude-md](../../agentindex/templates/migrating-claude-md.md)). |
 
 ## Servers
 

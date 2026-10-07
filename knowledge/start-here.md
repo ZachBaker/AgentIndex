@@ -19,7 +19,7 @@ reading are served by it.
 | Path | What lives there |
 |---|---|
 | `agentindex/` | The Python package, standard library only. See [architecture/overview](architecture/overview.md). |
-| `agentindex/templates/` | Files that `init` writes into other repos: the CLAUDE.md pointer and starter docs. |
+| `agentindex/templates/` | Files that `init` and `import` hand to other repos: the CLAUDE.md pointer, starter docs, the `/migrate-claude-md` skill and the migration guide. |
 | `knowledge/` | This knowledge base. |
 | `tests/` | The `unittest` suite. See [development/testing](development/testing.md). |
 | `.agentindex.json` | Which paths are indexed. See [configuration](configuration.md). |
@@ -32,3 +32,4 @@ reading are served by it.
 - [Code conventions](development/conventions.md): the rules for changing the code.
 - [Writing knowledge docs](../agentindex/templates/writing-docs.md) (id `writing-docs`): how to write docs for the index.
 - [Adopting AgentIndex](guides/adopting-agentindex.md): putting it in another repository.
+- [Migrating a CLAUDE.md](../agentindex/templates/migrating-claude-md.md) (id `migrating-claude-md`): the agent's checklist for restructuring and importing a CLAUDE.md.

@@ -38,7 +38,8 @@ The recognized keys are `title`, `summary` (or `description`), `tags` (lowercase
 ## Headings, anchors and sections
 
 ATX headings (`#` to `######` followed by a space) outside code fences start sections.
-Setext headings, underlined with `===` or `---`, are not recognized. Anchors follow
+Setext headings, underlined with `===` or `---`, are not recognized; `import` converts
+them (and bold-line headings) to ATX headings before splitting a file. Anchors follow
 GitHub's rules (github-slugger): lowercase; keep letters, combining marks, digits, `_`
 and dashes; drop other punctuation and symbols; turn spaces into `-`; number repeated
 headings `-1`, `-2` and so on. So anchors copied from GitHub work, in any script.
