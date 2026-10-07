@@ -26,6 +26,7 @@ from typing import Iterable
 
 from . import __version__
 from .config import DOC_SUFFIXES, Config
+from .conflicts import extract_statements, find_conflicts
 from .errors import AgentIndexError, NotFoundError, QueryError
 from .markdown import ParsedDoc, parse_document, searchable_text, slugify, word_count
 from .query import parse_query
@@ -741,6 +742,40 @@ class KnowledgeIndex:
             "errors": errors,
             "warnings": len(issues) - errors,
             "issues": issues,
+        }
+
+    def conflicts(self, refs: Iterable[str] = ()) -> dict:
+        """Statements in different docs that nearly repeat each other but disagree.
+
+        With ``refs``, only pairs involving at least one of those docs.
+        """
+        self.ensure_synced()
+        focus = sorted({self._resolve(ref.partition("#")[0])["id"] for ref in refs})
+        sections: dict[int, list[tuple[int, str, str]]] = defaultdict(list)
+        for row in self.conn.execute(
+            "SELECT doc, start_line, anchor, heading FROM sections ORDER BY doc, ord"
+        ):
+            sections[row["doc"]].append((row["start_line"], row["anchor"], row["heading"]))
+        statements = []
+        docs = self.conn.execute(
+            "SELECT rowid, id, path, title, body, body_line FROM documents ORDER BY id"
+        ).fetchall()
+        for doc in docs:
+            statements += extract_statements(
+                doc["id"],
+                doc["path"],
+                doc["title"],
+                doc["body"],
+                doc["body_line"],
+                sections[doc["rowid"]],
+            )
+        found = find_conflicts(statements, focus)
+        return {
+            "docs": focus,
+            "documents": len(docs),
+            "statements": len(statements),
+            "total": len(found),
+            "conflicts": [conflict.to_dict() for conflict in found],
         }
 
     # -- helpers ------------------------------------------------------------------

@@ -5,7 +5,7 @@ search them by keyword and read only what they need, instead of loading one
 huge CLAUDE.md into every session.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .config import Config, load_config  # noqa: E402
 from .errors import AgentIndexError, ConfigError, NotFoundError, QueryError  # noqa: E402

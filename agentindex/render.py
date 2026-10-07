@@ -6,6 +6,8 @@ ends by saying what to do next.
 
 from __future__ import annotations
 
+LOCATIONS_SHOWN = 8  # per side of a contradiction
+
 
 def render_search(result: dict, hint: str) -> str:
     query, results = result["query"], result["results"]
@@ -128,6 +130,38 @@ def render_check(result: dict) -> str:
         f"{result['documents']} docs checked: {_plural(result['errors'], 'error')},"
         f" {_plural(result['warnings'], 'warning')}."
     )
+    return "\n".join(lines)
+
+
+def render_conflicts(result: dict, hint: str) -> str:
+    scope = f" involving {', '.join(result['docs'])}" if result["docs"] else ""
+    compared = (
+        f"({result['statements']} statements in {_plural(result['documents'], 'doc')} compared)"
+    )
+    if not result["conflicts"]:
+        return (
+            f"No contradictions found{scope} {compared}. Only statements that nearly repeat each"
+            " other can be checked; claims worded differently are not."
+        )
+    lines = [f"{_plural(result['total'], 'possible contradiction')}{scope} {compared}:", ""]
+    for n, conflict in enumerate(result["conflicts"], 1):
+        a, b = conflict["difference"]
+        if conflict["kind"] == "value":
+            lines.append(f'{n}. Different values: "{a}" vs "{b}"')
+        elif a and b:
+            lines.append(f'{n}. Opposite meanings: "{a}" vs "{b}"')
+        else:
+            lines.append(f'{n}. Opposite meanings: only one says "{a or b}"')
+        for side in conflict["statements"]:
+            places = side["locations"]
+            for place in places[:LOCATIONS_SHOWN]:
+                ref = f"{place['id']}#{place['anchor']}" if place["anchor"] else place["id"]
+                lines.append(f"   {ref} ({place['path']}:{place['line']})")
+            if len(places) > LOCATIONS_SHOWN:
+                lines.append(f"   … and {len(places) - LOCATIONS_SHOWN} more (--json lists all)")
+            lines.append(f"     {side['text']}")
+        lines.append("")
+    lines.append(hint)
     return "\n".join(lines)
 
 

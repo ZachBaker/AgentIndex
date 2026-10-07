@@ -3,7 +3,7 @@ title: Architecture overview
 summary: How AgentIndex is put together. Markdown files sync into SQLite FTS5, the KnowledgeIndex core ranks and reads them, and thin CLI, MCP and HTTP layers expose it.
 tags: [architecture]
 keywords: [design, modules, components, data flow, pipeline, how it works, internals, design decisions]
-related: [architecture/search-ranking, architecture/database, architecture/markdown-parsing]
+related: [architecture/search-ranking, architecture/database, architecture/markdown-parsing, architecture/contradictions]
 ---
 
 # Architecture overview
@@ -14,7 +14,7 @@ Every query first syncs the cache with the files, so there is no build step to f
 ```
 knowledge/*.md ──sync──> SQLite: documents, sections, links + FTS5 tables
                                      │
-                  KnowledgeIndex: search · read · outline · list · check
+          KnowledgeIndex: search · read · outline · list · check · conflicts
                                      │
                ┌─────────────────────┼─────────────────────┐
               CLI               MCP (stdio)             HTTP API
@@ -28,7 +28,8 @@ knowledge/*.md ──sync──> SQLite: documents, sections, links + FTS5 table
 | [frontmatter.py](../../agentindex/frontmatter.py) | Parse the YAML subset used in front matter. |
 | [markdown.py](../../agentindex/markdown.py) | Headings, anchors, sections, links and summaries, all code-fence aware. |
 | [query.py](../../agentindex/query.py) | Turn free text into FTS5 match expressions. |
-| [store.py](../../agentindex/store.py) | `KnowledgeIndex`: schema, sync, ranking, read, list, check. |
+| [store.py](../../agentindex/store.py) | `KnowledgeIndex`: schema, sync, ranking, read, list, check, conflicts. |
+| [conflicts.py](../../agentindex/conflicts.py) | Find statements in different docs that contradict each other ([contradiction detection](contradictions.md)). |
 | [render.py](../../agentindex/render.py) | Text output shared by the CLI and the MCP server. |
 | [cli.py](../../agentindex/cli.py) | The `argparse` commands. |
 | [mcp_server.py](../../agentindex/mcp_server.py) | MCP tools over stdio (JSON-RPC). |

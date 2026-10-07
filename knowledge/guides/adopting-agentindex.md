@@ -72,7 +72,8 @@ that `init` creates runs the same checklist. In outline:
 5. **Replace the rest** with the pointer that `init` and `import` print. The template is
    [agentindex/templates/CLAUDE.md](../../agentindex/templates/CLAUDE.md).
 6. **Fill in `start-here`** with a short map of the project and its docs.
-7. Run `agentindex check` until it is clean.
+7. Run `agentindex check` until it is clean, and resolve what `agentindex conflicts`
+   reports.
 
 ## 4. Keep it healthy
 
@@ -85,3 +86,6 @@ Run the check in CI, so broken links and stale code references fail the build:
 
 Have agents update docs in the same change as the code they describe. The pointer in
 CLAUDE.md already asks them to.
+
+From time to time, run `agentindex conflicts` to find docs that contradict each other. Its
+results are candidates to check rather than errors, so it stays out of CI.

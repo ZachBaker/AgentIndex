@@ -25,6 +25,7 @@ QUESTIONS = [
     ("code fences", "architecture/markdown-parsing"),
     ("read a single section", "using-the-index"),
     ("what is agentindex", "start-here"),
+    ("find docs that contradict each other", "architecture/contradictions"),
 ]
 
 
@@ -43,6 +44,9 @@ class KnowledgeBaseTest(unittest.TestCase):
     def test_check_is_clean(self):
         result = self.index.check()
         self.assertEqual(result["issues"], [])
+
+    def test_docs_do_not_contradict_each_other(self):
+        self.assertEqual(self.index.conflicts()["conflicts"], [])
 
     def test_questions_find_their_docs(self):
         for question, expected in QUESTIONS:

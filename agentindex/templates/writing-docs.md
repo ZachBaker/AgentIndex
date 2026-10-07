@@ -74,3 +74,8 @@ Run `agentindex check` after editing docs, and in CI. It reports broken links (t
 docs or code), links to missing sections, duplicate ids, and docs without a title
 or summary; `--strict` also fails on warnings. When a change alters behavior that
 a doc describes, update the doc in the same change.
+
+After changing a fact, run `agentindex conflicts <id>` with the doc's id. It lists
+statements in other docs that say nearly the same thing with a different value or
+the opposite meaning: usually copies of the old fact. Without an id it checks every
+doc. Better still, state each fact in one doc and link to it from the others.

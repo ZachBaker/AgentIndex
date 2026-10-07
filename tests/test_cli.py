@@ -103,6 +103,38 @@ class MaintenanceCommandsTest(CliTestCase):
         self.assertEqual(code, 1)
         self.assertIn("knowledge/broken.md:6: error: broken link", out)
 
+    def test_conflicts(self):
+        code, out, _ = self.run_cli("conflicts")
+        self.assertEqual(code, 0)
+        self.assertTrue(out.startswith("No contradictions found"), out)
+        self.write("knowledge/api.md", "# API\n\nThe HTTP API listens on port 8765 by default.\n")
+        self.write(
+            "knowledge/setup.md", "# Setup\n\nThe HTTP API listens on port 8080 by default.\n"
+        )
+        code, out, _ = self.run_cli("conflicts")
+        self.assertEqual(code, 0)
+        self.assertIn('1. Different values: "8765" vs "8080"\n   api#api (knowledge/api.md:3)', out)
+        self.assertIn("     The HTTP API listens on port **8080** by default.", out)
+        self.assertIn("agentindex read <id>#<anchor>", out)
+        code, out, _ = self.run_cli("conflicts", "setup", "--json")
+        result = json.loads(out)
+        self.assertEqual((code, result["docs"], result["total"]), (0, ["setup"], 1))
+        self.assertEqual(result["conflicts"][0]["difference"], ["8080", "8765"])
+        code, out, err = self.run_cli("conflicts", "ops/deploying")
+        self.assertIn("No contradictions found involving ops/deploying", out)
+        self.assertEqual(self.run_cli("conflicts", "nope-nope")[0], 1)
+
+    def test_conflicts_list_a_few_places_per_side(self):
+        for n in range(10):
+            self.write(f"knowledge/copy{n}.md", f"# Copy {n}\n\nThe API listens on port 8765.\n")
+        self.write("knowledge/odd.md", "# Odd\n\nThe API listens on port 8080.\n")
+        _, out, _ = self.run_cli("conflicts")
+        self.assertIn(
+            "copy7#copy-7 (knowledge/copy7.md:3)\n   … and 2 more (--json lists all)", out
+        )
+        _, out, _ = self.run_cli("conflicts", "--json")
+        self.assertEqual(len(json.loads(out)["conflicts"][0]["statements"][0]["locations"]), 10)
+
     def test_sync_and_status(self):
         code, out, _ = self.run_cli("sync")
         self.assertEqual(code, 0)

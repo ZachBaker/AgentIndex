@@ -50,6 +50,9 @@ If a release breaks, roll back the deploy with `deploy --rollback`.
   migration (or run the `/migrate-claude-md` skill that `init` adds).
 - **A linter for CI.** `agentindex check` catches broken links to docs and code, duplicate
   ids, and docs missing a title or summary.
+- **A contradiction finder.** `agentindex conflicts` finds statements in different docs that
+  nearly repeat each other but disagree, such as port 8765 in one doc and 8080 in another,
+  or "enabled" in one and "disabled" in another, so stale copies of a fact get fixed.
 - **No dependencies.** Python 3.9+ standard library only. Install it, or vendor the
   `agentindex/` folder into your repo.
 
@@ -74,10 +77,11 @@ CLAUDE.md, is in [Adopting AgentIndex](knowledge/guides/adopting-agentindex.md).
 | `read <id>[#section]` | A whole doc or one section (`--outline` lists its headings) |
 | `list` | Every doc with its summary |
 | `check` | Lint the docs (use `--strict` in CI) |
+| `conflicts [id...]` | Statements in different docs that contradict each other |
 | `init`, `import` | Set up a repository; split a large markdown file into docs |
 | `mcp`, `serve` | The MCP server on stdio; the HTTP JSON API |
 
-`search`, `read`, `list`, `check`, `sync` and `status` also take `--json`. See the
+`search`, `read`, `list`, `check`, `conflicts`, `sync` and `status` also take `--json`. See the
 [CLI reference](knowledge/interfaces/cli.md),
 [MCP server](knowledge/interfaces/mcp-server.md) and [HTTP API](knowledge/interfaces/http-api.md).
 

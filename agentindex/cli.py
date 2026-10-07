@@ -21,6 +21,7 @@ EPILOG = """examples:
   {prog} read ops/deploying --outline   list a long doc's sections first
   {prog} list                           every doc with its summary
   {prog} check                          lint the knowledge base (for CI)
+  {prog} conflicts                      find docs that contradict each other
 
 The index updates itself from the markdown sources before every command."""
 
@@ -91,6 +92,12 @@ def build_parser(prog: str) -> argparse.ArgumentParser:
 
     p = command("check", cmd_check, "lint docs: broken links, duplicate ids, missing metadata")
     p.add_argument("--strict", action="store_true", help="also fail on warnings")
+    p.add_argument("--json", action="store_true", help="print JSON")
+
+    p = command(
+        "conflicts", cmd_conflicts, "find statements in different docs that contradict each other"
+    )
+    p.add_argument("ids", nargs="*", metavar="id", help="only contradictions involving these docs")
     p.add_argument("--json", action="store_true", help="print JSON")
 
     p = command("serve", cmd_serve, "serve the HTTP JSON API")
@@ -203,6 +210,18 @@ def cmd_check(args: argparse.Namespace, prog: str) -> int:
     _emit(args, result, render.render_check)
     failed = result["errors"] or (args.strict and result["warnings"])
     return 1 if failed else 0
+
+
+def cmd_conflicts(args: argparse.Namespace, prog: str) -> int:
+    with _index(args) as index:
+        result = index.conflicts(args.ids)
+    hint = (
+        f"Read each in context ({prog} read <id>#<anchor>) and check the code. Fix the doc"
+        " that is wrong, or reword both if both are right, and keep the fact in one doc that"
+        " the others link to."
+    )
+    _emit(args, result, lambda r: render.render_conflicts(r, hint))
+    return 0
 
 
 def cmd_serve(args: argparse.Namespace, prog: str) -> int:

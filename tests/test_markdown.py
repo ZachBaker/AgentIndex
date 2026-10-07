@@ -3,9 +3,11 @@ import unittest
 from agentindex.markdown import (
     extract_links,
     first_paragraph,
+    iter_lines,
     parse_document,
     parse_headings,
     plain_text,
+    prose_blocks,
     searchable_text,
     shorten,
     slugify,
@@ -135,6 +137,39 @@ class TextTest(unittest.TestCase):
         self.assertEqual(
             plain_text("Use **bold**, _em_, `__init__.py`, [link](x), <b>tag</b> and snake_case"),
             "Use bold, em, __init__.py, link, tag and snake_case",
+        )
+
+    def test_plain_text_can_keep_code_marks(self):
+        self.assertEqual(
+            plain_text("Run ``make  test`` or [ruff](r.md), **now**", code_marks=True),
+            "Run `make test` or ruff, now",
+        )
+
+    def test_prose_blocks(self):
+        text = (
+            "# Title\n\nA paragraph\nover two lines.\n- item one\n  continued\n* item two\n\n"
+            "> quoted\n\n| a | b |\n|---|---|\n| c | d |\n<div>html</div>\n[r]: r.md\n---\n"
+            "1. step\n\n    ```\n    nested code\n    ```\n"
+        )
+        self.assertEqual(
+            list(prose_blocks(text.split("\n"))),
+            [
+                (2, "A paragraph\nover two lines.", False),
+                (4, "item one\ncontinued", False),
+                (6, "item two", False),
+                (8, "quoted", False),
+                (10, "a — b", True),
+                (12, "c — d", True),
+                (16, "step", False),
+            ],
+        )
+
+    def test_nested_fences_are_code_only_when_asked(self):
+        lines = ["- item", "", "    ```", "    # code", "    ```"]
+        self.assertEqual([kind for *_, kind in iter_lines(lines)], ["", "", "", "", ""])
+        self.assertEqual(
+            [kind for *_, kind in iter_lines(lines, nested_fences=True)],
+            ["", "", "fence", "code", "fence"],
         )
 
     def test_first_paragraph_skips_non_prose(self):
