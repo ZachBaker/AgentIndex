@@ -87,6 +87,9 @@ doc.
 ## 5. Verify
 
 - Run `agentindex check` and fix everything it reports.
+- Run `agentindex conflicts`. A CLAUDE.md that grew over time often says one thing in two
+  places, differently, and the import has now put them in different docs. Check each
+  result against the code, and ask the user when the code does not settle it.
 - For each section of the old CLAUDE.md, search with the words someone would use when
   they need it (`agentindex search "<question>"`), and confirm the right doc is in the
   top three. If it is not, improve that doc's title, summary or keywords.

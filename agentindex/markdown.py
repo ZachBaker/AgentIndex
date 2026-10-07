@@ -16,6 +16,7 @@ from urllib.parse import unquote
 from .frontmatter import parse_frontmatter, split_frontmatter
 
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+_NESTED_FENCE = re.compile(r"^\s*(`{3,}|~{3,})(.*)$")
 _HEADING = re.compile(r"^ {0,3}(#{1,6})(?:[ \t]+(.*?))?[ \t]*$")
 _CLOSING_HASHES = re.compile(r"(?:^|[ \t]+)#+[ \t]*$")
 _RULE = re.compile(r"^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$")
@@ -40,10 +41,14 @@ _WORD = re.compile(r"[^\W_]+")
 TEXT, FENCE, CODE, COMMENT = "", "fence", "code", "comment"
 
 
-def iter_lines(lines: list[str]):
+def iter_lines(lines: list[str], nested_fences: bool = False):
     """Yield ``(index, line, kind)`` where kind is TEXT, FENCE (a code fence line),
     CODE (inside a fence) or COMMENT (an HTML comment block, as CommonMark defines it).
+
+    ``nested_fences`` also takes fences indented four or more spaces, as in nested
+    list items, to be code.
     """
+    fence_pattern = _NESTED_FENCE if nested_fences else _FENCE
     fence: tuple[str, int] | None = None
     in_comment = False
     for i, line in enumerate(lines):
@@ -51,7 +56,7 @@ def iter_lines(lines: list[str]):
             in_comment = "-->" not in line
             yield i, line, COMMENT
             continue
-        match = _FENCE.match(line)
+        match = fence_pattern.match(line)
         if fence is not None:
             closes = match and match.group(1)[0] == fence[0] and len(match.group(1)) >= fence[1]
             if closes and not match.group(2).strip():
@@ -69,13 +74,14 @@ def iter_lines(lines: list[str]):
             yield i, line, TEXT
 
 
-def plain_text(text: str) -> str:
-    """Render inline markdown as plain text (keeps code-span contents verbatim)."""
+def plain_text(text: str, code_marks: bool = False) -> str:
+    """Render inline markdown as plain text (keeps code-span contents verbatim, inside
+    backticks if ``code_marks``)."""
     parts = re.split(r"(`+)(.+?)\1", text)
     out = []
     for i, part in enumerate(parts):
         if i % 3 == 2:
-            out.append(part.strip())
+            out.append(f"`{part.strip()}`" if code_marks else part.strip())
         elif i % 3 == 0:
             out.append(_strip_inline(part))
     return " ".join("".join(out).split())
@@ -264,6 +270,40 @@ def searchable_text(markdown: str) -> str:
         stripped = _LIST_ITEM.sub("", re.sub(r"^(?:>\s?)+", "", stripped))
         out.append(plain_text(stripped))
     return "\n".join(out).strip()
+
+
+def prose_blocks(lines: list[str]):
+    """Yield ``(line, text, row)`` for each paragraph, list item and table row.
+
+    ``line`` is the block's first line and ``text`` keeps its line breaks, minus list
+    markers and blockquote marks. Table rows come one per block with ``row`` set and
+    their cells joined by " — ". Code, comments, headings, rules, HTML blocks, link
+    definitions and table separator rows are not prose and are skipped.
+    """
+    start, block = 0, []
+    for i, line, kind in iter_lines(lines, nested_fences=True):
+        text = re.sub(r"^(?:>\s?)+", "", line.strip())
+        item = _LIST_ITEM.match(text)
+        other = (
+            kind
+            or not text
+            or _HEADING.match(text)
+            or _RULE.match(text)
+            or _REF_DEFINITION.match(text)
+            or text.startswith(("<", "|"))
+        )
+        if block and (other or item):
+            yield start, "\n".join(block), False
+            block = []
+        if text.startswith("|") and not kind:
+            if not _TABLE_RULE.match(text):
+                yield i, " — ".join(cell.strip() for cell in text.strip("|").split("|")), True
+        elif not other:
+            if not block:
+                start = i
+            block.append(text[item.end() :] if item else text)
+    if block:
+        yield start, "\n".join(block), False
 
 
 def first_paragraph(lines: list[str]) -> str:

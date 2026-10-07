@@ -2,7 +2,7 @@
 title: CLI reference
 summary: Every agentindex command and option, with exit codes and JSON output.
 tags: [interfaces, reference]
-keywords: [command line, commands, options, flags, exit codes, json output, search, read, list, check, sync, status, serve, mcp, init, import, usage]
+keywords: [command line, commands, options, flags, exit codes, json output, search, read, list, check, conflicts, contradictions, sync, status, serve, mcp, init, import, usage]
 ---
 
 # CLI reference
@@ -25,6 +25,7 @@ before or after the command: `--root <dir>` and `--db <path>`
 | Command | What it does |
 |---|---|
 | `check [--strict] [--json]` | Lint the docs: broken links (to docs and to code), links to missing sections, duplicate ids, missing titles and summaries, very long docs. |
+| `conflicts [ID]... [--json]` | Statements in different docs that nearly repeat each other but disagree: a different value, or the opposite meaning. With ids, only results involving those docs. See [contradiction detection](../architecture/contradictions.md). |
 | `sync [--force] [--json]` | Update the index now. Never required, since every command syncs first. |
 | `status [--json]` | Root, config, sources, database location and counts. |
 | `init [--dir DIR] [--no-mcp]` | Set up a repository. See [adopting AgentIndex](../guides/adopting-agentindex.md). |
@@ -40,7 +41,8 @@ before or after the command: `--root <dir>` and `--db <path>`
 
 ## Exit codes and JSON
 
-- `0`: success, including a search with no results.
+- `0`: success, including a search with no results, and `conflicts` whether or not it
+  finds any (its results are candidates to check, not errors).
 - `1`: a doc or section was not found (suggestions are printed to stderr), or `check`
   found errors (or warnings, with `--strict`).
 - `2`: bad usage or configuration, such as a query with no search terms or an invalid

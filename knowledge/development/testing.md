@@ -27,9 +27,10 @@ Python 3.9 and the newest Python on Linux, and on the newest Python on macOS and
 | `test_query.py` | Query parsing and the FTS5 expressions it produces. |
 | `test_store.py` | Sync (adding, changing and deleting files, duplicate ids), read, outline, list, check, schema rebuilds. |
 | `test_search.py` | Ranking expectations on a small, realistic corpus. Add a case here whenever a query ranks badly. |
+| `test_conflicts.py` | Contradiction detection: statements, pairs it must report and pairs it must not, grouping, focus, and the candidate filter against brute force. |
 | `test_cli.py`, `test_http_api.py`, `test_mcp_server.py` | The three interfaces, end to end. The HTTP and MCP tests talk to real servers. |
 | `test_scaffold.py` | `init` and `import`. |
-| `test_knowledge_base.py` | This repo's own docs pass `check --strict` and answer key questions. |
+| `test_knowledge_base.py` | This repo's own docs pass `check --strict`, do not contradict each other, and answer key questions. |
 
 [tests/helpers.py](../../tests/helpers.py) builds throwaway projects in a temporary
 directory: `make_project({"knowledge/a.md": "..."})` writes the files and returns the root.
@@ -39,5 +40,7 @@ directory: `make_project({"knowledge/a.md": "..."})` writes the files and return
 - A parsing change needs a unit test with the exact markdown that motivated it.
 - A ranking change needs its motivating query in `test_search.py`, and the existing cases
   must still pass.
+- A contradiction-detection change needs its motivating pair in `test_conflicts.py`: a
+  false positive with a case the rule must still report, or a missed contradiction.
 - A new CLI option, endpoint or tool argument needs a test through that interface.
 - Run the suite on Python 3.9 when you can (`uv python install 3.9`), because CI does.
