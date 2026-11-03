@@ -1,0 +1,547 @@
+{
+ "corpus": "node-contributing",
+ "about": "Questions written blind from merged nodejs/node PRs (June to November 2026) and a few common contributor tasks, without seeing the docs; answers labeled separately against the pinned docs.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 30,
+   "keep_drop_agree": 29,
+   "both_answered": 26,
+   "same_doc": 26,
+   "identical": 26,
+   "reconciled": 14
+  }
+ },
+ "cases": [
+  {
+   "id": "node-01",
+   "pr": "#66627",
+   "task": "deps: V8: cherry-pick 8d14d49c4040",
+   "kind": "how-to",
+   "question": "How do I cherry-pick an upstream V8 commit into deps/v8, and what else must change besides the patched files?",
+   "keywords": "cherry-pick V8 commit deps/v8",
+   "answers": [
+    "maintaining/maintaining-V8#backporting-manually",
+    "maintaining/maintaining-V8#backporting-with-git-node-recommended"
+   ],
+   "note": "Manual: git am --directory=deps/v8, commit format, bump v8_embedder_string in common.gypi; git node v8 backport automates it.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-02",
+   "pr": "#67106",
+   "task": "doc: clarify that V8 major upgrade uses stable release",
+   "kind": "convention",
+   "question": "When upgrading deps/v8 to a new major version, should we use V8's stable release or a newer beta branch?",
+   "keywords": "V8 major upgrade stable beta",
+   "answers": [
+    "maintaining/maintaining-V8#major-updates"
+   ],
+   "note": "Major updates: upgrade once V8 finishes stable promotion; use a fresh checkout of the latest stable branch.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-03",
+   "pr": "#66989",
+   "task": "deps: update zlib to 1.3.2.1-motley-9f9f52c",
+   "kind": "how-to",
+   "question": "Our bundled zlib has a version like 1.3.2.1-motley; where is it sourced from and how do I update it?",
+   "keywords": "update zlib motley version",
+   "answers": [
+    "maintaining/maintaining-dependencies#zlib",
+    "maintaining/maintaining-dependencies#updating-dependencies"
+   ],
+   "note": "zlib comes from Chromium's zlib fork; updates by the weekly action or a tools/update-deps script. 'motley' not explained.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-04",
+   "pr": "#66503",
+   "task": "tools: skip dependency update if PR has non-bot commits",
+   "kind": "how-it-works",
+   "question": "How does the automated job that opens dependency update PRs work, and which dependencies does it handle?",
+   "keywords": "automated dependency update PRs",
+   "answers": [
+    "maintaining/maintaining-dependencies#updating-dependencies"
+   ],
+   "note": "Weekly dependency-update-action (tools.yml) covers most deps; OpenSSL has its own action, npm uses npm-cli-bot. Brief.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-05",
+   "pr": "#67063",
+   "task": "deps: patch npm engines to accept alpha versions",
+   "kind": "convention",
+   "question": "Can I patch files in a vendored dependency like deps/npm directly in a Node PR, or must changes go upstream first?",
+   "keywords": "patch vendored deps/npm upstream",
+   "answers": [
+    "pull-requests#dependencies",
+    "maintaining/maintaining-dependencies#updating-dependencies"
+   ],
+   "note": "Send deps/ changes to their upstream projects; updates accepted only once landed upstream, with case-by-case TSC exceptions.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-06",
+   "pr": "#66398",
+   "task": "tools: keep OpenSSL update PRs in draft until arch configs committed",
+   "kind": "troubleshooting",
+   "question": "The OpenSSL update PR fails to build because the architecture-specific configs weren't regenerated; how do I regenerate and commit them?",
+   "keywords": "regenerate openssl arch configs",
+   "answers": [
+    "maintaining/maintaining-openssl#2-execute-make-in-depsopensslconfig-directory",
+    "maintaining/maintaining-openssl#4-commit-and-test"
+   ],
+   "note": "Step 2: make -C deps/openssl/config (or make gen-openssl). Step 4: git add -A the config dirs and commit.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-07",
+   "pr": "#66869",
+   "task": "test: keep objects alive in finalization fixtures",
+   "kind": "how-to",
+   "question": "How do I make a single test file run with extra node flags like --expose-gc when executed by tools/test.py?",
+   "keywords": "run test with expose-gc flag",
+   "answers": [
+    "writing-tests#flags"
+   ],
+   "note": "Add a '// Flags: ...' comment in the test preamble; the test runner applies those flags.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-08",
+   "pr": "#66735",
+   "task": "build: fix gtest integration",
+   "kind": "how-to",
+   "question": "How do I build and run only the C++ gtest unit tests, and filter to a single test case?",
+   "keywords": "run cctest gtest filter",
+   "answers": [
+    "writing-tests#adding-a-new-test"
+   ],
+   "note": "make cctest; filter with GTEST_FILTER=... or run out/Release/cctest --gtest_filter=...",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-09",
+   "pr": "#67088",
+   "task": "test: remove duplicate `common` imports",
+   "kind": "convention",
+   "question": "Does every test file have to require('../common') at the top even when it doesn't use it, and why?",
+   "keywords": "require common test unused",
+   "answers": [
+    "writing-tests#lines-1-3"
+   ],
+   "note": "Yes, require('../common') before other modules even if unused; it fails tests that leak globals.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-11",
+   "pr": "#66750",
+   "task": "test: deflake test-filehandle-close",
+   "kind": "troubleshooting",
+   "question": "My test is flaky on slow CI machines because it waits on a fixed setTimeout; how should tests handle timers?",
+   "keywords": "flaky test setTimeout timers",
+   "answers": [
+    "writing-tests#timers"
+   ],
+   "note": "Timers: avoid timers since they cause flakiness; if one is needed, use common.platformTimeout() to get longer timeouts on slow platforms.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-12",
+   "pr": "#66980",
+   "task": "test: deflake test-worker-message-port-transfer-filehandle-fd0",
+   "kind": "troubleshooting",
+   "question": "A worker test fails intermittently on CI but never locally; how can I run it many times on CI to reproduce?",
+   "keywords": "stress test flaky CI",
+   "answers": [
+    "collaborator-guide#useful-jenkins-ci-jobs"
+   ],
+   "note": "The node-stress-single-test Jenkins job runs a group of tests over and over on a specific platform to check for flakiness.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-13",
+   "pr": "#66599",
+   "task": "benchmark: add util.parseArgs benchmark",
+   "kind": "how-to",
+   "question": "How is a benchmark file under benchmark/ structured — how do createBenchmark configs, bench.start() and bench.end(n) fit together?",
+   "keywords": "createBenchmark bench.end configs",
+   "answers": [
+    "writing-and-running-benchmarks#basics-of-a-benchmark"
+   ],
+   "note": "Covers the createBenchmark(main, configs, options) arguments, bench.start()/bench.end(n), the two-pass run, and a full example.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-14",
+   "pr": "#66831",
+   "task": "lib: optimize TextEncoder.encode for short strings",
+   "kind": "how-to",
+   "question": "How do I benchmark my TextEncoder change against a main build and show the improvement is statistically significant?",
+   "keywords": "benchmark compare old new binary",
+   "answers": [
+    "writing-and-running-benchmarks#comparing-nodejs-versions"
+   ],
+   "note": "Build main and PR binaries, run benchmark/compare.js --old/--new with --analyze (Welch t-test), and read the confidence stars.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-15",
+   "pr": "#66369",
+   "task": "util: make mime parsing faster",
+   "kind": "how-it-works",
+   "question": "Why does lib/ code use primordials like StringPrototypeSlice instead of calling methods directly, and do they slow down hot paths?",
+   "keywords": "primordials performance hot path",
+   "answers": [
+    "primordials#prototype-methods",
+    "primordials#primordials-with-known-performance-issues"
+   ],
+   "note": "Primordials wrap the original prototype methods so userland changes can't break core. The doc lists primordials known to slow hot paths. The intro adds context.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-16",
+   "pr": "#66789",
+   "task": "lib: speed up AbortSignal",
+   "kind": "convention",
+   "question": "For internal state on lib/ classes like AbortSignal, should I use Symbol() or Symbol.for(), and how should they be named?",
+   "keywords": "internal symbols Symbol.for naming",
+   "answers": [
+    "using-symbols"
+   ],
+   "note": "Short doc: Symbol('kField') for private-like internal fields; Symbol.for only with a 'nodejs.' prefix for developer-facing metaprogramming.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-17",
+   "pr": "#66533",
+   "task": "doc,lib,src: throw on missing WebAssembly or RX support",
+   "kind": "how-to",
+   "question": "How do I add a new ERR_* error code to lib/internal/errors.js, and where do new codes get documented?",
+   "keywords": "add new ERR_ error code",
+   "answers": [
+    "using-internal-errors#adding-new-errors",
+    "using-internal-errors#documenting-new-errors"
+   ],
+   "note": "Append the code with E(key, message, Base) in internal/errors.js and document it in doc/api/errors.md (run make lint-clean if lint misses it).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-18",
+   "pr": "#66406",
+   "task": "ffi: throw on allocation failure in toArrayBuffer()",
+   "kind": "convention",
+   "question": "Should C++ binding code throw JavaScript exceptions directly, or return an error status so the JS side builds and throws the error?",
+   "keywords": "throw JavaScript error from C++",
+   "answers": [
+    "cpp-style-guide#avoid-throwing-javascript-errors-in-c"
+   ],
+   "note": "Return error data (or fill a ctx object) from C++ and build and throw the error in JS with internal/errors. Throw from C++ only close to the return to JS.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-19",
+   "pr": "#66867",
+   "task": "ffi: fix handle leak in fast buffer arguments",
+   "kind": "how-it-works",
+   "question": "What is a V8 fast API callback not allowed to do — can it create handles, allocate, call into JS, or throw?",
+   "keywords": "fast API callback restrictions",
+   "answers": [
+    "adding-v8-fast-api#adding-v8-fast-api-callbacks",
+    "adding-v8-fast-api#stack-allocated-objects-and-garbage-collection",
+    "adding-v8-fast-api#handling-errors"
+   ],
+   "note": "Intro (H1): no-re-entry/no-throw limits lifted in V8 12.6; handles need options.isolate plus HandleScope; throwing needs options arg.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-21",
+   "pr": "#67113",
+   "task": "http2: release queued data memory on stream cancellation",
+   "kind": "troubleshooting",
+   "question": "Memory keeps growing when http2 streams are cancelled; how do I track down a native memory leak in src/ with valgrind?",
+   "keywords": "native memory leak valgrind",
+   "answers": [
+    "investigating-native-memory-leaks#an-obvious-memory-leak",
+    "investigating-native-memory-leaks#nodejs-binary"
+   ],
+   "note": "Rerun valgrind with --leak-check=full for allocation stacks; for src/ leaks build ./configure --debug, run out/Debug node.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-23",
+   "pr": "#66484",
+   "task": "fs: add mkstemp()",
+   "kind": "convention",
+   "question": "When documenting a new API in doc/api, what version goes in the YAML added: field before the release exists?",
+   "keywords": "YAML added version new API",
+   "answers": [
+    "api-documentation#writing-documentation",
+    "pull-requests#step-3-code",
+    "releases#step-3-update-any-replaceme-and-dep00xx-tags-in-the-docs"
+   ],
+   "note": "Use REPLACEME in added:/introduced_in; releasers replace it with the real version at release time.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-25",
+   "pr": "#67144",
+   "task": "doc: ffi rename OS/400 -> IBM i",
+   "kind": "convention",
+   "question": "How long must a pull request stay open before it can land, and can a trivial doc fix be fast-tracked?",
+   "keywords": "pull request wait time fast-track",
+   "answers": [
+    "collaborator-guide#waiting-for-approvals",
+    "pull-requests#respect-the-minimum-wait-time-for-comments",
+    "pull-requests#waiting-until-the-pull-request-gets-landed"
+   ],
+   "note": "Wait 48 hours; doc-only or trivial changes can land sooner (fast-track label plus two collaborator approvals).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-26",
+   "pr": "#66944",
+   "task": "crypto: reject immutable random fill buffers",
+   "kind": "convention",
+   "question": "Is making an API throw on input it previously accepted a semver-major change, and what approvals does a breaking change need?",
+   "keywords": "semver-major breaking change approvals",
+   "answers": [
+    "collaborator-guide#breaking-changes"
+   ],
+   "note": "Adding errors is listed as a breaking change; backward-incompatible changes need approval from two TSC voting members.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-27",
+   "pr": "#66459",
+   "task": "deps,lib,tools: remove jitless and lite modes",
+   "kind": "how-it-works",
+   "question": "Before removing a command-line flag like --jitless, must it be deprecated first, and how do the deprecation stages progress?",
+   "keywords": "deprecate remove command-line flag",
+   "answers": [
+    "collaborator-guide#breaking-changes-and-deprecations",
+    "collaborator-guide#deprecations"
+   ],
+   "note": "Stable public APIs need deprecation before removal: documentation-only, then runtime, then End-of-Life, with deprecation-cycle rules.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-28",
+   "pr": "#66598",
+   "task": "tls: add tlsSocket.socket, to access the raw stream beneath TLS",
+   "kind": "how-it-works",
+   "question": "How does Node decide what counts as public API versus internal — are underscore-prefixed properties like tlsSocket._handle covered by semver?",
+   "keywords": "underscore properties public API semver",
+   "answers": [
+    "collaborator-guide#internal-vs-public-api",
+    "collaborator-guide#breaking-changes-to-internal-elements"
+   ],
+   "note": "Undocumented _-prefixed properties are internal; changing them can be semver-patch/minor unless it breaks the ecosystem.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-29",
+   "pr": "#66516",
+   "task": "Revert \"deps,lib,tools: remove jitless and lite modes\"",
+   "kind": "how-to",
+   "question": "How do I revert a commit that already landed on main, and what labels should the revert PR carry?",
+   "keywords": "revert landed commit labels",
+   "answers": [
+    "collaborator-guide#reverting-commits"
+   ],
+   "note": "Use git revert <HASH> and open a normal PR; add dont-land-on-v?.x labels and remove semver-*/notable-change.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-30",
+   "pr": "#66694",
+   "task": "crypto: fix X509 curve name crash for non-NIST curves",
+   "kind": "where",
+   "question": "Which GitHub team should I mention to get reviewers for a crypto change, and where is the list of teams per subsystem?",
+   "keywords": "team to ping crypto review",
+   "answers": [
+    "collaborator-guide#who-to-cc-in-the-issue-tracker"
+   ],
+   "note": "Who-to-CC table maps lib/{crypto,tls,https} and src/crypto to @nodejs/crypto.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-31",
+   "pr": null,
+   "task": "Landing an approved pull request with the commit-queue label",
+   "kind": "troubleshooting",
+   "question": "The commit-queue label was removed from my PR with a failure comment; what does a PR need for the queue to land it?",
+   "keywords": "commit-queue label removed failure",
+   "answers": [
+    "commit-queue"
+   ],
+   "note": "Whole doc: approval/wait-time rules, CI, hard-failure retry, and limitations (fresh CI/approval since last change, commit messages, main).",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-33",
+   "pr": "#66765",
+   "task": "[v22.x] deps: update undici to 6.29.1",
+   "kind": "how-to",
+   "question": "This change doesn't apply cleanly to v22.x; how do I prepare a backport PR for that release line?",
+   "keywords": "backport v22.x conflicts PR",
+   "answers": [
+    "backporting-to-release-lines#submitting-a-backport-pull-request"
+   ],
+   "note": "Automated git node backport and manual cherry-pick steps, PR target/title, and backport label updates.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-34",
+   "pr": "#66764",
+   "task": "[v24.x] deps: update undici to 7.30.1",
+   "kind": "how-it-works",
+   "question": "How do commits on main end up in release lines like v24.x, and what do labels like dont-land-on-v24.x mean?",
+   "keywords": "dont-land-on backport-requested labels",
+   "answers": [
+    "first-contributions#q-when-will-my-change-be-released",
+    "collaborator-guide#how-are-lts-branches-managed",
+    "collaborator-guide#ltsversion-labels",
+    "releases#1-update-the-staging-branch"
+   ],
+   "note": "Cherry-pick flow from main to staging branches; dont-land-on/backport label meanings; releaser branch-diff excluding labels.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-35",
+   "pr": "#66965",
+   "task": "2026-10-28, Version 26.13.0 'Lithium' (LTS)",
+   "kind": "how-to",
+   "question": "How do I prepare an LTS release proposal, including generating the changelog and creating the release commit?",
+   "keywords": "release proposal changelog commit",
+   "answers": [
+    "releases#1-update-the-staging-branch",
+    "releases#2-create-a-new-branch-for-the-release",
+    "releases#3-update-srcnode_versionh",
+    "releases#4-update-the-changelog",
+    "releases#5-create-release-commit",
+    "releases#6-propose-release-on-github"
+   ],
+   "note": "Release steps 1-6: LTS staging rules, proposal branch/automation, version, changelog-maker, release commit, proposal PR.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-36",
+   "pr": "#66568",
+   "task": "doc: add documentation for the new release schedule",
+   "kind": "how-it-works",
+   "question": "How does the new release schedule work — what are alpha releases and how do they relate to Current and LTS lines?",
+   "keywords": "alpha releases release schedule",
+   "answers": [
+    "releases#schedule",
+    "releases#release-branch",
+    "releases#alpha-releases-october-to-april",
+    "releases#semver-major-release-april"
+   ],
+   "note": "Yearly schedule, October branch-off with first Alpha at prior line's LTS, Alpha semver-majors, April out-of-Alpha to Current.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-38",
+   "pr": "#66909",
+   "task": "doc: add rafael and antoine as last security release stewards",
+   "kind": "where",
+   "question": "Where is the rotation of security release stewards recorded, and how is the steward for the next release picked?",
+   "keywords": "security release stewards rotation",
+   "answers": [
+    "security-release-process#security-release-stewards"
+   ],
+   "note": "Stewards table (company, person, date, upcoming rotation); stewards nominated via TSC issue and TSC consensus.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-39",
+   "pr": "#66805",
+   "task": "build: fix overriding node_path in GN build",
+   "kind": "how-to",
+   "question": "How do I build Node.js with GN instead of gyp locally to verify a fix to the GN build files?",
+   "keywords": "build node with GN",
+   "answers": [
+    "gn-build#build-with-gn"
+   ],
+   "note": "Install depot_tools, fetch node (node-ci checkout), tools/gn-gen.py out/Release, then ninja -C out/Release node.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-40",
+   "pr": null,
+   "task": "Iterating on C++ changes in src/ and wanting faster incremental rebuilds",
+   "kind": "how-to",
+   "question": "Can I build Node.js with Ninja instead of make to get faster incremental rebuilds, and how do I set it up?",
+   "keywords": "ninja incremental rebuild",
+   "answers": [
+    "building-node-with-ninja"
+   ],
+   "note": "Short single-topic doc: ./configure --ninja then make; parallel jobs, debug builds, custom NINJA path.",
+   "labeled": "reconciled"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "node-10",
+   "pr": "#66338",
+   "task": "test: run node-bench tools test sequentially",
+   "kind": "convention",
+   "question": "What kinds of tests belong in test/sequential rather than test/parallel, and what makes a test unsafe to parallelize?",
+   "keywords": "test/sequential test/parallel",
+   "reason": "Test directory section only links to test/README.md, outside the KB; port-0 and 'default to test/parallel' remarks are tangential.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-20",
+   "pr": "#66400",
+   "task": "src: use native CopyArrayBufferBytes for webstream buffer copy",
+   "kind": "troubleshooting",
+   "question": "make lint-cpp reports style errors in my src/ changes; how do I automatically format the C++ code to fix them?",
+   "keywords": "lint-cpp format C++ code",
+   "reason": "No doc covers automatic C++ formatting (make format-cpp or clang-format). cpp-style-guide#formatting only says make lint-cpp runs cpplint and lists rules to follow by hand.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-22",
+   "pr": "#66829",
+   "task": "doc,crypto: mark raw key formats as stable",
+   "kind": "how-to",
+   "question": "What do I need to change to promote an experimental API to stable, and does that need any special approval?",
+   "keywords": "experimental API to stable",
+   "reason": "The KB has no general way to promote an experimental API to stable. The only exit criteria are for Node-API (adding-new-napi-api#process-and-approval), which does not apply to other APIs.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "node-24",
+   "pr": "#66796",
+   "task": "build,doc,tools: support alpha releases",
+   "kind": "convention",
+   "question": "How should the commit message subject be formatted when a change touches several subsystems like build, doc and tools?",
+   "keywords": "commit message multiple subsystems",
+   "reason": "pull-requests gives only the single-subsystem prefix format and says several subsystems may be valid, never how to combine them in the subject.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-32",
+   "pr": null,
+   "task": "Getting set up as a newly nominated Node.js collaborator",
+   "kind": "how-it-works",
+   "question": "What happens during onboarding for a newly nominated collaborator, and what should be set up beforehand, like two-factor auth?",
+   "keywords": "new collaborator onboarding",
+   "reason": "The collaborator onboarding guide is the repo-root onboarding.md, outside doc/contributing; only steward/ambassador onboarding is covered.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "node-37",
+   "pr": null,
+   "task": "Preparing a fix for a privately reported vulnerability ahead of a security release",
+   "kind": "how-to",
+   "question": "How do I submit and get review for a fix to an embargoed vulnerability without it becoming public before the release?",
+   "keywords": "embargoed vulnerability fix PR",
+   "reason": "Docs only cover steward/releaser handling of nodejs-private patches, not how a fix author submits and gets private review.",
+   "labeled": "reconciled"
+  }
+ ]
+}
