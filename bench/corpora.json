@@ -1,0 +1,75 @@
+{
+  "//": "Real knowledge bases the benchmark runs on, each pinned to a commit. `python3 -m bench fetch` makes a sparse checkout of `paths` into bench/.cache/<name>/. kind 'docs' indexes those folders as they are; kind 'import' splits one agent instructions file with `agentindex import`, as an adopter would. Nothing is tuned per corpus.",
+  "corpora": [
+    {
+      "name": "rustc-dev-guide",
+      "title": "Rust compiler dev guide",
+      "kind": "docs",
+      "repo": "https://github.com/rust-lang/rustc-dev-guide",
+      "commit": "a29f8285990b8254783202aa0d86322eb21edf61",
+      "paths": ["src"],
+      "license": "MIT OR Apache-2.0",
+      "about": "The contributor guide for the Rust compiler (an mdBook). Questions come from merged rust-lang/rust PRs."
+    },
+    {
+      "name": "node-contributing",
+      "title": "Node.js contributor docs",
+      "kind": "docs",
+      "repo": "https://github.com/nodejs/node",
+      "commit": "1b070ffad67f380036c1c5e5acf01aafd32c51ce",
+      "paths": ["doc/contributing"],
+      "license": "MIT",
+      "about": "How Node.js is built, tested, reviewed and released. Questions come from merged nodejs/node PRs."
+    },
+    {
+      "name": "electron",
+      "title": "Electron docs",
+      "kind": "docs",
+      "repo": "https://github.com/electron/electron",
+      "commit": "20f58d838c93e6064a5367841eb9d70ed21ee33b",
+      "paths": ["docs"],
+      "license": "MIT",
+      "about": "API reference, tutorials and contributor docs. Questions come from common app-building tasks and merged electron/electron PRs."
+    },
+    {
+      "name": "gitlab-development",
+      "title": "GitLab development docs",
+      "kind": "docs",
+      "repo": "https://gitlab.com/gitlab-org/gitlab.git",
+      "commit": "5190a8e2108919f67fd1ed37aa5f9db1cd613f4e",
+      "paths": ["doc/development"],
+      "license": "CC BY-SA 4.0",
+      "about": "Engineering guidelines for the GitLab monolith. Questions come from merged gitlab-org/gitlab merge requests."
+    },
+    {
+      "name": "posthog-agents",
+      "title": "PostHog AGENTS.md",
+      "kind": "import",
+      "repo": "https://github.com/PostHog/posthog",
+      "commit": "482288ee2f862c0963202f9c950a1e71830453ad",
+      "paths": ["AGENTS.md"],
+      "license": "MIT",
+      "about": "A 47 KB agent instructions file, split with `agentindex import`. Questions come from merged PostHog PRs."
+    },
+    {
+      "name": "nextjs-agents",
+      "title": "Next.js AGENTS.md",
+      "kind": "import",
+      "repo": "https://github.com/vercel/next.js",
+      "commit": "4c3f5618ffdcd08e33693a1b25d47a4ef1254d90",
+      "paths": ["AGENTS.md"],
+      "license": "MIT",
+      "about": "A 32 KB agent instructions file, split with `agentindex import`. Questions come from merged vercel/next.js PRs."
+    },
+    {
+      "name": "workerd-agents",
+      "title": "workerd AGENTS.md",
+      "kind": "import",
+      "repo": "https://github.com/cloudflare/workerd",
+      "commit": "b1173d89251716cdf0f297c5a2e16d96d6ba9525",
+      "paths": ["AGENTS.md"],
+      "license": "Apache-2.0",
+      "about": "A 27 KB agent instructions file, split with `agentindex import`. Questions come from merged cloudflare/workerd PRs."
+    }
+  ]
+}

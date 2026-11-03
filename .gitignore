@@ -8,3 +8,6 @@ build/
 dist/
 .venv/
 .pytest_cache/
+
+# Benchmark corpora (python3 -m bench fetch)
+bench/.cache/

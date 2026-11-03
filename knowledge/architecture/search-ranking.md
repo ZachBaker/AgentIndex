@@ -78,5 +78,6 @@ code blocks are kept.
 
 The weights are at the top of `store.py` (`DOC_WEIGHTS`, `SECTION_WEIGHTS`). Before
 changing them, add the query that ranks badly to `tests/test_search.py` and make sure the
-other cases still pass. Often the better fix is in the docs: a sharper title or summary,
-or `keywords` with the words people actually search for.
+other cases still pass. Then compare the [benchmark](../development/benchmarks.md) on real
+knowledge bases before and after the change. Often the better fix is in the docs: a sharper
+title or summary, or `keywords` with the words people actually search for.

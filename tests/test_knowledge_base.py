@@ -26,6 +26,7 @@ QUESTIONS = [
     ("read a single section", "using-the-index"),
     ("what is agentindex", "start-here"),
     ("find docs that contradict each other", "architecture/contradictions"),
+    ("how well does search perform on real docs", "development/benchmarks"),
 ]
 
 
