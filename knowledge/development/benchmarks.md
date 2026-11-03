@@ -73,11 +73,31 @@ Both stop after 3 reads, and a miss costs all of them. AgentIndex also costs its
 pointer once per session. "Lookups before AgentIndex costs more" divides what loading
 everything costs per session by the median lookup.
 
+Reading whole files makes the simulated grep agent an upper bound: real agents grep, then
+read only the matching part of a file. Compare costs against grep with the
+[real agents](#real-agents) instead.
+
 ## Speed
 
 Measured on whatever machine runs it: building the index from scratch (the first query
 does this once), searching in-process including the per-query file check, and a whole
 `python3 -m agentindex search` process from start to output.
+
+## Real agents
+
+The simulated agents above are deterministic and cheap to rerun. To check them against
+real behavior, every question was also given to real coding agents, with results in
+`bench/pilot.md`. For each question, two fresh agents in the Claude
+Code harness, with the same model and one run each, looked up the answer:
+
+- one could read the docs only through `python3 -m agentindex search` and `read`;
+- the other could use only grep, find and file reads on the docs folder, or, for the
+  AGENTS.md corpora, had to read the whole AGENTS.md first.
+
+Two judges, blind to which agent was which, graded each answer against the labeled docs as
+correct, partly correct, wrong or "the docs don't answer it", with a third judge where they
+disagreed. Context added, doc text read, tool calls and time come from the agents'
+transcripts. This needs an agent harness, so `python3 -m bench run` does not repeat it.
 
 ## Changing ranking or output
 

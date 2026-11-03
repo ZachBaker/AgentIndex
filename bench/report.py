@@ -65,12 +65,6 @@ def _summary(results: dict) -> list[str]:
             low, high = stats["agentindex"][key + "_ci"]
             cells[0] = f"**{cells[0]}** ({_pct(low)}–{_pct(high)})"
             rows.append(f"| {label}, {PHRASING_NAMES[phrasing]} | " + " | ".join(cells) + " |")
-    for phrasing in PHRASINGS:
-        tokens = overall["tokens"][phrasing]
-        rows.append(
-            f"| Tokens read per lookup (median), {PHRASING_NAMES[phrasing]} |"
-            f" **{_num(tokens['agentindex']['median'])}** | – | {_num(tokens['grep']['median'])} |"
-        )
     section = overall["section"]["question"]
     if section["rate"] is not None:
         rows.append(
@@ -79,7 +73,8 @@ def _summary(results: dict) -> list[str]:
     note = (
         "Percentages are of all cases; AgentIndex's 95% confidence interval is in brackets."
         " The answering section is judged where the answer is one section of a longer doc"
-        " and a relevant doc was in the top 3."
+        " and a relevant doc was in the top 3. What the lookups cost is under"
+        " [context cost](#context-cost); what real agents spent is in [pilot.md](pilot.md)."
     )
     return rows + ["", note]
 
@@ -116,11 +111,14 @@ def _kind_table(results: dict) -> list[str]:
 def _cost_table(results: dict) -> list[str]:
     pointer = results["settings"]["pointer_tokens"]
     rows = [
-        "Approximate tokens (characters / 4). Loading everything is paid in every session;"
-        f" AgentIndex costs a {pointer}-token CLAUDE.md pointer per session plus each lookup."
-        " Lookups are medians over natural questions; misses count all their reads.",
+        "Approximate tokens (characters / 4) of text a simulated agent reads. Loading everything"
+        f" is paid in every session; AgentIndex costs a {pointer}-token CLAUDE.md pointer per"
+        " session plus each lookup. Lookups are medians over natural questions, and misses"
+        " count all their reads. The grep agent here reads whole files, which is an upper"
+        " bound: real agents read the matching parts, and [pilot.md](pilot.md) has what they"
+        " spent.",
         "",
-        "| Corpus | Load everything | grep + read, per lookup | AgentIndex, per lookup |"
+        "| Corpus | Load everything | grep, reading whole files | AgentIndex, per lookup |"
         " Lookups before AgentIndex costs more |",
         "|---|---|---|---|---|",
     ]
