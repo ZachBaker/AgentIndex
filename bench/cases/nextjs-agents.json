@@ -24,7 +24,14 @@
     "testing#generate-tests-non-interactively-for-ai-agents"
    ],
    "note": "pnpm new-test --args <appDir> <name> <type>; types e2e | production | development | unit (unit is flat test/unit).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "fast-local-development",
+    "linting-and-types",
+    "rebuilding-before-running-tests",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-03",
@@ -38,7 +45,12 @@
     "testing#test-commands-by-mode"
    ],
    "note": "Step 2 runs pnpm test-dev-turbo / test-start-turbo <file>; testing lists dev and build+start scripts (file example in intro).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "development-tips",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-04",
@@ -51,7 +63,14 @@
     "key-directories-quick-reference"
    ],
    "note": "Gives each folder's purpose: test/e2e end-to-end, test/development dev server, test/production production build. Brief, but tells them apart.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "development-tips",
+    "fast-local-development",
+    "testing",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-05",
@@ -64,7 +83,13 @@
     "writing-tests#test-writing-expectations"
    ],
    "note": "Prefer integration/e2e tests; avoid unit tests mapping to implementation except complicated algorithms; don't commit temporary ones.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "github-pull-requests",
+    "key-directories-quick-reference",
+    "testing"
+   ]
   },
   {
    "id": "nextjs-07",
@@ -77,7 +102,14 @@
     "writing-tests#test-writing-expectations"
    ],
    "note": "Use retry() from next-test-utils with expect() instead of setTimeout; check() is deprecated.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "context-efficient-workflows",
+    "development-anti-patterns",
+    "rebuilding-before-running-tests",
+    "secrets-and-env-safety",
+    "testing"
+   ]
   },
   {
    "id": "nextjs-08",
@@ -91,7 +123,12 @@
     "development-anti-patterns#test-gotchas"
    ],
    "note": "DEBUG=next:* debug logging; __NEXT_SHOW_IGNORE_LISTED=true shows full server stack traces. Nothing covers a visible browser.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "key-directories-quick-reference",
+    "testing",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-11",
@@ -105,7 +142,13 @@
     "rebuilding-before-running-tests"
    ],
    "note": "Watch mode `pnpm --filter=next dev` in fast-local-development; packages/next edits need `pnpm --filter=next build` in both docs.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "codebase-structure",
+    "context-efficient-workflows",
+    "development-anti-patterns",
+    "testing"
+   ]
   },
   {
    "id": "nextjs-12",
@@ -118,7 +161,15 @@
     "fast-local-development"
    ],
    "note": "Bootstrapping paragraph: pnpm install, then build only what your work changes; build-all only for Rust.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "build-commands",
+    "development-anti-patterns",
+    "github-pull-requests",
+    "linting-and-types",
+    "secrets-and-env-safety",
+    "this-is-not-the-turborepo-you-know"
+   ]
   },
   {
    "id": "nextjs-13",
@@ -134,7 +185,10 @@
     "build-commands"
    ],
    "note": "`pnpm build-all` for Rust/Turbopack changes: rebuilding rule, Stale Native Binary section, fast-local-development, build-commands list.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "codebase-structure"
+   ]
   },
   {
    "id": "nextjs-15",

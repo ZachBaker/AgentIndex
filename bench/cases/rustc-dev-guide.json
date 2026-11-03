@@ -25,7 +25,19 @@
     "building/quickstart"
    ],
    "note": "Link the build with `rustup toolchain link stage1 build/host/stage1`, then run `rustc +stage1 ...` (e.g. with --explain).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/writing-tools-in-bootstrap",
+    "building/optimized-build",
+    "compiler-debugging",
+    "queries/incremental-compilation-in-detail",
+    "rustdoc",
+    "tests/adding",
+    "tests/codegen-backend-tests/cg_gcc",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/running"
+   ]
   },
   {
    "id": "rustc-02",
@@ -40,7 +52,14 @@
     "stabilization-guide#removing-existing-uses-of-the-feature-gate"
    ],
    "note": "Stage0 builds get --cfg bootstrap, so just-stabilized features use cfg_attr(bootstrap, feature(..)). Stage0 compiles compiler/rustc and src/bootstrap.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/bootstrap-in-dependencies",
+    "building/bootstrapping/debugging-bootstrap",
+    "feature-gate-check",
+    "overview",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-03",
@@ -52,10 +71,21 @@
    "answers": [
     "tests/running#editing-and-updating-the-reference-files",
     "tests/adding#step-5-check-other-tests",
-    "building/quickstart"
+    "building/quickstart",
+    "tests/ui#output-comparison"
    ],
    "note": "Run `./x test tests/ui --bless` to regenerate the .stderr/.stdout/.fixed snapshots after changing diagnostic output.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/how-to-build-and-run",
+    "diagnostics",
+    "implementing-new-features",
+    "rustc-driver/getting-diagnostics",
+    "tests/compiletest"
+   ],
+   "pooled": [
+    "tests/ui#output-comparison"
+   ]
   },
   {
    "id": "rustc-04",
@@ -69,7 +99,17 @@
     "tests/compiletest#revisions"
    ],
    "note": "Use `//@ revisions: a b` with `//@[a] compile-flags: ...`. Each revision gets its own test.a.stderr file.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/how-to-build-and-run",
+    "building/suggested",
+    "fuzzing",
+    "tests/adding",
+    "tests/directives",
+    "tests/minicore",
+    "tests/misc",
+    "tests/running"
+   ]
   },
   {
    "id": "rustc-05",
@@ -85,7 +125,13 @@
     "tests/adding#step-3-add-error-annotations"
    ],
    "note": "Bullets/examples: `//~^` one caret per line above, `//~v` below, `//~|` previous annotation's line; adding Step 3 shows `//~^`.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "diagnostics",
+    "incrcomp-debugging",
+    "tests/compiletest",
+    "tests/directives"
+   ]
   },
   {
    "id": "rustc-06",

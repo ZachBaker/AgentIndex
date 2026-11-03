@@ -24,7 +24,12 @@
     "commands"
    ],
    "note": "Tests list: `hogli test path/to/test.py` and `hogli test path/to/test.py::TestClass::test_method` (pytest node id).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "code-style"
+   ]
   },
   {
    "id": "posthog-02",
@@ -37,7 +42,14 @@
     "commands"
    ],
    "note": "Universal `hogli test <file_or_directory>` auto-detects Jest; no doc says whether ClickHouse/Kafka/Postgres must run.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "ci-github-actions",
+    "code-style",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-03",
@@ -50,7 +62,12 @@
     "commands"
    ],
    "note": "Tests list: `hogli test <file_or_directory>` auto-detects Jest; pass the single logic test file.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture-guidelines",
+    "code-style",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-05",
@@ -63,7 +80,14 @@
     "ci-github-actions"
    ],
    "note": "Trunk Flaky Tests via the `trunk` MCP server checks per-test flakiness; rerunning CI jobs is not covered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture-guidelines",
+    "code-style",
+    "codebase-structure",
+    "commands",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-06",
@@ -76,7 +100,14 @@
     "code-style#tests"
    ],
    "note": "Tests section: parameterize variations of the same behavior, `parameterized` in Python, `test.each` in Jest.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "ci-github-actions",
+    "commands",
+    "security"
+   ]
   },
   {
    "id": "posthog-07",
@@ -90,7 +121,12 @@
     "code-style#python"
    ],
    "note": "commands Lint: `ruff check . --fix`, `ruff format .`; code-style Python: `uv run mypy --cache-fine-grained .` repo-wide.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-08",
@@ -103,7 +139,13 @@
     "commands"
    ],
    "note": "Lint list: `pnpm --filter=@posthog/frontend typescript:check`, plus `fix`/`lint` (Oxlint/Oxfmt) scripts.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "code-style",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-09",
@@ -116,7 +158,12 @@
     "commands"
    ],
    "note": "Environment list: prefer `flox activate -- bash -c \"<command>\"` if commands fail; never interactive `flox activate`.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture-guidelines",
+    "ci-github-actions",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-10",
@@ -129,7 +176,13 @@
     "commands"
    ],
    "note": "Build > Start dev: `./bin/start` or `hogli start` (TUI); detached `hogli up -d` with `hogli wait`/`hogli down`.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "codebase-structure",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-11",
@@ -142,7 +195,13 @@
     "commands"
    ],
    "note": "Lists everyday hogli commands: test, start, up -d/wait/down, build:openapi, devex:feedback; other docs mention single commands only in passing.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "ci-github-actions",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-16",
@@ -156,7 +215,11 @@
     "commands"
    ],
    "note": "`hogli build:openapi` generates TS via drf-spectacular+Orval; regenerate after changing serializers/viewsets (commands repeats it briefly).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "code-style"
+   ]
   },
   {
    "id": "posthog-23",
@@ -169,7 +232,13 @@
     "code-style#frontend"
    ],
    "note": "code-style#frontend: 'Use tailwind utility classes over inline styles'; SCSS stylesheets are not mentioned explicitly.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "codebase-structure",
+    "security"
+   ]
   },
   {
    "id": "posthog-26",
@@ -182,7 +251,13 @@
     "user-facing-copy"
    ],
    "note": "Errors and empty states guide, don't dead-end: say what happened and the next action; plain, direct language.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "commands",
+    "commits-and-pull-requests",
+    "security"
+   ]
   },
   {
    "id": "posthog-27",
@@ -195,7 +270,13 @@
     "user-facing-copy"
    ],
    "note": "Lists sentence case, AI-text tells and em dashes to avoid, plain language without jargon, and a direct, friendly, consistent tone.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "code-style",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-28",
@@ -208,7 +289,13 @@
     "architecture-guidelines#tenancy-and-scoping"
    ],
    "note": "Tenancy section: team_id on every tenant model, fail-closed scoped managers, for_team(); HogQL team filtering not covered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "commands",
+    "commits-and-pull-requests",
+    "security"
+   ]
   },
   {
    "id": "posthog-32",
@@ -221,7 +308,13 @@
     "architecture-guidelines#api-schemas-and-generated-types"
    ],
    "note": "MCP tools are generated from the OpenAPI spec via YAML config and codegen; endpoint schemas need help_text.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "ci-github-actions",
+    "code-style",
+    "codebase-structure"
+   ]
   },
   {
    "id": "posthog-33",
@@ -236,7 +329,12 @@
     "architecture-guidelines#entrypoints-and-layering"
    ],
    "note": "Skills: .agents/skills/ (hogli init:skill; invoke /writing-skills); single-product skills under products/<product>/. SKILL.md/reference layout not covered.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "code-style",
+    "commits-and-pull-requests",
+    "user-facing-copy"
+   ]
   },
   {
    "id": "posthog-34",
@@ -249,7 +347,11 @@
     "code-style#comments"
    ],
    "note": "Comments section: explain why not what, one line, no change history/chat context, keep comments when moving code.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "commits-and-pull-requests"
+   ]
   },
   {
    "id": "posthog-35",
@@ -265,7 +367,13 @@
     "commits-and-pull-requests#rules"
    ],
    "note": "Intro says conventional commits for messages and PR titles; format <type>(<scope>): <description>, types, scope/lowercase rules.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "architecture-guidelines",
+    "commands",
+    "user-facing-copy"
+   ]
   },
   {
    "id": "posthog-36",
@@ -278,7 +386,12 @@
     "commits-and-pull-requests#pr-descriptions"
    ],
    "note": "PR descriptions: use pull_request_template.md structure, fill Agent context, screenshots for visual changes via hogli pr:upload-image.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "agent-automation",
+    "code-style",
+    "security"
+   ]
   }
  ],
  "dropped": [
