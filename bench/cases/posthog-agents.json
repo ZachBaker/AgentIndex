@@ -1,0 +1,446 @@
+{
+ "corpus": "posthog-agents",
+ "about": "Questions written blind from merged PostHog/posthog PRs (2026) and a few common tasks, without seeing AGENTS.md; answers labeled separately against the docs `agentindex import` made from it.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 36,
+   "keep_drop_agree": 36,
+   "both_answered": 20,
+   "same_doc": 20,
+   "identical": 35,
+   "reconciled": 1
+  }
+ },
+ "cases": [
+  {
+   "id": "posthog-01",
+   "pr": "#126422",
+   "task": "fix(activity-logging): skip reads for fields a logged save cannot change",
+   "kind": "how-to",
+   "question": "How do I run just one backend Python test file, or a single test case, locally with pytest?",
+   "keywords": "pytest run single test",
+   "answers": [
+    "commands"
+   ],
+   "note": "Tests list: `hogli test path/to/test.py` and `hogli test path/to/test.py::TestClass::test_method` (pytest node id).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-02",
+   "pr": "#126923",
+   "task": "chore(nodejs): control the clock in the CPU-call yield test",
+   "kind": "how-to",
+   "question": "How do I run the Node.js service tests locally, and do they need ClickHouse, Kafka or Postgres running?",
+   "keywords": "nodejs tests run locally",
+   "answers": [
+    "commands"
+   ],
+   "note": "Universal `hogli test <file_or_directory>` auto-detects Jest; no doc says whether ClickHouse/Kafka/Postgres must run.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-03",
+   "pr": "#126880",
+   "task": "chore(frontend): keep kea-test-utils off the authenticated shell",
+   "kind": "how-to",
+   "question": "How do I run a single frontend Jest test file, for example the tests for one Kea logic?",
+   "keywords": "jest single test frontend",
+   "answers": [
+    "commands"
+   ],
+   "note": "Tests list: `hogli test <file_or_directory>` auto-detects Jest; pass the single logic test file.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-05",
+   "pr": "#126377",
+   "task": "chore(tests): keep the team id sequence across test flushes",
+   "kind": "troubleshooting",
+   "question": "A backend test passes locally but fails intermittently in CI; how do I check whether it's flaky and rerun it?",
+   "keywords": "flaky test CI rerun",
+   "answers": [
+    "ci-github-actions"
+   ],
+   "note": "Trunk Flaky Tests via the `trunk` MCP server checks per-test flakiness; rerunning CI jobs is not covered.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-06",
+   "pr": "#126576",
+   "task": "fix(signals): evaluate count-based monitoring rates",
+   "kind": "convention",
+   "question": "When I need several similar test cases, does the project prefer parameterized tests, and with which helper or library?",
+   "keywords": "parameterized tests",
+   "answers": [
+    "code-style#tests"
+   ],
+   "note": "Tests section: parameterize variations of the same behavior, `parameterized` in Python, `test.each` in Jest.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-07",
+   "pr": "#126473",
+   "task": "fix(oauth): accept sign-in-only cimd scopes and name cimd failures",
+   "kind": "how-to",
+   "question": "Which commands should I run to lint, format and type-check Python changes before pushing — ruff and mypy?",
+   "keywords": "ruff format mypy python",
+   "answers": [
+    "commands",
+    "code-style#python"
+   ],
+   "note": "commands Lint: `ruff check . --fix`, `ruff format .`; code-style Python: `uv run mypy --cache-fine-grained .` repo-wide.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-08",
+   "pr": "#126310",
+   "task": "refactor(frontend): move members logic to models and drop preflight shim",
+   "kind": "how-to",
+   "question": "How do I run TypeScript type-checking and linting for the frontend before opening a PR?",
+   "keywords": "frontend typescript check lint",
+   "answers": [
+    "commands"
+   ],
+   "note": "Lint list: `pnpm --filter=@posthog/frontend typescript:check`, plus `fix`/`lint` (Oxlint/Oxfmt) scripts.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-09",
+   "pr": null,
+   "task": "Run project commands in a fresh shell where tools like pnpm or the expected Python version are missing",
+   "kind": "troubleshooting",
+   "question": "Commands fail with 'command not found' or the wrong Python version; do I need to activate a project environment like flox first?",
+   "keywords": "command not found flox activate",
+   "answers": [
+    "commands"
+   ],
+   "note": "Environment list: prefer `flox activate -- bash -c \"<command>\"` if commands fail; never interactive `flox activate`.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-10",
+   "pr": null,
+   "task": "Set up a local development environment and run PostHog",
+   "kind": "how-to",
+   "question": "How do I bring up the full local dev stack — Docker services, the Django backend, frontend dev server and workers?",
+   "keywords": "start local dev stack",
+   "answers": [
+    "commands"
+   ],
+   "note": "Build > Start dev: `./bin/start` or `hogli start` (TUI); detached `hogli up -d` with `hogli wait`/`hogli down`.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-11",
+   "pr": "#126560",
+   "task": "chore(ci): install only hogli for workflow lint",
+   "kind": "how-it-works",
+   "question": "What is hogli, and which of its commands should I use for everyday tasks like starting services or running checks?",
+   "keywords": "hogli commands",
+   "answers": [
+    "commands"
+   ],
+   "note": "Lists everyday hogli commands: test, start, up -d/wait/down, build:openapi, devex:feedback; other docs mention single commands only in passing.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-16",
+   "pr": "#126852",
+   "task": "chore(ci): narrow the openapi codegen checkout",
+   "kind": "how-it-works",
+   "question": "How are frontend API client types generated from the Django OpenAPI spec, and when do I need to regenerate them?",
+   "keywords": "openapi codegen generated types",
+   "answers": [
+    "architecture-guidelines#api-schemas-and-generated-types",
+    "commands"
+   ],
+   "note": "`hogli build:openapi` generates TS via drf-spectacular+Orval; regenerate after changing serializers/viewsets (commands repeats it briefly).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-23",
+   "pr": "#126418",
+   "task": "chore(frontend): flag components that use a stylesheet they do not import",
+   "kind": "convention",
+   "question": "Should new frontend components be styled with Tailwind utility classes, or with their own SCSS stylesheet?",
+   "keywords": "tailwind scss component styles",
+   "answers": [
+    "code-style#frontend"
+   ],
+   "note": "code-style#frontend: 'Use tailwind utility classes over inline styles'; SCSS stylesheets are not mentioned explicitly.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-26",
+   "pr": "#126364",
+   "task": "fix(data-warehouse): tell users how to fix an invalid sendgrid api key",
+   "kind": "convention",
+   "question": "How should user-facing error messages be worded so users understand what went wrong and how to fix it?",
+   "keywords": "user-facing error message",
+   "answers": [
+    "user-facing-copy"
+   ],
+   "note": "Errors and empty states guide, don't dead-end: say what happened and the next action; plain, direct language.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-27",
+   "pr": "#126722",
+   "task": "feat(experiments): explain why no primary metric has users yet",
+   "kind": "convention",
+   "question": "Are there product copy rules for UI text, such as sentence case, tone of voice, or words to avoid?",
+   "keywords": "UI copy sentence case",
+   "answers": [
+    "user-facing-copy"
+   ],
+   "note": "Lists sentence case, AI-text tells and em dashes to avoid, plain language without jargon, and a direct, friendly, consistent tone.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-28",
+   "pr": "#126125",
+   "task": "fix(hogql_query): Extend support for all projects under org",
+   "kind": "convention",
+   "question": "What rules prevent data leaking between teams — must every queryset and HogQL query be filtered by team?",
+   "keywords": "team_id filter queryset",
+   "answers": [
+    "architecture-guidelines#tenancy-and-scoping"
+   ],
+   "note": "Tenancy section: team_id on every tenant model, fail-closed scoped managers, for_team(); HogQL team filtering not covered.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-32",
+   "pr": "#126454",
+   "task": "feat(signals): serve the personal inbox ranking via for_me endpoint and mcp tool",
+   "kind": "how-to",
+   "question": "How do I expose a backend API endpoint as a tool in the PostHog MCP server?",
+   "keywords": "add MCP tool endpoint",
+   "answers": [
+    "architecture-guidelines#api-schemas-and-generated-types"
+   ],
+   "note": "MCP tools are generated from the OpenAPI spec via YAML config and codegen; endpoint schemas need help_text.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-33",
+   "pr": "#126112",
+   "task": "chore(skills): add contents to four long skill references",
+   "kind": "where",
+   "question": "Where do agent skills live in the repo, and how should a skill's SKILL.md and reference files be organized?",
+   "keywords": "agent skills SKILL.md references",
+   "answers": [
+    "agent-automation#agent-automation",
+    "agent-automation#invoke-when-in-the-area",
+    "architecture-guidelines#entrypoints-and-layering"
+   ],
+   "note": "Skills: .agents/skills/ (hogli init:skill; invoke /writing-skills); single-product skills under products/<product>/. SKILL.md/reference layout not covered.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "posthog-34",
+   "pr": "#126551",
+   "task": "chore(quill-charts): trim gauge comments",
+   "kind": "convention",
+   "question": "What's the guidance on code comments — when are they wanted, and what kinds of comments should be left out?",
+   "keywords": "code comments",
+   "answers": [
+    "code-style#comments"
+   ],
+   "note": "Comments section: explain why not what, one line, no change history/chat context, keep comments when moving code.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-35",
+   "pr": null,
+   "task": "Open a pull request for a finished change",
+   "kind": "convention",
+   "question": "What format should commit messages and PR titles follow — conventional commits with a scope like feat(scope)?",
+   "keywords": "PR title conventional commits",
+   "answers": [
+    "commits-and-pull-requests#commits-and-pull-requests",
+    "commits-and-pull-requests#format",
+    "commits-and-pull-requests#commit-types",
+    "commits-and-pull-requests#rules"
+   ],
+   "note": "Intro says conventional commits for messages and PR titles; format <type>(<scope>): <description>, types, scope/lowercase rules.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-36",
+   "pr": null,
+   "task": "Write the description for a pull request",
+   "kind": "convention",
+   "question": "What should a PR description include — motivation, how it was tested, screenshots for UI changes?",
+   "keywords": "PR description testing screenshots",
+   "answers": [
+    "commits-and-pull-requests#pr-descriptions"
+   ],
+   "note": "PR descriptions: use pull_request_template.md structure, fill Agent context, screenshots for visual changes via hogli pr:upload-image.",
+   "labeled": "agreed"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "posthog-04",
+   "pr": "#126410",
+   "task": "fix(activity-log): load the acting user with activity list queries",
+   "kind": "troubleshooting",
+   "question": "My change lowered the query count and now snapshot tests of the SQL queries fail; how do I update those snapshots?",
+   "keywords": "update query snapshots assertNumQueries",
+   "reason": "No doc mentions snapshot tests, `--snapshot-update`, `assertNumQueries` or query-count snapshots, so updating them is not covered.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-12",
+   "pr": "#126072",
+   "task": "perf(signals): index signal reports by team and updated_at",
+   "kind": "convention",
+   "question": "Are there rules for Django migrations on large tables, like adding indexes concurrently so writes aren't blocked?",
+   "keywords": "migration add index concurrently",
+   "reason": "Nothing on large-table migrations or concurrent indexes; agent-automation#always-invoke only points to the /django-migrations skill.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-13",
+   "pr": null,
+   "task": "Rebase a branch whose new Django migration conflicts with a migration merged to master",
+   "kind": "troubleshooting",
+   "question": "After rebasing, my Django migration clashes with one just merged to master; how do I renumber it and fix max_migration.txt?",
+   "keywords": "migration conflict max_migration.txt",
+   "reason": "No content on migration conflicts, renumbering or max_migration.txt; only the /django-migrations skill pointer in agent-automation.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-14",
+   "pr": "#126317",
+   "task": "feat(api): add strict_fetch to catch lazy loads in list endpoints",
+   "kind": "convention",
+   "question": "What's expected for avoiding N+1 queries in API list endpoints — must viewsets use select_related or prefetch_related?",
+   "keywords": "N+1 queries list endpoint",
+   "reason": "No N+1, select_related or prefetch_related guidance; only pointers to the /improving-drf-endpoints and /profiling-slow-api-endpoints skills.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-15",
+   "pr": "#126832",
+   "task": "chore(ci): skip unchanged python schema generation",
+   "kind": "how-to",
+   "question": "After editing the TypeScript query schema, how do I regenerate schema.json and the generated Python schema models?",
+   "keywords": "python schema generation schema.py",
+   "reason": "The docs cover OpenAPI codegen from Django serializers only, not regenerating schema.json or the Python schema models from the TypeScript query schema.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-17",
+   "pr": "#126836",
+   "task": "chore(frontend): move inviteLogic into the shell layer",
+   "kind": "how-to",
+   "question": "After moving a Kea logic or changing its actions, how do I regenerate the logicType typings?",
+   "keywords": "kea typegen logicType",
+   "reason": "No kea typegen or logicType command anywhere; code-style#frontend only says frontend/src/AGENTS.md covers when to run typegen.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-18",
+   "pr": "#126867",
+   "task": "chore(frontend): clear two kernel imports of shell helpers",
+   "kind": "troubleshooting",
+   "question": "The frontend layer check failed because I added an upward import; what are the layers and how do I fix it?",
+   "keywords": "layer check upward import",
+   "reason": "No frontend layer model or layer-check guidance; architecture-guidelines#entrypoints-and-layering covers thin backend entrypoints and product placement instead.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-19",
+   "pr": "#126939",
+   "task": "perf(frontend): load lemon markdown lazily in the authenticated shell",
+   "kind": "how-it-works",
+   "question": "How does the frontend decide what loads eagerly in the authenticated shell versus lazily with individual scenes?",
+   "keywords": "authenticated shell lazy load",
+   "reason": "Not covered: no guidance on authenticated-shell vs scene lazy loading; only 'eager graph budgets' is named in passing in the CI report section.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-20",
+   "pr": "#126853",
+   "task": "chore(frontend): move Resizer into lemon-ui",
+   "kind": "where",
+   "question": "Where should a shared, reusable UI component live — lemon-ui, lib/components, or inside the product that uses it?",
+   "keywords": "lemon-ui shared component",
+   "reason": "Not covered: the docs only point to the /writing-ui-components skill and frontend/src/AGENTS.md and never choose between lemon-ui, lib/components or the product.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-21",
+   "pr": "#126297",
+   "task": "refactor(dashboards): use the experiments facade in experiment widgets",
+   "kind": "convention",
+   "question": "Can code in one product import another product's models directly, or must cross-product access go through a facade?",
+   "keywords": "product facade cross-product imports",
+   "reason": "Not covered: architecture-guidelines and codebase-structure say products are isolated but link products/README.md and products/architecture.md for the import and facade rules.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-22",
+   "pr": "#126868",
+   "task": "chore(frontend): let products register their own global modals",
+   "kind": "where",
+   "question": "What's the expected folder layout for a product under products/, including its backend code, frontend code and manifest?",
+   "keywords": "products folder structure manifest",
+   "reason": "Not covered: only fragments (backend/routes.py, frontend/, hogli product:bootstrap) plus a link to products/README.md; no layout described and no manifest mentioned.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-24",
+   "pr": "#127022",
+   "task": "fix(signals): rename census day property to census_date",
+   "kind": "convention",
+   "question": "What naming convention should analytics event names and event properties follow when instrumenting a feature?",
+   "keywords": "event property naming",
+   "reason": "Not covered: feature-usage-tracking requires end-to-end tracking but gives no naming convention for event names or properties.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-25",
+   "pr": "#126181",
+   "task": "feat(mcp): add usefulness feedback to the explain-chart app",
+   "kind": "how-to",
+   "question": "Should I capture a new product analytics event from the frontend or the backend, and which helper do I call?",
+   "keywords": "capture analytics event",
+   "reason": "Not covered: only a Celery-specific rule (ph_scoped_capture instead of posthoganalytics.capture) in architecture-guidelines; nothing on frontend vs backend or a general helper.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-29",
+   "pr": null,
+   "task": "Address a Semgrep finding reported by CI on a pull request",
+   "kind": "troubleshooting",
+   "question": "Semgrep flagged my change in CI; how do I tell whether it's a real issue and suppress a false positive?",
+   "keywords": "semgrep finding false positive",
+   "reason": "Not answered: security.md only defers semgrep-finding handling to .agents/security.md (outside the KB) and gives the local semgrep command; nosemgrep appears only for one locking rule.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-30",
+   "pr": null,
+   "task": "Add a webhook destination that sends requests to a user-configured URL",
+   "kind": "how-to",
+   "question": "How should backend code make HTTP requests to user-supplied URLs safely, without opening an SSRF hole?",
+   "keywords": "SSRF user-supplied URL request",
+   "reason": "Not answered: no SSRF or user-supplied-URL request guidance; only a rule that new DNS-resolution/outbound-host entry points call the shared OOB domain check (architecture-guidelines#async-storage-and-outbound-calls).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "posthog-31",
+   "pr": "#126136",
+   "task": "fix(signals): let project members update self-driving settings",
+   "kind": "how-it-works",
+   "question": "How are permissions enforced on API viewsets — which permission classes or access scopes does a new endpoint need?",
+   "keywords": "viewset permission classes scope",
+   "reason": "Not answered: nothing on DRF permission classes or access scopes, only the /improving-drf-endpoints skill pointer and a link to .agents/security.md.",
+   "labeled": "agreed"
+  }
+ ]
+}
