@@ -1,0 +1,462 @@
+{
+ "corpus": "nextjs-agents",
+ "about": "Questions written blind from merged vercel/next.js PRs (2026) and a few common tasks, without seeing AGENTS.md; answers labeled separately against the docs `agentindex import` made from it.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 36,
+   "keep_drop_agree": 36,
+   "both_answered": 24,
+   "same_doc": 24,
+   "identical": 33,
+   "reconciled": 3
+  }
+ },
+ "cases": [
+  {
+   "id": "nextjs-01",
+   "pr": "#100510",
+   "task": "[test] Reproduce two cache-sharing bugs",
+   "kind": "how-to",
+   "question": "How do I scaffold a new test with the repo's generator, and which test types can it create?",
+   "keywords": "pnpm new-test scaffold",
+   "answers": [
+    "testing#generate-tests-non-interactively-for-ai-agents"
+   ],
+   "note": "pnpm new-test --args <appDir> <name> <type>; types e2e | production | development | unit (unit is flat test/unit).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-03",
+   "pr": "#100404",
+   "task": "test: fix flakiness in segment-cache-stale-time",
+   "kind": "how-to",
+   "question": "How do I run one e2e test file locally, both in dev mode and in production (next start) mode?",
+   "keywords": "run e2e test dev start",
+   "answers": [
+    "fast-local-development#1-start-watch-build-in-background",
+    "testing#test-commands-by-mode"
+   ],
+   "note": "Step 2 runs pnpm test-dev-turbo / test-start-turbo <file>; testing lists dev and build+start scripts (file example in intro).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-04",
+   "pr": "#100592",
+   "task": "Fix navigation from global-not-found to app routes",
+   "kind": "where",
+   "question": "Which test folder should a regression test for an App Router bug go in — test/e2e, test/development, test/production?",
+   "keywords": "test/e2e test/development test/production",
+   "answers": [
+    "key-directories-quick-reference"
+   ],
+   "note": "Gives each folder's purpose: test/e2e end-to-end, test/development dev server, test/production production build. Brief, but tells them apart.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-05",
+   "pr": "#100830",
+   "task": "Fix `export const foo = function bar(){}` in server reference transform",
+   "kind": "convention",
+   "question": "For a bug fix, should I write a unit test of the internal function or an end-to-end test of the behavior?",
+   "keywords": "unit test vs e2e test",
+   "answers": [
+    "writing-tests#test-writing-expectations"
+   ],
+   "note": "Prefer integration/e2e tests; avoid unit tests mapping to implementation except complicated algorithms; don't commit temporary ones.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-07",
+   "pr": "#100946",
+   "task": "[test] Fix flaky file-system-cache-clock tests",
+   "kind": "convention",
+   "question": "In e2e tests, what should I use instead of fixed timeouts or sleeps to wait for async results without flakiness?",
+   "keywords": "flaky test retry timeout",
+   "answers": [
+    "writing-tests#test-writing-expectations"
+   ],
+   "note": "Use retry() from next-test-utils with expect() instead of setTimeout; check() is deprecated.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-08",
+   "pr": "#100096",
+   "task": "test: deflake app-basepath external redirect test",
+   "kind": "troubleshooting",
+   "question": "An e2e test fails without a useful message; how do I debug it with a visible browser or more verbose server logs?",
+   "keywords": "debug e2e test browser",
+   "answers": [
+    "development-tips",
+    "development-anti-patterns#test-gotchas"
+   ],
+   "note": "DEBUG=next:* debug logging; __NEXT_SHOW_IGNORE_LISTED=true shows full server stack traces. Nothing covers a visible browser.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-11",
+   "pr": "#100822",
+   "task": "perf(build): lazily require page-data helpers in build/utils",
+   "kind": "how-to",
+   "question": "After editing source in packages/next, what do I rebuild before tests see my change, and is there a watch mode?",
+   "keywords": "rebuild packages/next watch",
+   "answers": [
+    "fast-local-development",
+    "rebuilding-before-running-tests"
+   ],
+   "note": "Watch mode `pnpm --filter=next dev` in fast-local-development; packages/next edits need `pnpm --filter=next build` in both docs.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "nextjs-12",
+   "pr": "#100600",
+   "task": "Stop requiring build-all when bootstrapping a fresh clone or worktree",
+   "kind": "how-to",
+   "question": "What are the minimal steps to install dependencies and build the repo from a fresh clone?",
+   "keywords": "fresh clone install build",
+   "answers": [
+    "fast-local-development"
+   ],
+   "note": "Bootstrapping paragraph: pnpm install, then build only what your work changes; build-all only for Rust.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-13",
+   "pr": "#100949",
+   "task": "fix(turbopack): fix canary build after chunk_groups became a Vec",
+   "kind": "how-to",
+   "question": "How do I build the native Rust bindings locally so Next.js runs with my Turbopack changes?",
+   "keywords": "build native bindings turbopack",
+   "answers": [
+    "rebuilding-before-running-tests",
+    "development-anti-patterns#stale-native-binary",
+    "fast-local-development",
+    "build-commands"
+   ],
+   "note": "`pnpm build-all` for Rust/Turbopack changes: rebuilding rule, Stale Native Binary section, fast-local-development, build-commands list.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-15",
+   "pr": "#100418",
+   "task": "Remove unnecessary `as any` casts",
+   "kind": "how-to",
+   "question": "How do I run TypeScript type checking for the whole repo, or just for packages/next?",
+   "keywords": "typescript type check",
+   "answers": [
+    "linting-and-types",
+    "fast-local-development",
+    "context-efficient-workflows#batch-edits-before-building"
+   ],
+   "note": "linting-and-types: pnpm types / pnpm typescript (root tsconfig); pnpm --filter=next types in the other two.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-16",
+   "pr": "#100310",
+   "task": "Format all READMEs with Prettier",
+   "kind": "how-to",
+   "question": "How do I run ESLint and Prettier on just the files I changed before committing?",
+   "keywords": "lint prettier changed files",
+   "answers": [
+    "commit-and-pr-style"
+   ],
+   "note": "Pre-validate block: exact prettier and eslint commands the pre-commit hook runs on changed files.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-17",
+   "pr": "#100569",
+   "task": "ci: Fix ast-grep CI step",
+   "kind": "troubleshooting",
+   "question": "The ast-grep step failed in CI on my PR; how do I run those rules locally and see what they flag?",
+   "keywords": "ast-grep CI",
+   "answers": [
+    "linting-and-types"
+   ],
+   "note": "`pnpm lint` runs full lint including ast-grep; no ast-grep-specific command is documented.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-18",
+   "pr": "#100912",
+   "task": "[ci] Fix test axis fixtures never running their off state in CI",
+   "kind": "troubleshooting",
+   "question": "A test only fails in CI, not locally; how do I reproduce the CI environment and settings on my machine?",
+   "keywords": "reproduce CI failure locally",
+   "answers": [
+    "development-anti-patterns#test-gotchas"
+   ],
+   "note": "Test Gotchas: match exact CI env vars (pr-status Job Environment Variables), CI command/mode, build_and_test.yml afterBuild flags.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-19",
+   "pr": null,
+   "task": "Investigate the failing CI checks on an open pull request",
+   "kind": "how-to",
+   "question": "How do I find the failing CI jobs on my pull request and read their logs from the command line?",
+   "keywords": "CI failure logs gh",
+   "answers": [
+    "pr-status-ci-failures-and-reviews"
+   ],
+   "note": "Dedicated doc: use the $pr-status-triage skill (scripts/pr-status.js) for CI failures; the commands live in that skill.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-22",
+   "pr": "#100532",
+   "task": "Turbopack: test import.meta.glob code splitting with an execution test",
+   "kind": "where",
+   "question": "Where do Turbopack execution tests live, and how do I add and run a new one?",
+   "keywords": "turbopack execution test",
+   "answers": [
+    "writing-tests#test-writing-expectations"
+   ],
+   "note": "Gives the location turbopack/crates/turbopack-tests/tests/execution/; adding or running a new one is not covered.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-26",
+   "pr": "#100712",
+   "task": "Turbopack: add minServerChunkSize and maxMergeServerChunkSize options",
+   "kind": "how-to",
+   "question": "How do I add a new experimental option to next.config, including its config schema validation and TypeScript types?",
+   "keywords": "add experimental config option",
+   "answers": [
+    "development-anti-patterns#development-anti-patterns"
+   ],
+   "note": "Intro 'Core runtime/bundling rules': new flags get type in config-shared.ts, schema in config-schema.ts, define-env.ts if bundled.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-29",
+   "pr": null,
+   "task": "Use a Node.js API in server code that is also bundled for the edge runtime",
+   "kind": "convention",
+   "question": "What should I watch out for when packages/next code may run in both the Node.js and edge runtimes?",
+   "keywords": "edge runtime node.js APIs",
+   "answers": [
+    "development-anti-patterns#development-anti-patterns"
+   ],
+   "note": "Intro core rules: require() behind compile-time branches for DCE; force Node-only gating flags false in edge builds.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-30",
+   "pr": "#100234",
+   "task": "chore: Remove package.json#workspaces",
+   "kind": "where",
+   "question": "How is the monorepo organized — where are workspace packages declared, and what lives in each top-level folder?",
+   "keywords": "monorepo workspace packages",
+   "answers": [
+    "codebase-structure#monorepo-overview"
+   ],
+   "note": "Says pnpm monorepo and lists each top-level folder's contents; the workspace declaration file is not named.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-31",
+   "pr": null,
+   "task": "Search the codebase for where a runtime behavior is implemented",
+   "kind": "where",
+   "question": "Which directories contain generated or vendored code I should skip when searching, like compiled bundles or dist output?",
+   "keywords": "skip compiled dist search",
+   "answers": [
+    "context-efficient-workflows"
+   ],
+   "note": "Intro bullet: generated dist/, node_modules/, .next/ are search-only, don't read; src/compiled not mentioned.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "nextjs-32",
+   "pr": "#100842",
+   "task": "docs: clarify use cache is unsupported in Proxy",
+   "kind": "where",
+   "question": "Where do the Next.js documentation pages live in the repo, and are there conventions for editing them?",
+   "keywords": "docs mdx folder",
+   "answers": [
+    "codebase-structure#monorepo-overview",
+    "development-anti-patterns#documentation-code-blocks"
+   ],
+   "note": "Monorepo tree lists docs/ as documentation; Documentation Code Blocks gives highlight={...} line-counting conventions.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-33",
+   "pr": null,
+   "task": "Open a pull request for a finished change",
+   "kind": "convention",
+   "question": "What should a Next.js pull request title and description contain, and is there a template to follow?",
+   "keywords": "PR title description template",
+   "answers": [
+    "commit-and-pr-style",
+    "github-pull-requests#github-pull-requests",
+    "github-issues-comments-and-discussions#if-the-user-is-not-a-member"
+   ],
+   "note": "Descriptions: what changed and why, no AI footers, NEXT_JS_LLM marker at bottom; template .github/pull_request_template.md; no title rules.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "nextjs-34",
+   "pr": null,
+   "task": "Report a bug discovered while working on an unrelated change",
+   "kind": "convention",
+   "question": "If I find an unrelated bug, should I open an issue or a GitHub discussion, and what must it include?",
+   "keywords": "issue discussion bug report",
+   "answers": [
+    "github-issues-comments-and-discussions"
+   ],
+   "note": "Membership rule, bug_report.yml issue template, what agents may draft, NEXT_JS_LLM marker; issue-vs-discussion choice not explicit.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-35",
+   "pr": "#100423",
+   "task": "[lts-active] Don't load the app-page runtime in proxy.ts",
+   "kind": "convention",
+   "question": "How do I backport a merged fix to an LTS release line, and how should the backport PR be titled?",
+   "keywords": "backport lts-active PR",
+   "answers": [
+    "specialized-skills"
+   ],
+   "note": "Only the $backport-pr skill entry: cherry-pick merged canary PRs to releases/lts/active or maintenance; no title convention.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-36",
+   "pr": "#100121",
+   "task": "[cd] Gate release bot credentials behind GitHub environments",
+   "kind": "convention",
+   "question": "What are the rules for handling secrets — may I print environment variables or tokens in logs, commits, or PRs?",
+   "keywords": "secrets tokens environment variables",
+   "answers": [
+    "secrets-and-env-safety#secrets-and-env-safety"
+   ],
+   "note": "Intro rules: treat env values as sensitive; never print secrets in chat, commits or logs; redact output.",
+   "labeled": "agreed"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "nextjs-02",
+   "pr": "#100828",
+   "task": "test: properly gate some cache-component tests",
+   "kind": "how-it-works",
+   "question": "How do isNextDev, isNextStart and isNextDeploy get set, and how should a test use them to vary assertions?",
+   "keywords": "isNextDev isNextStart isNextDeploy",
+   "reason": "No doc mentions isNextDev/isNextStart/isNextDeploy or how mode flags get set; test gotchas only mention a 'mode check' in passing.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-06",
+   "pr": "#100138",
+   "task": "test: speed up use-cache-cross-deployment",
+   "kind": "convention",
+   "question": "Should tests in one suite share a single Next.js instance via nextTestSetup instead of starting a new server per test?",
+   "keywords": "nextTestSetup createNext",
+   "reason": "No doc covers sharing one Next.js instance per suite; nextTestSetup appears only in a fixture-directory example, and skipStart only for mode-specific tests.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-09",
+   "pr": "#100557",
+   "task": "Update Rspack development test manifest",
+   "kind": "how-it-works",
+   "question": "What are the per-bundler test manifests, and how do I update them when a test starts passing or failing?",
+   "keywords": "test manifest rspack turbopack",
+   "reason": "No doc mentions per-bundler test manifests or updating them; specialized-skills only names the $next-rspack and $gate-tests skills.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-10",
+   "pr": "#100118",
+   "task": "chore: Prevent concurrent pack-for-isolated-tests",
+   "kind": "how-it-works",
+   "question": "Why do e2e tests pack Next.js into an isolated install first, and can I skip that step to iterate faster?",
+   "keywords": "pack-for-isolated-tests skip",
+   "reason": "No doc covers packing Next.js into an isolated install for e2e tests, or skipping that step.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-14",
+   "pr": "#100768",
+   "task": "Enforce strict rustdoc (incl. private items) across the Rust workspace",
+   "kind": "how-to",
+   "question": "Which checks should I run on Rust crates before pushing — cargo fmt, clippy, rustdoc — and with which flags?",
+   "keywords": "cargo clippy fmt rustdoc",
+   "reason": "Only a 'just run cargo fmt' tip in development-anti-patterns#rustcargo; no clippy, rustdoc or flags documented.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-20",
+   "pr": "#100627",
+   "task": "Ignore flaky turbo-tasks-fs watcher tests in CI",
+   "kind": "troubleshooting",
+   "question": "A test keeps failing intermittently in CI; is there a list of known flaky tests, and how do I mark one?",
+   "keywords": "known flaky test CI",
+   "reason": "No doc mentions flaky tests or a known-flaky list; the $gate-tests catalog line in specialized-skills covers @gate skip directives, not flakiness.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-21",
+   "pr": "#100879",
+   "task": "[ci] Pin deploy test deployments to Node.js 22.x",
+   "kind": "how-to",
+   "question": "How do I run the deploy-mode e2e tests that deploy to Vercel, and what credentials or env vars do they need?",
+   "keywords": "deploy tests vercel credentials",
+   "reason": "Nothing explains running deploy-mode e2e tests or their credentials/env vars; only a $deploy-release-test skill pointer and a fork-PR repo-secrets aside exist.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-23",
+   "pr": "#100308",
+   "task": "Turbopack: don't scope hoist modules using direct eval",
+   "kind": "troubleshooting",
+   "question": "Turbopack snapshot tests fail after my change alters generated output; how do I regenerate the expected snapshot files?",
+   "keywords": "turbopack snapshot tests update",
+   "reason": "Only a Next.js inline-snapshot env-flag gotcha exists (development-anti-patterns#test-gotchas); nothing on regenerating Turbopack snapshot files.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-24",
+   "pr": "#100443",
+   "task": "Turbopack: compute client reference manifest parts once per reference, not per page",
+   "kind": "how-it-works",
+   "question": "What rules apply when writing turbo_tasks functions — Vc arguments, cells, resolving values, and operations?",
+   "keywords": "turbo_tasks function Vc",
+   "reason": "The knowledge base never covers turbo_tasks functions, Vc arguments, cells, value resolution or operations.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-25",
+   "pr": "#100597",
+   "task": "Fix webpack build dependency cell creation order",
+   "kind": "troubleshooting",
+   "question": "A turbo-tasks function reports an error about cell creation order; what causes it and how do I fix it?",
+   "keywords": "cell creation order",
+   "reason": "No doc discusses turbo-tasks cell creation order errors, their cause, or a fix.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-27",
+   "pr": "#100684",
+   "task": "Fix dist dir lockfile on filesystems with no or limited lockfile implementations (e.g. NFS)",
+   "kind": "convention",
+   "question": "When I add a new error message thrown from packages/next, do I need to assign it an error code?",
+   "keywords": "new error code errors.json",
+   "reason": "No doc mentions error codes, errors.json, or any rule for new error messages thrown from packages/next.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "nextjs-28",
+   "pr": "#100818",
+   "task": "Use fast-jwt instead of jsonwebtoken",
+   "kind": "convention",
+   "question": "Can I add a new npm dependency to packages/next directly, or must it be precompiled into src/compiled?",
+   "keywords": "add dependency packages/next compiled",
+   "reason": "No doc covers adding npm dependencies to packages/next or precompiling into src/compiled; 'pre-compiled' appears only in feature-flag wiring rules.",
+   "labeled": "agreed"
+  }
+ ]
+}
