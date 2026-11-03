@@ -35,7 +35,8 @@
     "experiment_guide/experiment_rollout",
     "feature_flags/_index",
     "real_time",
-    "testing_guide/end_to_end/best_practices/feature_flags"
+    "testing_guide/end_to_end/best_practices/feature_flags",
+    "documentation/site_architecture/automation"
    ]
   },
   {
@@ -296,7 +297,8 @@
     "i18n/merging_translations",
     "i18n/pluralization",
     "i18n/translation",
-    "secure_coding_guidelines/_index"
+    "secure_coding_guidelines/_index",
+    "fe_guide/vue"
    ]
   },
   {
@@ -457,7 +459,8 @@
     "internal_api/_index",
     "testing_guide/best_practices",
     "urls_in_gitlab",
-    "workhorse/gitlab_features"
+    "workhorse/gitlab_features",
+    "integrations/jenkins"
    ]
   },
   {
@@ -720,7 +723,8 @@
     "import_project",
     "logging",
     "sidekiq/limited_capacity_worker",
-    "user_contribution_mapping"
+    "user_contribution_mapping",
+    "stage_group_observability/dashboards/stage_group_dashboard"
    ]
   },
   {
@@ -797,7 +801,8 @@
     "pipelines/internals",
     "push_rules/_index",
     "secure_coding_guidelines/_index",
-    "testing_guide/end_to_end/feature_flag_testing"
+    "testing_guide/end_to_end/feature_flag_testing",
+    "contributing/merge_request_workflow"
    ]
   },
   {
@@ -865,7 +870,8 @@
     "pipelines/internals",
     "search/advanced_search_migration_styleguide",
     "secrets_manager/testing",
-    "testing_guide/frontend_testing"
+    "testing_guide/frontend_testing",
+    "testing_guide/contract/provider_tests"
    ]
   },
   {

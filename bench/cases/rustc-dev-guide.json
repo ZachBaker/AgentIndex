@@ -285,7 +285,8 @@
     "overview",
     "rustc-driver/getting-diagnostics",
     "tests/ci",
-    "tests/ui"
+    "tests/ui",
+    "diagnostics/diagnostic-items"
    ]
   },
   {
@@ -306,7 +307,8 @@
     "diagnostics/error-guaranteed",
     "git",
     "stabilization-report-template",
-    "ty"
+    "ty",
+    "fuzzing"
    ]
   },
   {
@@ -331,7 +333,8 @@
     "profiling",
     "profiling/with-perf",
     "profiling/with-rustc-perf",
-    "tests/compiletest"
+    "tests/compiletest",
+    "mir/optimizations"
    ]
   },
   {
@@ -353,7 +356,8 @@
     "diagnostics/translation",
     "macro-expansion",
     "rustc-driver/getting-diagnostics",
-    "tests/ui"
+    "tests/ui",
+    "diagnostics/error-codes"
    ]
   },
   {
@@ -481,7 +485,8 @@
     "feature-gate-check",
     "guides/editions",
     "stability-guarantees",
-    "stabilization-guide"
+    "stabilization-guide",
+    "stabilization-report-template"
    ]
   },
   {
@@ -528,7 +533,8 @@
     "tests/directives",
     "tests/minicore",
     "tests/ui",
-    "walkthroughs/test"
+    "walkthroughs/test",
+    "compiler-debugging"
    ]
   },
   {
@@ -591,7 +597,8 @@
     "getting-started",
     "macro-expansion",
     "overview",
-    "traits/resolution"
+    "traits/resolution",
+    "ambig-unambig-ty-and-consts"
    ]
   },
   {
@@ -658,7 +665,8 @@
     "borrow-check/region-inference/lifetime-parameters",
     "borrow-check/two-phase-borrows",
     "borrow-check/type-check",
-    "overview"
+    "overview",
+    "type-inference"
    ]
   },
   {
@@ -682,7 +690,8 @@
     "debuginfo/lldb-internals",
     "debuginfo/lldb-visualizers",
     "memory",
-    "sanitizers"
+    "sanitizers",
+    "mir/index"
    ]
   },
   {
