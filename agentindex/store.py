@@ -35,9 +35,11 @@ from .query import parse_query
 # then rebuilt from the markdown sources on next use.
 SCHEMA_VERSION = "1"
 TOKENIZER = "porter unicode61"
-# Field weights; each field's term frequency saturates separately, so a title
-# hit is worth ~3 body mentions, not ~1 (see knowledge/architecture/search-ranking.md).
-DOC_WEIGHTS = (3.0, 2.0, 1.5, 1.5, 1.5, 1.0)  # title, keywords, tags, summary, headings, body
+# Field weights. Each field's term frequency saturates separately, so a word in a
+# doc's title, summary and headings already counts once per field. Weighting titles
+# and ids up as well let narrow docs named after a query word outrank the doc that
+# answers it on real knowledge bases (see knowledge/architecture/search-ranking.md).
+DOC_WEIGHTS = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0)  # title, keywords, tags, summary, headings, body
 SECTION_WEIGHTS = (2.0, 0.5, 1.0)  # own heading, parent headings + doc title, body
 SECTIONS_PER_RESULT = 2
 MAX_LIMIT = 50

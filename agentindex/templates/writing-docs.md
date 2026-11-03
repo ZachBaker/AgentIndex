@@ -36,7 +36,7 @@ Lead with the answer...
 
 | Field | What it is for |
 |---|---|
-| `title` | Shown in results and weighted highest in search. Defaults to the first `# Heading`. |
+| `title` | Shown in results, and searched along with every other field. Defaults to the first `# Heading`. |
 | `summary` | One or two sentences shown under every search result: say what the doc answers. Defaults to the first paragraph (`description` also works). |
 | `tags` | A few broad categories, for filtering (`--tag`) and search. |
 | `keywords` | Words people search for that are not in the text: synonyms, abbreviations, old names. |
