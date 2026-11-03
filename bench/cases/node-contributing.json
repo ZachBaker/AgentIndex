@@ -4,12 +4,12 @@
  "labeling": {
   "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
   "agreement": {
-   "compared": 30,
-   "keep_drop_agree": 29,
-   "both_answered": 26,
-   "same_doc": 26,
-   "identical": 26,
-   "reconciled": 14
+   "compared": 40,
+   "keep_drop_agree": 39,
+   "both_answered": 34,
+   "same_doc": 34,
+   "identical": 34,
+   "reconciled": 6
   }
  },
  "cases": [
@@ -376,8 +376,8 @@
    "answers": [
     "commit-queue"
    ],
-   "note": "Whole doc: approval/wait-time rules, CI, hard-failure retry, and limitations (fresh CI/approval since last change, commit messages, main).",
-   "labeled": "reconciled"
+   "note": "Whole doc: approval/CI/wait-time rules, hard-failure retry, and limitations (CI and approval since last change, main target).",
+   "labeled": "agreed"
   },
   {
    "id": "node-33",
@@ -389,8 +389,8 @@
    "answers": [
     "backporting-to-release-lines#submitting-a-backport-pull-request"
    ],
-   "note": "Automated git node backport and manual cherry-pick steps, PR target/title, and backport label updates.",
-   "labeled": "reconciled"
+   "note": "Automated (git node backport) and manual cherry-pick steps, PR title/target, and label updates for vN.x-staging.",
+   "labeled": "agreed"
   },
   {
    "id": "node-34",
@@ -405,8 +405,8 @@
     "collaborator-guide#ltsversion-labels",
     "releases#1-update-the-staging-branch"
    ],
-   "note": "Cherry-pick flow from main to staging branches; dont-land-on/backport label meanings; releaser branch-diff excluding labels.",
-   "labeled": "reconciled"
+   "note": "Staging-branch cherry-pick flow and label meanings (dont-land-on, backport-requested) in FAQ, collaborator guide, releaser steps.",
+   "labeled": "agreed"
   },
   {
    "id": "node-35",
@@ -423,7 +423,7 @@
     "releases#5-create-release-commit",
     "releases#6-propose-release-on-github"
    ],
-   "note": "Release steps 1-6: LTS staging rules, proposal branch/automation, version, changelog-maker, release commit, proposal PR.",
+   "note": "Release steps 1-6: LTS staging rules, proposal branch/automation, version, changelog-maker changelog, release commit, proposal PR.",
    "labeled": "reconciled"
   },
   {
@@ -439,7 +439,7 @@
     "releases#alpha-releases-october-to-april",
     "releases#semver-major-release-april"
    ],
-   "note": "Yearly schedule, October branch-off with first Alpha at prior line's LTS, Alpha semver-majors, April out-of-Alpha to Current.",
+   "note": "Major releases: yearly schedule, branch-off (first Alpha at prior line's LTS), Alpha releases, April out-of-Alpha to Current.",
    "labeled": "reconciled"
   },
   {
@@ -452,8 +452,8 @@
    "answers": [
     "security-release-process#security-release-stewards"
    ],
-   "note": "Stewards table (company, person, date, upcoming rotation); stewards nominated via TSC issue and TSC consensus.",
-   "labeled": "reconciled"
+   "note": "Stewards table (company, person, release date) with upcoming rotation; stewards nominated via TSC issue and consensus.",
+   "labeled": "agreed"
   },
   {
    "id": "node-39",
@@ -465,8 +465,8 @@
    "answers": [
     "gn-build#build-with-gn"
    ],
-   "note": "Install depot_tools, fetch node (node-ci checkout), tools/gn-gen.py out/Release, then ninja -C out/Release node.",
-   "labeled": "reconciled"
+   "note": "Install depot_tools, fetch node (node-ci checkout), run tools/gn-gen.py, then ninja -C out/Release node.",
+   "labeled": "agreed"
   },
   {
    "id": "node-40",
@@ -478,8 +478,8 @@
    "answers": [
     "building-node-with-ninja"
    ],
-   "note": "Short single-topic doc: ./configure --ninja then make; parallel jobs, debug builds, custom NINJA path.",
-   "labeled": "reconciled"
+   "note": "Short single-topic doc: ./configure --ninja then make; debug builds, -j jobs, custom NINJA binary path.",
+   "labeled": "agreed"
   }
  ],
  "dropped": [
@@ -530,8 +530,8 @@
    "kind": "how-it-works",
    "question": "What happens during onboarding for a newly nominated collaborator, and what should be set up beforehand, like two-factor auth?",
    "keywords": "new collaborator onboarding",
-   "reason": "The collaborator onboarding guide is the repo-root onboarding.md, outside doc/contributing; only steward/ambassador onboarding is covered.",
-   "labeled": "reconciled"
+   "reason": "Not answered: the collaborator onboarding guide (onboarding.md) is at the repo root, outside doc/contributing; only steward/ambassador onboarding exists.",
+   "labeled": "agreed"
   },
   {
    "id": "node-37",
@@ -540,8 +540,8 @@
    "kind": "how-to",
    "question": "How do I submit and get review for a fix to an embargoed vulnerability without it becoming public before the release?",
    "keywords": "embargoed vulnerability fix PR",
-   "reason": "Docs only cover steward/releaser handling of nodejs-private patches, not how a fix author submits and gets private review.",
-   "labeled": "reconciled"
+   "reason": "Not answered: docs cover steward/releaser handling of nodejs-private patches, not how a fix author submits and gets private review.",
+   "labeled": "agreed"
   }
  ]
 }
