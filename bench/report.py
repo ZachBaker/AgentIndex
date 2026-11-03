@@ -8,6 +8,7 @@ from pathlib import Path
 from .evaluate import PHRASINGS
 
 SYSTEM_NAMES = {"agentindex": "AgentIndex", "bm25": "FTS5 bm25()", "grep": "grep"}
+CONTEXT_WINDOW = 200_000
 PHRASING_NAMES = {"question": "natural questions", "keywords": "search keywords"}
 
 
@@ -43,6 +44,8 @@ def render_report(results: dict, summary_only: bool = False) -> str:
     for phrasing in PHRASINGS:
         lines += [f"Asked as {PHRASING_NAMES[phrasing]}: answer ranked first · in the top 3.", ""]
         lines += _retrieval_table(corpora, phrasing) + [""]
+    if results.get("by_kind"):
+        lines += ["## Retrieval by kind of question", "", *_kind_table(results), ""]
     lines += ["## Context cost", "", *_cost_table(results), "", "## Speed", ""]
     lines += _speed_table(results) + ["", "## Corpora", "", *_corpora_table(results)]
     lines += ["", "## Misses", "", *_misses(corpora)]
@@ -94,6 +97,22 @@ def _retrieval_table(corpora: list[dict], phrasing: str) -> list[str]:
     return rows
 
 
+def _kind_table(results: dict) -> list[str]:
+    rows = [
+        "Natural questions, all corpora: answer ranked first · in the top 3.",
+        "",
+        "| Kind | Cases | AgentIndex | FTS5 bm25() | grep |",
+        "|---|---|---|---|---|",
+    ]
+    for kind, stats in results["by_kind"].items():
+        question = stats["question"]
+        cells = [f"{_pct(question[s]['hit1'])} · {_pct(question[s]['hit3'])}" for s in SYSTEM_NAMES]
+        cells[0] = f"**{cells[0]}**"
+        n = question["agentindex"]["n"]
+        rows.append(f"| {kind} | {n} | " + " | ".join(cells) + " |")
+    return rows
+
+
 def _cost_table(results: dict) -> list[str]:
     pointer = results["settings"]["pointer_tokens"]
     rows = [
@@ -111,10 +130,14 @@ def _cost_table(results: dict) -> list[str]:
         tokens = corpus["tokens"]["question"]
         index_cost = tokens["agentindex"]["median"]
         breakeven = (corpus["tokens_total"] - pointer) // index_cost if index_cost else 0
+        total = _num(corpus["tokens_total"])
+        if corpus["tokens_total"] > CONTEXT_WINDOW:
+            total += " (does not fit)"
         rows.append(
-            f"| {corpus['title']} | {_num(corpus['tokens_total'])} |"
-            f" {_num(tokens['grep']['median'])} | **{_num(index_cost)}** | {_num(breakeven)} |"
+            f"| {corpus['title']} | {total} | {_num(tokens['grep']['median'])} |"
+            f" **{_num(index_cost)}** | {_num(breakeven)} |"
         )
+    rows += ["", f'"Does not fit": more than a {CONTEXT_WINDOW // 1000}k-token context window.']
     return rows
 
 
@@ -143,10 +166,11 @@ def _corpora_table(results: dict) -> list[str]:
         "Each corpus is pinned to a commit and indexed as it is, with no per-corpus tuning."
         " Questions were written from real merged PRs (or common tasks) without looking at the"
         " docs; the answers were labeled separately, and questions the docs do not answer were"
-        " dropped.",
+        " dropped. Two labelers worked independently on every question; the last column is how"
+        " often they named the same answering doc when both found one.",
         "",
-        "| Corpus | Source | Indexed | Questions kept / written |",
-        "|---|---|---|---|",
+        "| Corpus | Source | Indexed | Questions kept / written | Labelers agreed |",
+        "|---|---|---|---|---|",
     ]
     for corpus in results["corpora"]:
         how = (
@@ -155,9 +179,15 @@ def _corpora_table(results: dict) -> list[str]:
             else f"{corpus['docs']} docs"
         )
         source = f"[{corpus['url'].split('/')[3]}/{corpus['url'].split('/')[4]}]({corpus['url']})"
+        agreement = (corpus.get("labeling") or {}).get("agreement") or {}
+        agreed = (
+            _pct(agreement["same_doc"] / agreement["both_answered"])
+            if agreement.get("both_answered")
+            else "–"
+        )
         rows.append(
             f"| {corpus['title']} | {source} @ `{corpus['commit'][:10]}` ({corpus['license']}) |"
-            f" {how} | {corpus['n']} / {corpus['written']} |"
+            f" {how} | {corpus['n']} / {corpus['written']} | {agreed} |"
         )
     return rows
 

@@ -195,6 +195,7 @@ class RunTest(BenchTestCase):
         text = report.render_report(self.results)
         self.assertIn("| Fake docs | 2 |", text)
         self.assertIn("## Misses", text)
+        self.assertIn("| other | 2 |", text)  # cases without a kind, in the by-kind table
         out = Path(tempfile.mkdtemp(prefix="agentindex-bench-out-"))
         self.addCleanup(shutil.rmtree, out, True)
         paths = report.write_results(self.results, out)

@@ -92,6 +92,7 @@ class CaseFile:
     cases: list[Case] = field(default_factory=list)
     dropped: list[dict] = field(default_factory=list)  # blind questions the docs do not answer
     about: str = ""
+    labeling: dict = field(default_factory=dict)  # how answers were labeled, and agreement
 
 
 def load_cases(name: str) -> CaseFile:
@@ -101,7 +102,9 @@ def load_cases(name: str) -> CaseFile:
     data = json.loads(path.read_text(encoding="utf-8"))
     fields = set(Case.__dataclass_fields__)
     cases = [Case(**{k: v for k, v in c.items() if k in fields}) for c in data.get("cases", [])]
-    return CaseFile(name, cases, data.get("dropped", []), data.get("about", ""))
+    return CaseFile(
+        name, cases, data.get("dropped", []), data.get("about", ""), data.get("labeling", {})
+    )
 
 
 def check_cases(corpora: list[Corpus]) -> list[str]:
@@ -200,6 +203,7 @@ def run_benchmark(corpora: list[Corpus], log=print) -> dict:
         },
         "corpora": results,
         "overall": aggregate([c for r in results for c in r["cases"]]),
+        "by_kind": by_kind([c for r in results for c in r["cases"]]),
     }
 
 
@@ -299,6 +303,7 @@ def _run_corpus(corpus: Corpus, log) -> dict:
         "original": corpus.paths[0] if corpus.original else None,
         "written": len(case_file.cases) + len(case_file.dropped),
         "dropped": case_file.dropped,
+        "labeling": case_file.labeling,
         "speed": {
             "cold_index_s": round(cold, 3),
             "resync_ms": round(resync * 1000, 2),
@@ -469,6 +474,23 @@ def aggregate(cases: list[dict]) -> dict:
         }
     out["search_ms"] = _percentiles(times)
     return out
+
+
+def by_kind(cases: list[dict]) -> dict:
+    """Retrieval per kind of question (how-to, troubleshooting, ...), for each phrasing."""
+    kinds: dict[str, list[dict]] = {}
+    for case in cases:
+        kinds.setdefault(case.get("kind") or "other", []).append(case)
+    return {
+        kind: {
+            phrasing: {
+                system: _retrieval([case[phrasing][system]["rank"] for case in group])
+                for system in SYSTEMS
+            }
+            for phrasing in PHRASINGS
+        }
+        for kind, group in sorted(kinds.items())
+    }
 
 
 def _retrieval(ranks: list[int | None]) -> dict:
