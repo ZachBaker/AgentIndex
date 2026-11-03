@@ -1,0 +1,587 @@
+{
+ "corpus": "gitlab-development",
+ "about": "Questions written blind from merged gitlab-org/gitlab merge requests (2026), without seeing the docs; answers labeled separately against the pinned docs.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 40,
+   "keep_drop_agree": 40,
+   "both_answered": 39,
+   "same_doc": 39,
+   "identical": 29,
+   "reconciled": 11
+  }
+ },
+ "cases": [
+  {
+   "id": "gitlab-01",
+   "pr": "!265798",
+   "task": "Remove the duo_workflow_write_incremental_only feature flag",
+   "kind": "how-to",
+   "question": "This feature flag is fully rolled out now — what are all the steps to remove it and its YAML definition from the codebase?",
+   "keywords": "remove feature flag yaml",
+   "answers": [
+    "feature_flags/controls#zero-downtime-upgrade-compatibility",
+    "feature_flags/controls#cleanup-chatops"
+   ],
+   "note": "Zero-downtime subsection lists the removal MR steps (label, refs and tests, YAML), then the ChatOps delete and closing the rollout issue.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-02",
+   "pr": "!267523",
+   "task": "Move the scan execution schedule flags from wip to beta",
+   "kind": "convention",
+   "question": "What's the difference between wip and beta feature flag types, and when should a flag's type be changed from wip to beta?",
+   "keywords": "feature flag type wip beta",
+   "answers": [
+    "feature_flags/_index#wip-type",
+    "feature_flags/_index#beta-type"
+   ],
+   "note": "wip and beta type sections give purpose, constraints and lifespan; a wip flag can change to beta once the feature is complete.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-03",
+   "pr": "!266477",
+   "task": "Backfill NULL mcp_server_enabled on namespace settings",
+   "kind": "how-to",
+   "question": "How should I backfill NULL values in a namespace_settings column — is a regular migration fine, or do I need batched background processing?",
+   "keywords": "backfill null column migration",
+   "answers": [
+    "database/not_null_constraints#data-migration-to-fix-existing-records-current-release",
+    "migration_style_guide#choose-an-appropriate-migration-type",
+    "migration_style_guide#how-long-a-migration-should-take",
+    "database/batched_background_migrations#when-to-use-batched-background-migrations",
+    "database/background_operations#decision-tree"
+   ],
+   "note": "Fewer than 1000 NULL rows: post-deploy migration, otherwise a BBM. Also the migration timing limits, BBM when-to-use, and the data-operation decision tree.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-04",
+   "pr": "!258290",
+   "task": "Remove unused search curation settings columns from application_settings",
+   "kind": "how-to",
+   "question": "What's the safe sequence for dropping unused columns from application_settings so code running during the deploy doesn't break?",
+   "keywords": "remove unused columns application_settings",
+   "answers": [
+    "database/avoiding_downtime_in_migrations#dropping-columns",
+    "application_settings#required-cleanup-steps"
+   ],
+   "note": "Ignore the column in M, drop it with a post-deploy migration in M+1, remove the ignore rule in M+2. application_settings restates this order.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-05",
+   "pr": "!264858",
+   "task": "Add merge_request_iid parameter to save_pipeline MCP tool",
+   "kind": "how-to",
+   "question": "How do I add a new input parameter to an existing GitLab MCP server tool, and where are those tools defined?",
+   "keywords": "MCP server tool parameter",
+   "answers": [
+    "duo_agent_platform/mcp/_index#modifying-an-existing-tool",
+    "duo_agent_platform/mcp/_index#implement-a-tool-from-a-rest-api-route",
+    "duo_agent_platform/mcp/graphql_integration#creating-new-tools---step-by-step-guide"
+   ],
+   "note": "Add only optional params, never a new version. Tools live in route_setting :mcp params or app/services/mcp/tools input_schema.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-06",
+   "pr": "!267307",
+   "task": "Cover per-row reads on a page of Duo Workflows with a query-count spec",
+   "kind": "how-to",
+   "question": "How do I write a spec proving that loading a page of records doesn't run extra queries per row, i.e. no N+1?",
+   "keywords": "query count spec N+1",
+   "answers": [
+    "database/query_recorder#how-a-queryrecorder-works",
+    "database/query_recorder#recommended-pattern",
+    "api_styleguide#verifying-with-tests",
+    "api_graphql_styleguide#testing-tips-and-tricks"
+   ],
+   "note": "QueryRecorder: record a control count, add records, assert the same count. The REST and GraphQL guides have example N+1 specs.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-07",
+   "pr": "!250058",
+   "task": "Delete seat data syncing worker classes (deprecation step M+2)",
+   "kind": "how-to",
+   "question": "What are the release-by-release steps for deleting a Sidekiq worker class, and what happens to jobs still sitting in the queue?",
+   "keywords": "delete sidekiq worker class",
+   "answers": [
+    "sidekiq/compatibility_across_updates#removing-worker-classes"
+   ],
+   "note": "M: stop enqueuing and make perform a no-op. M+1: sidekiq_remove_jobs migration clears queued jobs. M+2: delete the class.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-08",
+   "pr": "!266591",
+   "task": "Deprecate GitlabSubscriptionUsageUserEvent.eventType for flowType",
+   "kind": "how-to",
+   "question": "How do I deprecate a GraphQL field in favor of a new one, and what milestone or reason details must I provide?",
+   "keywords": "deprecate graphql field",
+   "answers": [
+    "api_graphql_styleguide#deprecating-schema-items",
+    "api_graphql_styleguide#create-a-deprecation-issue",
+    "api_graphql_styleguide#mark-the-item-as-deprecated",
+    "api_graphql_styleguide#deprecation-reason-style-guide"
+   ],
+   "note": "Create a deprecation issue, then set deprecated: { reason:, milestone: }. The reason must name the replacement, for example 'Use `newField`'.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-09",
+   "pr": "!265509",
+   "task": "Add admin API to transfer users to an organization",
+   "kind": "how-to",
+   "question": "What's involved in adding a new admin-only REST API endpoint with Grape — params, response entity, specs, and documentation?",
+   "keywords": "admin REST API endpoint grape",
+   "answers": [
+    "api_styleguide#methods-and-parameters-description",
+    "api_styleguide#declared-parameters",
+    "api_styleguide#entities",
+    "api_styleguide#testing",
+    "api_styleguide#documentation",
+    "documentation/restful_api_styleguide"
+   ],
+   "note": "API style guide covers the Grape desc/params DSL, declared params, entities, schema specs and required docs. The REST docs guide covers writing the docs. The admin-only check is not covered.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-10",
+   "pr": "!266823",
+   "task": "Let fine-grained tokens read blame and CODEOWNERS validation in GraphQL",
+   "kind": "how-to",
+   "question": "How do I make a GraphQL field accessible to fine-grained personal access tokens — what permission do I need to declare?",
+   "keywords": "fine-grained token graphql permission",
+   "answers": [
+    "permissions/granular_access/graphql_implementation_guide#step-5-add-authorization-directives-to-types-and-mutations",
+    "permissions/granular_access/graphql_implementation_guide#step-2-determine-permissions-needed",
+    "permissions/granular_access/graphql_architecture#scenario-4-root-query-field-with-boundary_argument"
+   ],
+   "note": "Declare authorize_granular_token with a read_<resource> permission and a boundary on the type or resolver. Scenario 4 shows declaring it on a field.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-11",
+   "pr": "!263059",
+   "task": "Migrate status checks store to Pinia",
+   "kind": "how-to",
+   "question": "What's our recommended approach for migrating an existing Vuex store to Pinia, and how should the component specs change?",
+   "keywords": "migrate vuex store pinia",
+   "answers": [
+    "fe_guide/pinia#migrating-from-vuex",
+    "fe_guide/pinia#migrating-component-tests",
+    "fe_guide/pinia#unit-testing-components-with-the-store"
+   ],
+   "note": "Pinia guide: single vs multi-step migration, codemods; component specs: stub async actions, createTestingPinia setup.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-12",
+   "pr": "!264620",
+   "task": "Render group visibility description links in the Vue settings form",
+   "kind": "how-to",
+   "question": "How do I put a link inside a translated sentence in a Vue component without concatenating strings or using v-html?",
+   "keywords": "translated string link vue",
+   "answers": [
+    "i18n/externalization#avoid-splitting-sentences-when-adding-links",
+    "i18n/externalization#interpolation"
+   ],
+   "note": "Use GlSprintf with %{linkStart}/%{linkEnd} placeholders and a #link slot rendering GlLink.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-13",
+   "pr": "!254016",
+   "task": "Add a duration histogram for Global Search",
+   "kind": "how-to",
+   "question": "How do I add a Prometheus histogram for Global Search duration, and how should I pick buckets and labels?",
+   "keywords": "duration histogram prometheus metric",
+   "answers": [
+    "prometheus_metrics"
+   ],
+   "note": "Steps to add a metric (Gitlab::Metrics.histogram), naming, low-cardinality labels; no explicit bucket-selection guidance.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-14",
+   "pr": "!266615",
+   "task": "Always serve cached AI model catalog when AI Gateway fails",
+   "kind": "how-to",
+   "question": "How do I run the AI Gateway locally alongside GDK so I can test how Rails behaves when it's unavailable?",
+   "keywords": "AI gateway local GDK",
+   "answers": [
+    "ai_features/_index#set-up-your-local-development-environment"
+   ],
+   "note": "Points to GDK AI setup for local AIGW, gdk tail gitlab-ai-gateway, local model-selection env var; no outage testing.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-15",
+   "pr": "!265907",
+   "task": "Add models attributes for Duo Code Review depth cascading settings",
+   "kind": "how-to",
+   "question": "How do I add a new cascading namespace setting that a group can lock so its subgroups and projects inherit it?",
+   "keywords": "add cascading setting namespace",
+   "answers": [
+    "cascading_settings#add-a-new-cascading-setting-to-groups-only",
+    "cascading_settings#add-a-new-cascading-setting-to-projects"
+   ],
+   "note": "cascading_attr on NamespaceSetting plus add_cascading_namespace_setting migration (value and lock_ columns); projects use project_settings.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-16",
+   "pr": "!260026",
+   "task": "Add loose foreign key from deployments.user_id to users",
+   "kind": "convention",
+   "question": "Should deployments.user_id point to users with a loose foreign key rather than a real database foreign key, and when is each appropriate?",
+   "keywords": "loose foreign key users",
+   "answers": [
+    "database/multiple_databases#foreign-keys-that-cross-databases",
+    "database/loose_foreign_keys#problem-statement",
+    "organization/sharding/_index#cross-schema-references"
+   ],
+   "note": "LFKs for references across databases/schemas (users is in a different DB, user_id example); regular FKs otherwise.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-17",
+   "pr": "!266034",
+   "task": "Take deploy key organization from the project",
+   "kind": "convention",
+   "question": "How do I decide which sharding key a table like deploy_keys should use — organization_id, namespace_id or project_id — and where is it declared?",
+   "keywords": "sharding key organization_id table",
+   "answers": [
+    "organization/sharding/_index#choosing-the-right-sharding-key",
+    "organization/sharding/_index#sharding-principles"
+   ],
+   "note": "Most specific key: project_id/namespace_id; organization_id only for root models; declared as sharding_key in db/docs YAML.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-18",
+   "pr": "!266938",
+   "task": "Use sticky data consistency for ExecuteApprovalHooksWorker",
+   "kind": "convention",
+   "question": "When should a Sidekiq worker use sticky rather than delayed or always data consistency, given replica lag?",
+   "keywords": "sidekiq data_consistency sticky delayed",
+   "answers": [
+    "sidekiq/worker_attributes#trading-immediacy-for-reduced-primary-load"
+   ],
+   "note": "Table: sticky preferred for fast jobs; delayed when delay is fine (not cron/no-retry); always strongly discouraged.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-19",
+   "pr": "!255848",
+   "task": "Always validate KubeClient API URLs against UrlBlocker",
+   "kind": "convention",
+   "question": "What's the required way to make outbound HTTP requests to user-supplied URLs so they can't reach internal network addresses?",
+   "keywords": "UrlBlocker validate outbound URL",
+   "answers": [
+    "secure_coding_guidelines/ruby#mitigations",
+    "secure_coding_guidelines/_index#mitigations-1"
+   ],
+   "note": "Use Gitlab::HTTP (respects outbound request settings) and Gitlab::HTTP_V2::UrlBlocker; else feature-specific IP blocking.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-21",
+   "pr": "!262596",
+   "task": "Add dismissed column to duo_workflows_workflows",
+   "kind": "convention",
+   "question": "What do database reviewers expect in the MR description when I add a migration, such as migrate and rollback output?",
+   "keywords": "database review migration MR",
+   "answers": [
+    "database_review#migrations",
+    "database_review#preparation-when-adding-migrations"
+   ],
+   "note": "Required > Migrations: reviewers check db:migrate/db:rollback output from db:check-migrations; plus migration prep checklist.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-22",
+   "pr": "!267302",
+   "task": "Use the SaaS feature check in the Code Suggestions API",
+   "kind": "convention",
+   "question": "Should GitLab.com-only behavior be gated with Gitlab.com? or a SaaS feature check, and how do I register a new one?",
+   "keywords": "saas feature check gitlab.com",
+   "answers": [
+    "ee_features#saas-only-feature",
+    "ee_features#implementing-a-saas-only-feature-with-gitlabsaasfeature_available"
+   ],
+   "note": "Prefer Gitlab::Saas.feature_available? over Gitlab.com?; add to FEATURES, create YAML with bin/saas-feature.rb.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-23",
+   "pr": "!266632",
+   "task": "Fix 500 for quick-action-only comments in Rapid Diffs commit discussions",
+   "kind": "convention",
+   "question": "Does a user-facing bug fix need a changelog entry, and how do I add one with the right category?",
+   "keywords": "changelog entry bug fix",
+   "answers": [
+    "changelog#what-warrants-a-changelog-entry",
+    "changelog#how-to-generate-a-changelog-entry"
+   ],
+   "note": "User-facing changes need an entry; add a Changelog git trailer. The full category list is in user docs outside the KB.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-24",
+   "pr": "!266659",
+   "task": "Add log-only concurrent session limit on workflow transitions",
+   "kind": "convention",
+   "question": "For a log-only check in a service, which logger class should I use and how should the structured log fields be named?",
+   "keywords": "structured logging logger fields",
+   "answers": [
+    "logging#how-to-use-json-logging",
+    "logging#include-a-class-attribute",
+    "logging#logging-durations"
+   ],
+   "note": "JsonLogger subclass and key-value fields in how-to; AppJsonLogger with Loggable adds class attribute; duration keys end _s.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-25",
+   "pr": "!266753",
+   "task": "Read current project authorizations from the primary",
+   "kind": "how-it-works",
+   "question": "How does database load balancing choose between primary and replicas during a web request, and how do I force a primary read?",
+   "keywords": "load balancing read primary replica",
+   "answers": [
+    "database/load_balancing#query-routing",
+    "database/load_balancing#special-routing-blocks",
+    "database/load_balancing#primary-sticking"
+   ],
+   "note": "Routing order in query-routing; use_primary/use_primary! in special-routing-blocks; per-user sticking after writes in primary-sticking.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-26",
+   "pr": "!267301",
+   "task": "Defer the Repository X-Ray scan worker on database health signals",
+   "kind": "how-it-works",
+   "question": "How does deferring a Sidekiq worker on database health signals work, and what indicators does it check before running?",
+   "keywords": "defer worker database health",
+   "answers": [
+    "sidekiq/_index#deferring-sidekiq-workers"
+   ],
+   "note": "defer_on_database_health_signal opt-in, backoff delays, default indicators (autovacuum, WAL, Patroni apdex, WAL rate).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-27",
+   "pr": "!267377",
+   "task": "Lower complexity overrides for board list queries",
+   "kind": "how-it-works",
+   "question": "How is GraphQL query complexity calculated, and how do custom complexity values on a field or resolver count toward the limit?",
+   "keywords": "graphql complexity override",
+   "answers": [
+    "api_graphql_styleguide#max-complexity",
+    "api_graphql_styleguide#field-complexity",
+    "api_graphql_styleguide#query-limits"
+   ],
+   "note": "Fields add 1 by default; custom field complexity; resolver_complexity example; limits defined in gitlab_schema.rb.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-28",
+   "pr": "!267172",
+   "task": "Check project membership first in `Ai::Catalog::ItemPolicy`",
+   "kind": "how-it-works",
+   "question": "In DeclarativePolicy, does the order of rules and conditions affect which ones get evaluated and how expensive a permission check is?",
+   "keywords": "DeclarativePolicy rule order",
+   "answers": [
+    "policies#scores-order-performance",
+    "permissions/review_guidelines#keep-conditions-cheap-and-side-effect-free"
+   ],
+   "note": "Rules are sorted by score with short-circuiting and caching. The review guidelines say to put cheap checks first inside conditions.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-29",
+   "pr": "!264639",
+   "task": "Read EE-only paths from a shared list in as-if-foss jobs",
+   "kind": "how-it-works",
+   "question": "How do the as-if-foss CI jobs work — how do they run the test suite as though the ee/ directory didn't exist?",
+   "keywords": "as-if-foss jobs EE paths",
+   "answers": [
+    "pipelines/_index#as-if-foss-jobs-and-cross-project-downstream-pipeline"
+   ],
+   "note": "Jobs set FOSS_ONLY=1 and remove EE-only paths listed in .gitlab/ee-only-paths.txt; trigger labels listed.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-30",
+   "pr": "!266291",
+   "task": "Cache DORA aggregate metrics and performance scores",
+   "kind": "how-it-works",
+   "question": "Which Redis instance backs Rails.cache in GitLab, and are there conventions for cache keys and expiry times?",
+   "keywords": "Rails.cache redis expiry",
+   "answers": [
+    "redis#caching",
+    "redis#gitlabrediscachesharedstatequeues",
+    "redis#key-naming",
+    "caching#expires_in"
+   ],
+   "note": "redis#caching names redis-cluster-cache; Gitlab::Redis::Cache section: same instance, 8h default TTL; key-naming; expires_in.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-31",
+   "pr": "!266043",
+   "task": "Look up GitHub import target namespace in any organization",
+   "kind": "how-it-works",
+   "question": "How does the GitHub importer work end to end — which stages and Sidekiq workers run after an import is started?",
+   "keywords": "GitHub importer stages workers",
+   "answers": [
+    "github_importer#architecture-overview",
+    "github_importer#stages",
+    "github_importer#advancing-stages"
+   ],
+   "note": "Architecture overview traces import start; Stages lists the ten stage workers; Advancing stages explains AdvanceStageWorker.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-32",
+   "pr": "!264011",
+   "task": "Debounce policy configuration sync after policy project changes",
+   "kind": "how-it-works",
+   "question": "How does Sidekiq job deduplication treat jobs scheduled with a delay — is a duplicate enqueue dropped while one is still pending?",
+   "keywords": "sidekiq deduplicate debounce jobs",
+   "answers": [
+    "sidekiq/idempotent_jobs#scheduling-jobs-in-the-future"
+   ],
+   "note": "Delayed jobs aren't deduplicated by default; opt in with `deduplicate :until_executing, including_scheduled: true`.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "gitlab-33",
+   "pr": "!263608",
+   "task": "Show an icon for renamed files in the file browser",
+   "kind": "where",
+   "question": "Where can I browse the available SVG icon names to use with sprite_icon in HAML or GlIcon in Vue?",
+   "keywords": "svg icon sprite_icon",
+   "answers": [
+    "fe_guide/icons#usage-in-hamlrails",
+    "fe_guide/icons#usage-in-vue"
+   ],
+   "note": "sprite_icon and GlIcon sections point to the GitLab SVG previewer (design.gitlab.com/svgs) for icon names.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-34",
+   "pr": "!266113",
+   "task": "Update Danger bot text for documentation changes",
+   "kind": "where",
+   "question": "Where are the Danger rules that post messages on documentation MRs defined, and how can I test a change locally?",
+   "keywords": "danger rules documentation",
+   "answers": [
+    "documentation/site_architecture/_index#danger-bot",
+    "dangerbot#implementation-details",
+    "dangerbot#run-danger-locally"
+   ],
+   "note": "Docs rules live in danger/documentation/Dangerfile; dangerbot covers layout, spec/tooling/danger specs, bin/rake danger_local.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-35",
+   "pr": "!263594",
+   "task": "Security: Update activestorage from 7.2.3.1 to 7.2.4",
+   "kind": "troubleshooting",
+   "question": "After bumping a gem version, bundle install in CI fails with a checksum error — how do I update Gemfile.checksum?",
+   "keywords": "Gemfile.checksum gem update",
+   "answers": [
+    "gemfile#bundler-checksum-verification",
+    "gemfile#updating-the-checksum-file"
+   ],
+   "note": "bundler-checksum gem replaced by native Bundler checksums; bundle install updates CHECKSUMS in Gemfile.lock.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-36",
+   "pr": "!267532",
+   "task": "Fix RSpec/FeatureCategory in metrics_spec",
+   "kind": "troubleshooting",
+   "question": "RuboCop reports RSpec/FeatureCategory on a spec file — how do I find the correct feature_category value to add?",
+   "keywords": "RSpec/FeatureCategory feature_category",
+   "answers": [
+    "feature_categorization/_index#rspec-examples"
+   ],
+   "note": "Use a value from config/feature_categories.yml on RSpec.describe; RSpec/FeatureCategory cop flags missing ones.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-37",
+   "pr": "!266826",
+   "task": "Fix rules_diff_spec failing under fast_spec_helper",
+   "kind": "troubleshooting",
+   "question": "A spec using fast_spec_helper fails with uninitialized constant errors — what does fast_spec_helper load, and how do I require dependencies?",
+   "keywords": "fast_spec_helper uninitialized constant",
+   "answers": [
+    "testing_guide/best_practices#fast-unit-tests"
+   ],
+   "note": "Explains what fast_spec_helper skips/loads (lib/ autoload, ActiveSupport) and using require_dependency for gems.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-38",
+   "pr": "!267177",
+   "task": "Wait for the RSS link href in the dashboard issues filter spec",
+   "kind": "troubleshooting",
+   "question": "A feature spec intermittently fails because an element's attribute isn't set yet — which wait helpers should I use instead of sleep?",
+   "keywords": "flaky feature spec capybara wait",
+   "answers": [
+    "testing_guide/best_practices#prefer-waiting-matchers-over-reading-element-values",
+    "testing_guide/best_practices#poll-for-browser-side-effects-with-wait_for"
+   ],
+   "note": "Use retrying have_* waiting matchers instead of reading element values; wait_for helper only as last resort.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-39",
+   "pr": "!266181",
+   "task": "Reuse ListRefs branch heads in the conflict check",
+   "kind": "troubleshooting",
+   "question": "Specs fail with Gitlab::GitalyClient::TooManyInvocationsError after adding a ListRefs call — what's the limit and how do I fix it?",
+   "keywords": "TooManyInvocationsError gitaly",
+   "answers": [
+    "gitaly#toomanyinvocationserror-errors"
+   ],
+   "note": "Limit is 30 Gitaly calls per request/job; isolate the N+1, wrap in allow_n_plus_1_calls.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "gitlab-40",
+   "pr": "!261820",
+   "task": "Use consistent credits usage copy on the user credits dashboard",
+   "kind": "troubleshooting",
+   "question": "CI fails saying locale/gitlab.pot is outdated after I changed some UI copy — how do I regenerate it?",
+   "keywords": "locale gitlab.pot outdated",
+   "answers": [
+    "i18n/externalization#updating-the-po-files-with-the-new-content",
+    "contributing/first_contribution/contribute-gdk#update-the-translation-files"
+   ],
+   "note": "Run tooling/bin/gettext_extractor locale/gitlab.pot and commit the regenerated file.",
+   "labeled": "agreed"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "gitlab-20",
+   "pr": "!267417",
+   "task": "Fix stale top-level describe names in EE Jest specs (1 of 2)",
+   "kind": "convention",
+   "question": "What should the top-level describe block in a Jest spec be named — the component name, the file path, or something else?",
+   "keywords": "jest top-level describe name",
+   "reason": "Docs only give describe naming for methods and RSpec top-level ClassName; no Jest top-level describe naming rule, examples are inconsistent.",
+   "labeled": "agreed"
+  }
+ ]
+}
