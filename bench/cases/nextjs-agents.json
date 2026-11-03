@@ -203,7 +203,13 @@
     "context-efficient-workflows#batch-edits-before-building"
    ],
    "note": "linting-and-types: pnpm types / pnpm typescript (root tsconfig); pnpm --filter=next types in the other two.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "codebase-structure",
+    "development-anti-patterns",
+    "development-tips",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-16",
@@ -216,7 +222,12 @@
     "commit-and-pr-style"
    ],
    "note": "Pre-validate block: exact prettier and eslint commands the pre-commit hook runs on changed files.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "codebase-structure",
+    "linting-and-types",
+    "rebuilding-before-running-tests"
+   ]
   },
   {
    "id": "nextjs-17",
@@ -229,7 +240,15 @@
     "linting-and-types"
    ],
    "note": "`pnpm lint` runs full lint including ast-grep; no ast-grep-specific command is documented.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "context-efficient-workflows",
+    "development-anti-patterns",
+    "pr-status-ci-failures-and-reviews",
+    "secrets-and-env-safety",
+    "specialized-skills",
+    "testing"
+   ]
   },
   {
    "id": "nextjs-18",
@@ -242,7 +261,14 @@
     "development-anti-patterns#test-gotchas"
    ],
    "note": "Test Gotchas: match exact CI env vars (pr-status Job Environment Variables), CI command/mode, build_and_test.yml afterBuild flags.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "fast-local-development",
+    "github-pull-requests",
+    "pr-status-ci-failures-and-reviews",
+    "secrets-and-env-safety",
+    "specialized-skills"
+   ]
   },
   {
    "id": "nextjs-19",
@@ -255,7 +281,15 @@
     "pr-status-ci-failures-and-reviews"
    ],
    "note": "Dedicated doc: use the $pr-status-triage skill (scripts/pr-status.js) for CI failures; the commands live in that skill.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-and-pr-style",
+    "context-efficient-workflows",
+    "development-anti-patterns",
+    "github-issues-comments-and-discussions",
+    "github-pull-requests",
+    "specialized-skills"
+   ]
   },
   {
    "id": "nextjs-22",
@@ -268,7 +302,14 @@
     "writing-tests#test-writing-expectations"
    ],
    "note": "Gives the location turbopack/crates/turbopack-tests/tests/execution/; adding or running a new one is not covered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "codebase-structure",
+    "development-anti-patterns",
+    "fast-local-development",
+    "rebuilding-before-running-tests",
+    "testing"
+   ]
   },
   {
    "id": "nextjs-26",
@@ -281,7 +322,15 @@
     "development-anti-patterns#development-anti-patterns"
    ],
    "note": "Intro 'Core runtime/bundling rules': new flags get type in config-shared.ts, schema in config-schema.ts, define-env.ts if bundled.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-and-pr-style",
+    "github-pull-requests",
+    "linting-and-types",
+    "specialized-skills",
+    "this-is-not-the-turborepo-you-know",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-29",
@@ -294,7 +343,14 @@
     "development-anti-patterns#development-anti-patterns"
    ],
    "note": "Intro core rules: require() behind compile-time branches for DCE; force Node-only gating flags false in edge builds.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "codebase-structure",
+    "context-efficient-workflows",
+    "fast-local-development",
+    "rebuilding-before-running-tests",
+    "specialized-skills"
+   ]
   },
   {
    "id": "nextjs-30",
@@ -307,7 +363,14 @@
     "codebase-structure#monorepo-overview"
    ],
    "note": "Says pnpm monorepo and lists each top-level folder's contents; the workspace declaration file is not named.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "development-tips",
+    "fast-local-development",
+    "github-issues-comments-and-discussions",
+    "this-is-not-the-turborepo-you-know"
+   ]
   },
   {
    "id": "nextjs-31",
@@ -320,7 +383,12 @@
     "context-efficient-workflows"
    ],
    "note": "Intro bullet: generated dist/, node_modules/, .next/ are search-only, don't read; src/compiled not mentioned.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "codebase-structure",
+    "development-anti-patterns",
+    "specialized-skills"
+   ]
   },
   {
    "id": "nextjs-32",
@@ -334,7 +402,14 @@
     "development-anti-patterns#documentation-code-blocks"
    ],
    "note": "Monorepo tree lists docs/ as documentation; Documentation Code Blocks gives highlight={...} line-counting conventions.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "fast-local-development",
+    "linting-and-types",
+    "rebuilding-before-running-tests",
+    "this-is-not-the-turborepo-you-know",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-33",
@@ -349,7 +424,13 @@
     "github-issues-comments-and-discussions#if-the-user-is-not-a-member"
    ],
    "note": "Descriptions: what changed and why, no AI footers, NEXT_JS_LLM marker at bottom; template .github/pull_request_template.md; no title rules.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "development-anti-patterns",
+    "pr-status-ci-failures-and-reviews",
+    "rebuilding-before-running-tests",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-34",
@@ -362,7 +443,12 @@
     "github-issues-comments-and-discussions"
    ],
    "note": "Membership rule, bug_report.yml issue template, what agents may draft, NEXT_JS_LLM marker; issue-vs-discussion choice not explicit.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "development-anti-patterns",
+    "github-pull-requests",
+    "linting-and-types"
+   ]
   },
   {
    "id": "nextjs-35",
@@ -375,7 +461,14 @@
     "specialized-skills"
    ],
    "note": "Only the $backport-pr skill entry: cherry-pick merged canary PRs to releases/lts/active or maintenance; no title convention.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-and-pr-style",
+    "development-anti-patterns",
+    "github-pull-requests",
+    "pr-status-ci-failures-and-reviews",
+    "writing-tests"
+   ]
   },
   {
    "id": "nextjs-36",
@@ -388,7 +481,14 @@
     "secrets-and-env-safety#secrets-and-env-safety"
    ],
    "note": "Intro rules: treat env values as sensitive; never print secrets in chat, commits or logs; redact output.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-and-pr-style",
+    "context-efficient-workflows",
+    "development-anti-patterns",
+    "github-pull-requests",
+    "pr-status-ci-failures-and-reviews"
+   ]
   }
  ],
  "dropped": [

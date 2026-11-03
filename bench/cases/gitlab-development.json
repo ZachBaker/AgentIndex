@@ -25,7 +25,18 @@
     "feature_flags/controls#cleanup-chatops"
    ],
    "note": "Zero-downtime subsection lists the removal MR steps (label, refs and tests, YAML), then the ChatOps delete and closing the rollout issue.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "ai_features/model_migration",
+    "cicd/keyword_reviews",
+    "documentation/feature_flags",
+    "documentation/styleguide/_index",
+    "ee_features",
+    "experiment_guide/experiment_rollout",
+    "feature_flags/_index",
+    "real_time",
+    "testing_guide/end_to_end/best_practices/feature_flags"
+   ]
   },
   {
    "id": "gitlab-02",
@@ -39,7 +50,17 @@
     "feature_flags/_index#beta-type"
    ],
    "note": "wip and beta type sections give purpose, constraints and lifespan; a wip flag can change to beta once the feature is complete.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "activation_engine/_index",
+    "api_graphql_styleguide",
+    "api_styleguide",
+    "documentation/experiment_beta",
+    "documentation/feature_flags",
+    "organizations/release_process",
+    "testing_guide/end_to_end/best_practices/feature_flags",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-03",
@@ -56,7 +77,14 @@
     "database/background_operations#decision-tree"
    ],
    "note": "Fewer than 1000 NULL rows: post-deploy migration, otherwise a BBM. Also the migration timing limits, BBM when-to-use, and the data-operation decision tree.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "database/avoiding_downtime_in_migrations",
+    "database/batched_background_migration_spec_helpers",
+    "database/partitioning/date_range",
+    "organization/sharding/_index",
+    "search/advanced_search_migration_review"
+   ]
   },
   {
    "id": "gitlab-04",
@@ -70,7 +98,15 @@
     "application_settings#required-cleanup-steps"
    ],
    "note": "Ignore the column in M, drop it with a post-deploy migration in M+1, remove the ignore rule in M+2. application_settings restates this order.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "database/adding_database_indexes",
+    "database/batched_background_migrations",
+    "database/large_tables_limitations",
+    "fe_guide/tooling",
+    "migration_style_guide",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-05",
@@ -85,7 +121,14 @@
     "duo_agent_platform/mcp/graphql_integration#creating-new-tools---step-by-step-guide"
    ],
    "note": "Add only optional params, never a new version. Tools live in route_setting :mcp params or app/services/mcp/tools input_schema.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "ai_features/glossary",
+    "ai_features/logged_events",
+    "ai_features/semantic_search/semantic_code_search",
+    "fe_guide/vue3_migration",
+    "workhorse/ai_assisted_features_architecture"
+   ]
   },
   {
    "id": "gitlab-06",
@@ -101,7 +144,16 @@
     "api_graphql_styleguide#testing-tips-and-tricks"
    ],
    "note": "QueryRecorder: record a control count, add records, assert the same count. The REST and GraphQL guides have example N+1 specs.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "cached_queries",
+    "database/pagination_performance_guidelines",
+    "database/query_count_limits",
+    "graphql_guide/batchloader",
+    "graphql_guide/reviewing",
+    "testing_guide/best_practices",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-07",
@@ -114,7 +166,16 @@
     "sidekiq/compatibility_across_updates#removing-worker-classes"
    ],
    "note": "M: stop enqueuing and make perform a no-op. M+1: sidekiq_remove_jobs migration clears queued jobs. M+2: delete the class.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/avoiding_downtime_in_migrations",
+    "database/batched_background_migrations",
+    "database/loose_foreign_keys",
+    "feature_flags/_index",
+    "sidekiq/_index",
+    "sidekiq/limited_capacity_worker",
+    "sidekiq/worker_attributes"
+   ]
   },
   {
    "id": "gitlab-08",
@@ -130,7 +191,17 @@
     "api_graphql_styleguide#deprecation-reason-style-guide"
    ],
    "note": "Create a deprecation issue, then set deprecated: { reason:, milestone: }. The reason must name the replacement, for example 'Use `newField`'.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "ai_features/duo_chat",
+    "ai_features/usage_tracking",
+    "deprecation_guidelines/_index",
+    "fe_guide/graphql",
+    "fe_guide/migrating_from_vuex",
+    "feature_flags/_index",
+    "graphql_guide/monitoring",
+    "graphql_guide/reviewing"
+   ]
   },
   {
    "id": "gitlab-09",
@@ -148,7 +219,15 @@
     "documentation/restful_api_styleguide"
    ],
    "note": "API style guide covers the Grape desc/params DSL, declared params, entities, schema specs and required docs. The REST docs guide covers writing the docs. The admin-only check is not covered.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "application_slis/rails_request",
+    "duo_agent_platform/mcp/_index",
+    "ee_features",
+    "permissions/granular_access/rest_api_implementation_guide",
+    "secure_coding_guidelines/_index",
+    "spam_protection_and_captcha/rest_api"
+   ]
   },
   {
    "id": "gitlab-10",
@@ -163,7 +242,14 @@
     "permissions/granular_access/graphql_architecture#scenario-4-root-query-field-with-boundary_argument"
    ],
    "note": "Declare authorize_granular_token with a read_<resource> permission and a boundary on the type or resolver. Scenario 4 shows declaring it on a field.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "api_graphql_styleguide",
+    "duo_agent_platform/mcp/_index",
+    "duo_agent_platform/mcp/graphql_integration",
+    "permissions/granular_access/job_tokens",
+    "permissions/granular_access/rest_api_implementation_guide"
+   ]
   },
   {
    "id": "gitlab-11",
@@ -178,7 +264,15 @@
     "fe_guide/pinia#unit-testing-components-with-the-store"
    ],
    "note": "Pinia guide: single vs multi-step migration, codemods; component specs: stub async actions, createTestingPinia setup.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "fe_guide/graphql",
+    "fe_guide/migrating_from_vuex",
+    "fe_guide/state_management",
+    "fe_guide/vue",
+    "fe_guide/vue3_migration",
+    "fe_guide/vuex"
+   ]
   },
   {
    "id": "gitlab-12",
@@ -192,7 +286,18 @@
     "i18n/externalization#interpolation"
    ],
    "note": "Use GlSprintf with %{linkStart}/%{linkEnd} placeholders and a #link slot rendering GlLink.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "documentation/help",
+    "documentation/styleguide/_index",
+    "fe_guide/icons",
+    "fe_guide/style/vue",
+    "i18n/_index",
+    "i18n/merging_translations",
+    "i18n/pluralization",
+    "i18n/translation",
+    "secure_coding_guidelines/_index"
+   ]
   },
   {
    "id": "gitlab-13",
@@ -205,7 +310,17 @@
     "prometheus_metrics"
    ],
    "note": "Steps to add a metric (Gitlab::Metrics.histogram), naming, low-cardinality labels; no explicit bucket-selection guidance.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "advanced_search/tips",
+    "ai_features/duo_agent_platform_observability",
+    "application_slis/zoekt_tasks",
+    "internal_analytics/metrics/metrics_instrumentation",
+    "internal_analytics/service_ping/_index",
+    "namespaces_state_propagation",
+    "stage_group_observability/dashboards/stage_group_dashboard",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-14",
@@ -218,7 +333,19 @@
     "ai_features/_index#set-up-your-local-development-environment"
    ],
    "note": "Points to GDK AI setup for local AIGW, gdk tail gitlab-ai-gateway, local model-selection env var; no outage testing.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "ai_architecture",
+    "ai_features/ai_development_license",
+    "ai_features/cloud_connector",
+    "ai_features/duo_chat",
+    "ai_features/foundational_chat_agents",
+    "ai_features/model_switching",
+    "code_review",
+    "duo_agent_platform/_index",
+    "duo_agent_platform/mcp/_index",
+    "secrets_manager/local_setup"
+   ]
   },
   {
    "id": "gitlab-15",
@@ -232,7 +359,15 @@
     "cascading_settings#add-a-new-cascading-setting-to-projects"
    ],
    "note": "cascading_attr on NamespaceSetting plus add_cascading_namespace_setting migration (value and lock_ columns); projects use project_settings.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "ai_features/availability",
+    "api_styleguide",
+    "application_settings",
+    "database/foreign_keys",
+    "namespaces_state_propagation",
+    "organization/sharding/_index"
+   ]
   },
   {
    "id": "gitlab-16",
@@ -247,7 +382,14 @@
     "organization/sharding/_index#cross-schema-references"
    ],
    "note": "LFKs for references across databases/schemas (users is in a different DB, user_id example); regular FKs otherwise.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/ci_mirrored_tables",
+    "database/foreign_keys",
+    "database/partitioning/list",
+    "migration_style_guide",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-17",
@@ -261,7 +403,18 @@
     "organization/sharding/_index#sharding-principles"
    ],
    "note": "Most specific key: project_id/namespace_id; organization_id only for root models; declared as sharding_key in db/docs YAML.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api_graphql_styleguide",
+    "cells/_index",
+    "database/clickhouse/clickhouse_table_design_with_siphon",
+    "database/database_dictionary",
+    "database/multiple_databases",
+    "migration_style_guide",
+    "organization/_index",
+    "sidekiq/_index",
+    "testing_guide/testing_with_organizations"
+   ]
   },
   {
    "id": "gitlab-18",
@@ -274,7 +427,17 @@
     "sidekiq/worker_attributes#trading-immediacy-for-reduced-primary-load"
    ],
    "note": "Table: sticky preferred for fast jobs; delayed when delay is fine (not cron/no-retry); always strongly discouraged.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/clickhouse/clickhouse_within_gitlab",
+    "database/load_balancing",
+    "database/loose_foreign_keys",
+    "feature_flags/_index",
+    "merge_request_concepts/performance",
+    "scalability",
+    "sidekiq/_index",
+    "sidekiq/idempotent_jobs"
+   ]
   },
   {
    "id": "gitlab-19",
@@ -288,7 +451,14 @@
     "secure_coding_guidelines/_index#mitigations-1"
    ],
    "note": "Use Gitlab::HTTP (respects outbound request settings) and Gitlab::HTTP_V2::UrlBlocker; else feature-specific IP blocking.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "internal_api/_index",
+    "testing_guide/best_practices",
+    "urls_in_gitlab",
+    "workhorse/gitlab_features"
+   ]
   },
   {
    "id": "gitlab-21",
@@ -302,7 +472,18 @@
     "database_review#preparation-when-adding-migrations"
    ],
    "note": "Required > Migrations: reviewers check db:migrate/db:rollback output from db:check-migrations; plus migration prep checklist.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/_index",
+    "database/adding_database_indexes",
+    "database/batched_background_migrations",
+    "database/database_reviewer_guidelines",
+    "database/dbcheck-migrations-job",
+    "migration_style_guide",
+    "organization/sharding/_index",
+    "search/advanced_search_migration_review",
+    "search/advanced_search_migration_styleguide"
+   ]
   },
   {
    "id": "gitlab-22",
@@ -316,7 +497,15 @@
     "ee_features#implementing-a-saas-only-feature-with-gitlabsaasfeature_available"
    ],
    "note": "Prefer Gitlab::Saas.feature_available? over Gitlab.com?; add to FEATURES, create YAML with bin/saas-feature.rb.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "ai_features/cloud_connector",
+    "architecture",
+    "documentation/styleguide/word_list",
+    "registration_architecture",
+    "testing_guide/best_practices",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-23",
@@ -330,7 +519,17 @@
     "changelog#how-to-generate-a-changelog-entry"
    ],
    "note": "User-facing changes need an entry; add a Changelog git trailer. The full category list is in user docs outside the KB.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api_graphql_styleguide",
+    "code_review",
+    "contributing/merge_request_workflow",
+    "definition_of_done",
+    "fe_guide/graphql",
+    "feature_flags/_index",
+    "sec/analyzer_development_guide",
+    "transient/prevention-patterns"
+   ]
   },
   {
    "id": "gitlab-24",
@@ -345,7 +544,17 @@
     "logging#logging-durations"
    ],
    "note": "JsonLogger subclass and key-value fields in how-to; AppJsonLogger with Loggable adds class attribute; duration keys end _s.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "ai_features/duo_agent_platform_observability",
+    "ai_features/logging",
+    "api_graphql_styleguide",
+    "contributing/verify/_index",
+    "duo_agent_platform/mcp/graphql_integration",
+    "fe_guide/graphql",
+    "fe_guide/logging",
+    "redis"
+   ]
   },
   {
    "id": "gitlab-25",
@@ -360,7 +569,14 @@
     "database/load_balancing#primary-sticking"
    ],
    "note": "Routing order in query-routing; use_primary/use_primary! in special-routing-blocks; per-user sticking after writes in primary-sticking.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "advanced_search",
+    "database/scalability/patterns/read_mostly",
+    "merge_request_concepts/performance",
+    "scalability",
+    "sidekiq/worker_attributes"
+   ]
   },
   {
    "id": "gitlab-26",
@@ -373,7 +589,16 @@
     "sidekiq/_index#deferring-sidekiq-workers"
    ],
    "note": "defer_on_database_health_signal opt-in, backoff delays, default indicators (autovacuum, WAL, Patroni apdex, WAL rate).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/batched_background_migrations",
+    "database/new_decomposed_database",
+    "import/principles_of_importer_design",
+    "sec/malware_advisory_sync",
+    "secrets_manager/performance",
+    "sidekiq/limited_capacity_worker",
+    "sidekiq/worker_attributes"
+   ]
   },
   {
    "id": "gitlab-27",
@@ -388,7 +613,17 @@
     "api_graphql_styleguide#query-limits"
    ],
    "note": "Fields add 1 by default; custom field complexity; resolver_complexity example; limits defined in gitlab_schema.rb.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "duo_agent_platform/mcp/graphql_integration",
+    "fe_guide/graphql",
+    "graphql_guide/monitoring",
+    "graphql_guide/pagination",
+    "graphql_guide/reviewing",
+    "spam_protection_and_captcha/graphql_api",
+    "testing_guide/best_practices",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-28",
@@ -402,7 +637,17 @@
     "permissions/review_guidelines#keep-conditions-cheap-and-side-effect-free"
    ],
    "note": "Rules are sorted by score with short-circuiting and caching. The review guidelines say to put cheap checks first inside conditions.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/ruby_style_guide",
+    "database/migration_ordering",
+    "fe_guide/graphql",
+    "performance",
+    "permissions/authorizations",
+    "permissions/custom_roles",
+    "permissions/internal_permission_groups",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-29",
@@ -415,7 +660,18 @@
     "pipelines/_index#as-if-foss-jobs-and-cross-project-downstream-pipeline"
    ],
    "note": "Jobs set FOSS_ONLY=1 and remove EE-only paths listed in .gitlab/ee-only-paths.txt; trigger labels listed.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api_graphql_styleguide",
+    "dangerbot",
+    "database/creating_enums",
+    "database/dbmigrate_multi_version_upgrade_job",
+    "ee_features",
+    "testing_guide/best_practices",
+    "testing_guide/contract/_index",
+    "testing_guide/frontend_testing",
+    "testing_guide/smoke"
+   ]
   },
   {
    "id": "gitlab-30",
@@ -431,7 +687,16 @@
     "caching#expires_in"
    ],
    "note": "redis#caching names redis-cluster-cache; Gitlab::Redis::Cache section: same instance, 8h default TTL; key-naming; expires_in.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "cached_queries",
+    "cicd/cicd_reference_documentation_guide",
+    "database/scalability/patterns/read_mostly",
+    "migration_style_guide",
+    "redis/new_redis_instance",
+    "secure_coding_guidelines/_index",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-31",
@@ -446,7 +711,17 @@
     "github_importer#advancing-stages"
    ],
    "note": "Architecture overview traces import start; Stages lists the ten stage workers; Advancing stages explains AdvanceStageWorker.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "bitbucket_server_importer",
+    "database/batched_background_migrations",
+    "feature_development",
+    "import/principles_of_importer_design",
+    "import_project",
+    "logging",
+    "sidekiq/limited_capacity_worker",
+    "user_contribution_mapping"
+   ]
   },
   {
    "id": "gitlab-32",
@@ -459,7 +734,21 @@
     "sidekiq/idempotent_jobs#scheduling-jobs-in-the-future"
    ],
    "note": "Delayed jobs aren't deduplicated by default; opt in with `deduplicate :until_executing, including_scheduled: true`.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "architecture",
+    "database/background_operations",
+    "database/batched_background_migrations",
+    "database/deduplicate_database_records",
+    "fe_guide/graphql",
+    "feature_flags/_index",
+    "git_object_deduplication",
+    "migration_style_guide",
+    "sidekiq/_index",
+    "sidekiq/limited_capacity_worker",
+    "sidekiq/logging",
+    "sidekiq/worker_attributes"
+   ]
   },
   {
    "id": "gitlab-33",
@@ -473,7 +762,16 @@
     "fe_guide/icons#usage-in-vue"
    ],
    "note": "sprite_icon and GlIcon sections point to the GitLab SVG previewer (design.gitlab.com/svgs) for icon names.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "documentation/drawers",
+    "documentation/styleguide/_index",
+    "ee_features",
+    "fe_guide/accessibility/best_practices",
+    "fe_guide/haml",
+    "project_templates/add_new_template",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-34",
@@ -488,7 +786,19 @@
     "dangerbot#run-danger-locally"
    ],
    "note": "Docs rules live in danger/documentation/Dangerfile; dangerbot covers layout, spec/tooling/danger specs, bin/rake danger_local.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "cells/http_router",
+    "code_review",
+    "database/database_upgrade_ddl_lock",
+    "development_processes",
+    "documentation/testing/vale",
+    "fe_guide/graphql",
+    "pipelines/internals",
+    "push_rules/_index",
+    "secure_coding_guidelines/_index",
+    "testing_guide/end_to_end/feature_flag_testing"
+   ]
   },
   {
    "id": "gitlab-35",
@@ -502,7 +812,15 @@
     "gemfile#updating-the-checksum-file"
    ],
    "note": "bundler-checksum gem replaced by native Bundler checksums; bundle install updates CHECKSUMS in Gemfile.lock.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "emails",
+    "fe_guide/emojis",
+    "gems",
+    "pipelines/_index",
+    "rails_update",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-36",
@@ -515,7 +833,18 @@
     "feature_categorization/_index#rspec-examples"
    ],
    "note": "Use a value from config/feature_categories.yml on RSpec.describe; RSpec/FeatureCategory cop flags missing ones.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "application_slis/_index",
+    "code_review",
+    "feature_flags/_index",
+    "performance",
+    "pipelines/code_coverage",
+    "rubocop_development_guide",
+    "testing_guide/best_practices",
+    "testing_guide/end_to_end/beginners_guide/_index",
+    "testing_guide/end_to_end/best_practices/rspec_metadata_tests"
+   ]
   },
   {
    "id": "gitlab-37",
@@ -528,7 +857,16 @@
     "testing_guide/best_practices#fast-unit-tests"
    ],
    "note": "Explains what fast_spec_helper skips/loads (lib/ autoload, ActiveSupport) and using require_dependency for gems.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/batched_background_migration_spec_helpers",
+    "email_one_time_passwords",
+    "i18n/externalization",
+    "pipelines/internals",
+    "search/advanced_search_migration_styleguide",
+    "secrets_manager/testing",
+    "testing_guide/frontend_testing"
+   ]
   },
   {
    "id": "gitlab-38",
@@ -539,10 +877,22 @@
    "keywords": "flaky feature spec capybara wait",
    "answers": [
     "testing_guide/best_practices#prefer-waiting-matchers-over-reading-element-values",
-    "testing_guide/best_practices#poll-for-browser-side-effects-with-wait_for"
+    "testing_guide/best_practices#poll-for-browser-side-effects-with-wait_for",
+    "testing_guide/unhealthy_tests#what-are-the-potential-cause-for-a-test-to-be-flaky"
    ],
    "note": "Use retrying have_* waiting matchers instead of reading element values; wait_for helper only as last resort.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "database/batched_background_migration_spec_helpers",
+    "documentation/styleguide/_index",
+    "internal_analytics/capturing_snowplow_events_in_specs",
+    "testing_guide/_index",
+    "testing_guide/end_to_end/best_practices/waits",
+    "testing_guide/frontend_testing"
+   ],
+   "pooled": [
+    "testing_guide/unhealthy_tests#what-are-the-potential-cause-for-a-test-to-be-flaky"
+   ]
   },
   {
    "id": "gitlab-39",
@@ -555,7 +905,18 @@
     "gitaly#toomanyinvocationserror-errors"
    ],
    "note": "Limit is 30 Gitaly calls per request/job; isolate the N+1, wrap in allow_n_plus_1_calls.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api_graphql_styleguide",
+    "application_limits",
+    "architecture",
+    "backend/create_source_code_be/gitaly_touch_points",
+    "database/query_count_limits",
+    "git_object_deduplication",
+    "gitlab_shell/_index",
+    "merge_request_concepts/diffs/development",
+    "testing_guide/best_practices"
+   ]
   },
   {
    "id": "gitlab-40",
@@ -569,7 +930,17 @@
     "contributing/first_contribution/contribute-gdk#update-the-translation-files"
    ],
    "note": "Run tooling/bin/gettext_extractor locale/gitlab.pot and commit the regenerated file.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "ai_features/duo_chat",
+    "database/clickhouse/clickhouse_within_gitlab",
+    "documentation/styleguide/_index",
+    "documentation/styleguide/ui_text",
+    "fe_guide/frontend_faq",
+    "i18n/merging_translations",
+    "migration_style_guide",
+    "secure_coding_guidelines/_index"
+   ]
   }
  ],
  "dropped": [

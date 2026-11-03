@@ -146,7 +146,14 @@
     "tests/best-practices#test-organization"
    ],
    "note": "Use a meaningful subdirectory, not tests/ui itself or tests/ui/issues. Name the file descriptively, issue number in comments or as a suffix only.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "tests/adding",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/ecosystem",
+    "walkthroughs/test"
+   ]
   },
   {
    "id": "rustc-07",
@@ -156,10 +163,21 @@
    "question": "If my fix resolves an ICE whose reproducer lives in tests/crashes, what should I do with that test file?",
    "keywords": "tests/crashes ICE fixed",
    "answers": [
-    "tests/compiletest#crash-tests"
+    "tests/compiletest#crash-tests",
+    "tests/best-practices#test-naming"
    ],
    "note": "Crash tests section: move it to a fitting tests/ui subdirectory, give it a meaningful name, add a doc comment and `Fixes #N` in the PR.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "autodiff/debugging",
+    "fuzzing",
+    "tests/directives",
+    "tests/ui",
+    "walkthroughs/test"
+   ],
+   "pooled": [
+    "tests/best-practices#test-naming"
+   ]
   },
   {
    "id": "rustc-08",
@@ -172,7 +190,16 @@
     "conventions#line-length"
    ],
    "note": "Line length section: add a `// ignore-tidy-linelength` comment near the top of the file.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "contributing-to-guide",
+    "rustdoc-internals/search",
+    "tests/adding",
+    "tests/compiletest",
+    "tests/intro",
+    "tests/running",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-10",
@@ -188,7 +215,14 @@
     "rustdoc-internals/rustdoc-html-test-suite#limitations"
    ],
    "note": "Intro XPath example; `has PATH XPATH PATTERN` normalized text match, `matches` regex; Limitations: XPATH must start with `//`.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "SUMMARY",
+    "rustdoc-internals/rustdoc-gui-test-suite",
+    "rustdoc-internals/rustdoc-json-test-suite",
+    "rustdoc-internals/search",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-11",
@@ -203,7 +237,12 @@
     "debuginfo/testing#converting-existing-tests"
    ],
    "note": "compiletest: //@ lldb-command / lldb-check, // #break, -g example; debuginfo/testing: preferred lldb-repr directive plus --bless.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "debuginfo/lldb-internals",
+    "debuginfo/lldb-visualizers",
+    "tests/directives"
+   ]
   },
   {
    "id": "rustc-12",
@@ -216,7 +255,16 @@
     "mir/debugging"
    ],
    "note": "-Z dump-mir=F writes before/after MIR for every pass to mir_dump; -Z dump-mir-graphviz writes .dot graphs.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "borrow-check/debugging",
+    "compiler-debugging",
+    "incrcomp-debugging",
+    "mir/dataflow",
+    "mir/optimizations",
+    "overview",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-13",
@@ -230,7 +278,15 @@
     "tracing#how-to-keep-or-remove-debug-and-trace-calls-from-the-resulting-binary"
    ],
    "note": "RUSTC_LOG=path::to::module=debug rustc file.rs; debug! output requires rust.debug-logging = true in bootstrap.toml.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/debugging-bootstrap",
+    "compiler-debugging",
+    "overview",
+    "rustc-driver/getting-diagnostics",
+    "tests/ci",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-14",
@@ -243,7 +299,15 @@
     "compiler-debugging#debugging-delayed-bugs"
    ],
    "note": "Debugging delayed bugs: -Z eagerly-emit-delayed-bugs plus -Z treat-err-as-bug stops at the delayed bug for a backtrace.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "contributing",
+    "debuginfo/intro",
+    "diagnostics/error-guaranteed",
+    "git",
+    "stabilization-report-template",
+    "ty"
+   ]
   },
   {
    "id": "rustc-15",
@@ -257,7 +321,18 @@
     "tests/ci#try-builds"
    ],
    "note": "An authorized user comments `@bors try @rust-timer queue` on the PR; the try-builds section repeats it.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/debugging",
+    "debuginfo/lldb-visualizers",
+    "getting-started",
+    "git",
+    "overview",
+    "profiling",
+    "profiling/with-perf",
+    "profiling/with-rustc-perf",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-16",
@@ -270,7 +345,16 @@
     "diagnostics/diagnostic-structs#derivediagnostic"
    ],
    "note": "Add a Span field annotated #[label(\"...\")] (prev_span example); Option<Span> makes the label optional.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "bug-fix-procedure",
+    "diagnostics",
+    "diagnostics/diagnostic-items",
+    "diagnostics/translation",
+    "macro-expansion",
+    "rustc-driver/getting-diagnostics",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-17",
@@ -283,7 +367,14 @@
     "diagnostics#suggestions"
    ],
    "note": "Says be conservative; defines MachineApplicable, HasPlaceholders, MaybeIncorrect and Unspecified applicability levels.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/diagnostic-structs",
+    "guides/editions",
+    "implementing-new-features",
+    "solve/candidate-preference",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-18",
@@ -297,7 +388,14 @@
     "diagnostics#diagnostic-output-style-guide"
    ],
    "note": "Structure: backticks around code, no capitals or periods; style guide: lowercase start, no trailing punctuation, more rules.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/diagnostic-structs",
+    "diagnostics/error-codes",
+    "diagnostics/translation",
+    "rustc-driver/getting-diagnostics",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-19",
@@ -311,7 +409,15 @@
     "diagnostics/error-codes#error-explanations"
    ],
    "note": "Markdown files in compiler/rustc_error_codes/src/error_codes/EXXXX.md, registered in the error_codes! macro.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "compiler-debugging",
+    "compiler-src",
+    "diagnostics",
+    "diagnostics/error-guaranteed",
+    "profiling/with-perf",
+    "tests/directives"
+   ]
   },
   {
    "id": "rustc-20",
@@ -325,7 +431,12 @@
     "diagnostics#future-incompatible-lints"
    ],
    "note": "@future_incompatible with EditionError/EditionSemanticsChange reason joins rust-20xx-compatibility, which cargo fix --edition force-warns.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/lintstore",
+    "notification-groups/about",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-21",
@@ -338,7 +449,16 @@
     "implementing-new-features#stability-in-code"
    ],
    "note": "Steps: add symbol, declare in rustc_feature unstable.rs, check tcx.features(), emit feature_err or gate spans/gate_all!.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "feature-gate-check",
+    "feature-gates",
+    "stability",
+    "stabilization-guide",
+    "tests/compiletest",
+    "tests/ui"
+   ]
   },
   {
    "id": "rustc-22",
@@ -353,7 +473,16 @@
     "stability#stabilizing-a-library-feature"
    ],
    "note": "Replace #[rustc_const_unstable] with #[rustc_const_stable(since = \"CURRENT_RUSTC_VERSION\")] (step 4 of library stabilization).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/what-bootstrapping-does",
+    "diagnostics",
+    "effects",
+    "feature-gate-check",
+    "guides/editions",
+    "stability-guarantees",
+    "stabilization-guide"
+   ]
   },
   {
    "id": "rustc-23",
@@ -366,7 +495,15 @@
     "stability#stabilizing-a-library-feature"
    ],
    "note": "Step 2: change #[unstable] to #[stable(since = \"CURRENT_RUSTC_VERSION\")].",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "implementing-new-features",
+    "stability-guarantees",
+    "stabilization-guide",
+    "stabilization-report-template",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-24",
@@ -379,7 +516,20 @@
     "implementing-new-features#adding-unstable-compiler-flags"
    ],
    "note": "Add to UnstableOptions in rustc_session/src/options.rs; read via sess.opts.unstable_opts.<flag>.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "autodiff/flags",
+    "cli",
+    "diagnostics/lintstore",
+    "guides/editions",
+    "rustdoc-internals/search",
+    "tests/adding",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/minicore",
+    "tests/ui",
+    "walkthroughs/test"
+   ]
   },
   {
    "id": "rustc-25",
@@ -392,7 +542,13 @@
     "hir/attribute-parsing#a-step-by-step-guide-of-adding-a-new-inert-attribute-parser"
    ],
    "note": "Implement NoArgs/Single/Combine/AttributeParser trait in rustc_attr_parsing, register it; leftover checks in check_attr.rs.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "attributes",
+    "diagnostics",
+    "feature-gate-check",
+    "macro-expansion"
+   ]
   },
   {
    "id": "rustc-27",
@@ -406,7 +562,15 @@
     "macro-expansion#hygiene-and-hierarchies"
    ],
    "note": "SyntaxContext is an ID for a chain of ExpnId marks built with apply_mark; the parent section introduces ExpnId.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "guides/editions",
+    "hir/attribute-parsing",
+    "name-resolution",
+    "stabilization-report-template",
+    "test-implementation"
+   ]
   },
   {
    "id": "rustc-28",
@@ -420,7 +584,15 @@
     "name-resolution#basics"
    ],
    "note": "Intro and Basics: imports/macros resolved during expansion; all remaining names in rustc_resolve::late afterwards.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "early-late-parameters",
+    "getting-started",
+    "macro-expansion",
+    "overview",
+    "traits/resolution"
+   ]
   },
   {
    "id": "rustc-29",
@@ -435,7 +607,15 @@
     "solve/caching#handling-cycles"
    ],
    "note": "Cycles resolved by provisional-result fixpoint; inductive cycles start as overflow; only auto traits, Sized, WF are coinductive.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "normalization",
+    "overview",
+    "solve/the-solver",
+    "tests/x86_64-gnu-next-trait-solver-polonius-ci-job",
+    "traits/goals-and-clauses"
+   ]
   },
   {
    "id": "rustc-30",
@@ -449,7 +629,14 @@
     "ty-module/instantiating-binders"
    ],
    "note": "How Binder represents bound vars, and why/how to instantiate before accessing the inside; skip_binder itself is never named.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "analysis/well-formed",
+    "appendix/glossary",
+    "coroutine-closures",
+    "traits/hrtb",
+    "traits/implied-bounds"
+   ]
   },
   {
    "id": "rustc-31",
@@ -462,7 +649,17 @@
     "borrow-check#major-phases-of-the-borrow-checker"
    ],
    "note": "Bullet list of borrowck phases; region inference runs after MIR type check, before borrows-in-scope and error walk.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "appendix/glossary",
+    "borrow-check/opaque-types-region-inference-restrictions",
+    "borrow-check/region-inference",
+    "borrow-check/region-inference/lifetime-parameters",
+    "borrow-check/two-phase-borrows",
+    "borrow-check/type-check",
+    "overview"
+   ]
   },
   {
    "id": "rustc-32",
@@ -475,7 +672,18 @@
     "const-eval/interpret#memory"
    ],
    "note": "Memory section: Allocation bytes, AllocId+offset pointers, relocations store provenance out-of-band, undef_mask tracks initialized bytes.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "appendix/glossary",
+    "borrow-check/moves-and-initialization",
+    "const-eval",
+    "debuginfo/debugger-internals",
+    "debuginfo/intro",
+    "debuginfo/lldb-internals",
+    "debuginfo/lldb-visualizers",
+    "memory",
+    "sanitizers"
+   ]
   },
   {
    "id": "rustc-33",
@@ -489,7 +697,12 @@
     "backend/monomorph#codegen-unit-cgu-partitioning"
    ],
    "note": "Collection section covers collector and collect_and_partition_mono_items; CGU partitioning section covers stable/volatile CGU split.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/lowering-mir",
+    "parallel-rustc",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-34",
@@ -502,7 +715,16 @@
     "backend/backend-agnostic"
    ],
    "note": "Whole doc: rustc_codegen_ssa traits/generics interface implemented by backends; part-5-intro only one-line summary, excluded.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "backend/codegen",
+    "backend/lowering-mir",
+    "overview",
+    "part-5-intro",
+    "tests/codegen-backend-tests/cg_gcc",
+    "tests/codegen-backend-tests/intro"
+   ]
   },
   {
    "id": "rustc-35",
@@ -515,7 +737,17 @@
     "queries/incremental-compilation-in-detail#checking-query-results-for-changes-stablehash-and-fingerprints"
    ],
    "note": "Fingerprints section: query results hashed stably (DefId hashed as DefPath) so fingerprints compare across sessions.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/libs-and-metadata",
+    "cli",
+    "debugging-support-in-rustc",
+    "overview",
+    "queries/incremental-compilation",
+    "queries/query-evaluation-model-in-detail",
+    "stability",
+    "tests/compiletest"
+   ]
   },
   {
    "id": "rustc-36",
@@ -528,7 +760,17 @@
     "external-repos#synchronizing-a-git-subtree"
    ],
    "note": "Clippy is a git subtree: push first, subtree pull with -P prefix, never rebase; exact steps in Clippy guide.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/updating-llvm",
+    "contributing",
+    "diagnostics/diagnostic-items",
+    "getting-started",
+    "git",
+    "overview",
+    "rustdoc-internals/rustdoc-html-test-suite",
+    "tests/minicore"
+   ]
   },
   {
    "id": "rustc-37",
@@ -542,7 +784,12 @@
     "git#hard-resetting-submodules"
    ],
    "note": "Quick note shows exact 'new commits' status, fix is git submodule update; hard-reset covers modified-content variant.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building/new-target",
+    "external-repos",
+    "tests/directives"
+   ]
   },
   {
    "id": "rustc-40",
@@ -556,7 +803,20 @@
     "tests/ci#modifying-ci-jobs"
    ],
    "note": "Auto (merge) jobs are defined in the auto section of jobs.yml; Modifying CI jobs says edit that file.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "appendix/additional-resources",
+    "autodiff/installation",
+    "building/new-target",
+    "notification-groups/apple",
+    "tests/autodiff-ci-job",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/ecosystem-test-jobs/rust-for-linux",
+    "tests/running",
+    "tests/x86_64-gnu-next-trait-solver-polonius-ci-job"
+   ]
   }
  ],
  "dropped": [

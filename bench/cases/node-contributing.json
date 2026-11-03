@@ -25,7 +25,14 @@
     "maintaining/maintaining-V8#backporting-with-git-node-recommended"
    ],
    "note": "Manual: git am --directory=deps/v8, commit format, bump v8_embedder_string in common.gypi; git node v8 backport automates it.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backporting-to-release-lines",
+    "collaborator-guide",
+    "maintaining/maintaining-icu",
+    "maintaining/maintaining-openssl",
+    "releases"
+   ]
   },
   {
    "id": "node-02",
@@ -38,7 +45,13 @@
     "maintaining/maintaining-V8#major-updates"
    ],
    "note": "Major updates: upgrade once V8 finishes stable promotion; use a fresh checkout of the latest stable branch.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "maintaining/maintaining-icu",
+    "releases",
+    "releases-node-api"
+   ]
   },
   {
    "id": "node-03",
@@ -52,7 +65,16 @@
     "maintaining/maintaining-dependencies#updating-dependencies"
    ],
    "note": "zlib comes from Chromium's zlib fork; updates by the weekly action or a tools/update-deps script. 'motley' not explained.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "maintaining/maintaining-openssl",
+    "maintaining/maintaining-root-certs",
+    "primordials",
+    "pull-requests",
+    "releases",
+    "releases-node-api"
+   ]
   },
   {
    "id": "node-04",
@@ -65,7 +87,14 @@
     "maintaining/maintaining-dependencies#updating-dependencies"
    ],
    "note": "Weekly dependency-update-action (tools.yml) covers most deps; OpenSSL has its own action, npm uses npm-cli-bot. Brief.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "large-pull-requests",
+    "maintaining/maintaining-V8",
+    "maintaining/maintaining-merve",
+    "releases"
+   ]
   },
   {
    "id": "node-05",
@@ -79,7 +108,13 @@
     "maintaining/maintaining-dependencies#updating-dependencies"
    ],
    "note": "Send deps/ changes to their upstream projects; updates accepted only once landed upstream, with case-by-case TSC exceptions.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "maintaining/maintaining-V8",
+    "maintaining/maintaining-icu",
+    "releases"
+   ]
   },
   {
    "id": "node-06",
@@ -93,7 +128,16 @@
     "maintaining/maintaining-openssl#4-commit-and-test"
    ],
    "note": "Step 2: make -C deps/openssl/config (or make gen-openssl). Step 4: git add -A the config dirs and commit.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "commit-queue",
+    "large-pull-requests",
+    "maintaining/maintaining-V8",
+    "maintaining/maintaining-dependencies",
+    "pull-requests",
+    "releases"
+   ]
   },
   {
    "id": "node-07",
@@ -106,7 +150,14 @@
     "writing-tests#flags"
    ],
    "note": "Add a '// Flags: ...' comment in the test preamble; the test runner applies those flags.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "diagnostic-tooling-support-tiers",
+    "internal-api",
+    "maintaining/maintaining-single-executable-application-support",
+    "writing-and-running-benchmarks"
+   ]
   },
   {
    "id": "node-08",
@@ -119,7 +170,15 @@
     "writing-tests#adding-a-new-test"
    ],
    "note": "make cctest; filter with GTEST_FILTER=... or run out/Release/cctest --gtest_filter=...",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "collaborator-guide",
+    "maintaining/maintaining-single-executable-application-support",
+    "node-postmortem-support",
+    "releases",
+    "writing-and-running-benchmarks"
+   ]
   },
   {
    "id": "node-09",
@@ -132,7 +191,15 @@
     "writing-tests#lines-1-3"
    ],
    "note": "Yes, require('../common') before other modules even if unused; it fails tests that leak globals.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "collaborator-guide",
+    "cpp-style-guide",
+    "primordials",
+    "releases",
+    "writing-and-running-benchmarks"
+   ]
   },
   {
    "id": "node-11",
@@ -145,7 +212,14 @@
     "writing-tests#timers"
    ],
    "note": "Timers: avoid timers since they cause flakiness; if one is needed, use common.platformTimeout() to get longer timeouts on slow platforms.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "first-contributions",
+    "pull-requests",
+    "releases",
+    "writing-and-running-benchmarks"
+   ]
   },
   {
    "id": "node-12",
@@ -158,7 +232,14 @@
     "collaborator-guide#useful-jenkins-ci-jobs"
    ],
    "note": "The node-stress-single-test Jenkins job runs a group of tests over and over on a specific platform to check for flakiness.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "first-contributions",
+    "investigating-native-memory-leaks",
+    "pull-requests",
+    "releases",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-13",
@@ -171,7 +252,14 @@
     "writing-and-running-benchmarks#basics-of-a-benchmark"
    ],
    "note": "Covers the createBenchmark(main, configs, options) arguments, bench.start()/bench.end(n), the two-pass run, and a full example.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "maintaining/maintaining-dependencies",
+    "maintaining/maintaining-openssl",
+    "maintaining/maintaining-the-build-files",
+    "pull-requests"
+   ]
   },
   {
    "id": "node-14",
@@ -184,7 +272,16 @@
     "writing-and-running-benchmarks#comparing-nodejs-versions"
    ],
    "note": "Build main and PR binaries, run benchmark/compare.js --old/--new with --analyze (Welch t-test), and read the confidence stars.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building-node-with-ninja",
+    "collaborator-guide",
+    "cpp-style-guide",
+    "maintaining/maintaining-V8",
+    "maintaining/maintaining-the-build-files",
+    "pull-requests",
+    "releases"
+   ]
   },
   {
    "id": "node-15",
@@ -198,7 +295,14 @@
     "primordials#primordials-with-known-performance-issues"
    ],
    "note": "Primordials wrap the original prototype methods so userland changes can't break core. The doc lists primordials known to slow hot paths. The intro adds context.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "ffi-fast-api-internals",
+    "strategic-initiatives",
+    "writing-and-running-benchmarks",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-16",
@@ -211,7 +315,17 @@
     "using-symbols"
    ],
    "note": "Short doc: Symbol('kField') for private-like internal fields; Symbol.for only with a 'nodejs.' prefix for developer-facing metaprogramming.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "cpp-style-guide",
+    "erm-guidelines",
+    "ffi-fast-api-internals",
+    "investigating-native-memory-leaks",
+    "node-postmortem-support",
+    "primordials",
+    "using-internal-errors"
+   ]
   },
   {
    "id": "node-17",
@@ -225,7 +339,14 @@
     "using-internal-errors#documenting-new-errors"
    ],
    "note": "Append the code with E(key, message, Base) in internal/errors.js and document it in doc/api/errors.md (run make lint-clean if lint misses it).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "collaborator-guide",
+    "cpp-style-guide",
+    "releases",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-18",
@@ -238,7 +359,14 @@
     "cpp-style-guide#avoid-throwing-javascript-errors-in-c"
    ],
    "note": "Return error data (or fill a ctx object) from C++ and build and throw the error in JS with internal/errors. Throw from C++ only close to the return to JS.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "erm-guidelines",
+    "ffi-fast-api-internals",
+    "using-internal-errors",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-19",
@@ -253,7 +381,16 @@
     "adding-v8-fast-api#handling-errors"
    ],
    "note": "Intro (H1): no-re-entry/no-throw limits lifted in V8 12.6; handles need options.isolate plus HandleScope; throwing needs options arg.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "adding-new-napi-api",
+    "collaborator-guide",
+    "cpp-style-guide",
+    "ffi-fast-api-internals",
+    "investigating-native-memory-leaks",
+    "writing-and-running-benchmarks",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-21",
@@ -267,7 +404,17 @@
     "investigating-native-memory-leaks#nodejs-binary"
    ],
    "note": "Rerun valgrind with --leak-check=full for allocation stacks; for src/ leaks build ./configure --debug, run out/Debug node.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "adding-v8-fast-api",
+    "collaborator-guide",
+    "diagnostic-tooling-support-tiers",
+    "ffi-fast-api-internals",
+    "maintaining/maintaining-web-assembly",
+    "node-postmortem-support",
+    "releases",
+    "streaming-to-youtube"
+   ]
   },
   {
    "id": "node-23",
@@ -282,7 +429,12 @@
     "releases#step-3-update-any-replaceme-and-dep00xx-tags-in-the-docs"
    ],
    "note": "Use REPLACEME in added:/introduced_in; releasers replace it with the real version at release time.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "adding-new-napi-api",
+    "collaborator-guide",
+    "releases-node-api"
+   ]
   },
   {
    "id": "node-25",
@@ -297,7 +449,12 @@
     "pull-requests#waiting-until-the-pull-request-gets-landed"
    ],
    "note": "Wait 48 hours; doc-only or trivial changes can land sooner (fast-track label plus two collaborator approvals).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-queue",
+    "first-contributions",
+    "large-pull-requests"
+   ]
   },
   {
    "id": "node-26",
@@ -310,7 +467,14 @@
     "collaborator-guide#breaking-changes"
    ],
    "note": "Adding errors is listed as a breaking change; backward-incompatible changes need approval from two TSC voting members.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-new-napi-api",
+    "first-contributions",
+    "pull-requests",
+    "releases",
+    "using-internal-errors"
+   ]
   },
   {
    "id": "node-27",
@@ -324,7 +488,15 @@
     "collaborator-guide#deprecations"
    ],
    "note": "Stable public APIs need deprecation before removal: documentation-only, then runtime, then End-of-Life, with deprecation-cycle rules.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api-documentation",
+    "backporting-to-release-lines",
+    "first-contributions",
+    "internal-api",
+    "releases",
+    "writing-tests"
+   ]
   },
   {
    "id": "node-28",
@@ -338,7 +510,13 @@
     "collaborator-guide#breaking-changes-to-internal-elements"
    ],
    "note": "Undocumented _-prefixed properties are internal; changing them can be semver-patch/minor unless it breaks the ecosystem.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "adding-new-napi-api",
+    "ffi-fast-api-internals",
+    "releases",
+    "using-internal-errors"
+   ]
   },
   {
    "id": "node-29",
@@ -351,7 +529,13 @@
     "collaborator-guide#reverting-commits"
    ],
    "note": "Use git revert <HASH> and open a normal PR; add dont-land-on-v?.x labels and remove semver-*/notable-change.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "commit-queue",
+    "pull-requests",
+    "releases",
+    "security-release-process"
+   ]
   },
   {
    "id": "node-30",
@@ -364,7 +548,15 @@
     "collaborator-guide#who-to-cc-in-the-issue-tracker"
    ],
    "note": "Who-to-CC table maps lib/{crypto,tls,https} and src/crypto to @nodejs/crypto.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "first-contributions",
+    "large-pull-requests",
+    "pull-requests",
+    "releases",
+    "security-release-process",
+    "strategic-initiatives"
+   ]
   },
   {
    "id": "node-31",
@@ -377,7 +569,12 @@
     "commit-queue"
    ],
    "note": "Whole doc: approval/CI/wait-time rules, hard-failure retry, and limitations (CI and approval since last change, main target).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "first-contributions",
+    "releases"
+   ]
   },
   {
    "id": "node-33",
@@ -390,7 +587,13 @@
     "backporting-to-release-lines#submitting-a-backport-pull-request"
    ],
    "note": "Automated (git node backport) and manual cherry-pick steps, PR title/target, and label updates for vN.x-staging.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "first-contributions",
+    "maintaining/maintaining-V8",
+    "releases"
+   ]
   },
   {
    "id": "node-34",
@@ -406,7 +609,12 @@
     "releases#1-update-the-staging-branch"
    ],
    "note": "Staging-branch cherry-pick flow and label meanings (dont-land-on, backport-requested) in FAQ, collaborator guide, releaser steps.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backporting-to-release-lines",
+    "commit-queue",
+    "maintaining/maintaining-V8"
+   ]
   },
   {
    "id": "node-35",
@@ -424,7 +632,13 @@
     "releases#6-propose-release-on-github"
    ],
    "note": "Release steps 1-6: LTS staging rules, proposal branch/automation, version, changelog-maker changelog, release commit, proposal PR.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "backporting-to-release-lines",
+    "collaborator-guide",
+    "releases-node-api",
+    "security-release-process"
+   ]
   },
   {
    "id": "node-36",
@@ -440,7 +654,14 @@
     "releases#semver-major-release-april"
    ],
    "note": "Major releases: yearly schedule, branch-off (first Alpha at prior line's LTS), Alpha releases, April out-of-Alpha to Current.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "backporting-to-release-lines",
+    "collaborator-guide",
+    "first-contributions",
+    "maintaining/maintaining-V8",
+    "security-release-process"
+   ]
   },
   {
    "id": "node-38",
@@ -453,7 +674,13 @@
     "security-release-process#security-release-stewards"
    ],
    "note": "Stewards table (company, person, release date) with upcoming rotation; stewards nominated via TSC issue and consensus.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "releases",
+    "security-model-strategy",
+    "security-steward-on-off-boarding"
+   ]
   },
   {
    "id": "node-39",
@@ -466,7 +693,15 @@
     "gn-build#build-with-gn"
    ],
    "note": "Install depot_tools, fetch node (node-ci checkout), run tools/gn-gen.py, then ninja -C out/Release node.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "building-node-with-ninja",
+    "collaborator-guide",
+    "investigating-native-memory-leaks",
+    "maintaining/maintaining-the-build-files",
+    "maintaining/maintaining-icu",
+    "releases"
+   ]
   },
   {
    "id": "node-40",
@@ -476,10 +711,19 @@
    "question": "Can I build Node.js with Ninja instead of make to get faster incremental rebuilds, and how do I set it up?",
    "keywords": "ninja incremental rebuild",
    "answers": [
-    "building-node-with-ninja"
+    "building-node-with-ninja",
+    "using-devcontainer#5-build-your-changes"
    ],
    "note": "Short single-topic doc: ./configure --ninja then make; debug builds, -j jobs, custom NINJA binary path.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "collaborator-guide",
+    "gn-build",
+    "pull-requests"
+   ],
+   "pooled": [
+    "using-devcontainer#5-build-your-changes"
+   ]
   }
  ],
  "dropped": [

@@ -24,7 +24,12 @@
     "build-system-commands"
    ],
    "note": "Bazel section: `bazel build //src/workerd/server:workerd` (output in bazel-bin), or `just build`; bazelisk/Bazel version not covered.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "architecture",
+    "testing",
+    "v8-updates"
+   ]
   },
   {
    "id": "workerd-02",
@@ -37,7 +42,11 @@
     "testing"
    ],
    "note": "'Running a Single Test': `bazel test //src/workerd/api/tests:encoding-test@`; 'Test Variants': required `@` suffix, BUILD.bazel target lookup.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "architecture",
+    "build-system-commands"
+   ]
   },
   {
    "id": "workerd-03",
@@ -50,7 +59,14 @@
     "testing"
    ],
    "note": "'.wd-test File Format': add the flag to the worker's `compatibilityFlags` list.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "backward-compatibility",
+    "build-system-commands",
+    "coding-conventions"
+   ]
   },
   {
    "id": "workerd-04",
@@ -63,7 +79,13 @@
     "testing"
    ],
    "note": "'Test Variants': run the `name@all-autogates` target; enabling one specific autogate is covered nowhere.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "architecture",
+    "backward-compatibility",
+    "coding-conventions",
+    "other-documentation"
+   ]
   },
   {
    "id": "workerd-08",
@@ -76,7 +98,12 @@
     "build-system-commands"
    ],
    "note": "Bazel section: pass `--config=bazelflare` for remote execution if the `cloudflared access token` command prints a token.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "testing"
+   ]
   },
   {
    "id": "workerd-10",
@@ -91,7 +118,11 @@
     "coding-conventions#jsg-javascript-glue"
    ],
    "note": "Just Commands: just format/format-head, just clang-tidy; coding-conventions intro: githooks/pre-commit hook; JSG section: just clang-tidy.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "backward-compatibility"
+   ]
   },
   {
    "id": "workerd-12",
@@ -105,7 +136,14 @@
     "coding-conventions#comment-guidelines"
    ],
    "note": "Commit discipline: small compiling, tested commits, no fixups; commit messages hold change narrative; PR descriptions uncovered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "backward-compatibility",
+    "build-system-commands",
+    "development-workflow",
+    "overview"
+   ]
   },
   {
    "id": "workerd-14",
@@ -119,7 +157,11 @@
     "coding-conventions#feature-management"
    ],
    "note": "Autogates: temporary, per-process risky rollouts that don't preserve existing Workers' API surface; behavior changes use compat flags.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "testing"
+   ]
   },
   {
    "id": "workerd-15",
@@ -133,7 +175,11 @@
     "coding-conventions#feature-management"
    ],
    "note": "Where to Look: compatibility-date.capnp annotations define flag names and enable dates; Feature Management: document before enable date.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backward-compatibility",
+    "testing"
+   ]
   },
   {
    "id": "workerd-16",
@@ -146,7 +192,13 @@
     "backward-compatibility"
    ],
    "note": "Yes: deployed features can't change; behavior changes get feature flags in compatibility-date.capnp.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "coding-conventions",
+    "v8-updates"
+   ]
   },
   {
    "id": "workerd-19",
@@ -159,7 +211,13 @@
     "architecture#core-directory-structure-srcworkerd"
    ],
    "note": "Core Directory Structure describes api/, io/, jsg/, server/, util/ roles; which layer may depend on which is not documented.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "build-system-commands",
+    "coding-conventions",
+    "project-overview",
+    "testing"
+   ]
   },
   {
    "id": "workerd-20",
@@ -173,7 +231,13 @@
     "architecture#core-directory-structure-srcworkerd"
    ],
    "note": "Where-to-Look: dual-layer, register in api/node/node.h NODEJS_MODULES; directory section: C++ in api/node, TS in src/node; no preference rule.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "backward-compatibility",
+    "build-system-commands",
+    "coding-conventions",
+    "testing"
+   ]
   },
   {
    "id": "workerd-21",
@@ -187,7 +251,10 @@
     "architecture#where-to-look"
    ],
    "note": "Where to Look: IoContext = per-request god object; anti-patterns: JS-heap refs to KJ I/O objects need IoOwn.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "coding-conventions"
+   ]
   },
   {
    "id": "workerd-25",
@@ -200,7 +267,11 @@
     "coding-conventions#use-kj-types-not-stl"
    ],
    "note": "Use KJ types, not STL table: kj::String, kj::Own, kj::Maybe instead of std::string, std::unique_ptr, std::optional.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "anti-patterns",
+    "architecture"
+   ]
   },
   {
    "id": "workerd-26",
@@ -213,7 +284,13 @@
     "coding-conventions#error-handling"
    ],
    "note": "Error Handling: JSG_REQUIRE/JSG_FAIL_REQUIRE for JS-facing errors; KJ_REQUIRE is for C++ preconditions. TypeError not named.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "backward-compatibility",
+    "testing"
+   ]
   },
   {
    "id": "workerd-27",
@@ -227,7 +304,10 @@
     "coding-conventions#jsg-javascript-glue"
    ],
    "note": "Anti-patterns: Ref<T> in JS-visible C++ objects must implement visitForGc(); JSG section: fields traced in visitForGc(), clang-tidy check.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture"
+   ]
   },
   {
    "id": "workerd-28",
@@ -240,7 +320,12 @@
     "coding-conventions#jsg-javascript-glue"
    ],
    "note": "JSG section: workerd-unsafe-continuation-capture clang-tidy flags [this]/bare-ref captures in Promise::then; jsg::Ref leaks not covered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "backward-compatibility"
+   ]
   },
   {
    "id": "workerd-29",
@@ -253,7 +338,12 @@
     "anti-patterns"
    ],
    "note": "Anti-pattern: never pass jsg::Lock into KJ promise coroutines; nothing else on co_await pitfalls (architecture only points elsewhere).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "coding-conventions",
+    "instructions-for-ai-code-assistants"
+   ]
   },
   {
    "id": "workerd-31",
@@ -266,7 +356,14 @@
     "testing#test-types"
    ],
    "note": "Test Types: Rust unit tests go in <module>-test.rs beside the module, never inline.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "anti-patterns",
+    "architecture",
+    "build-system-commands",
+    "coding-conventions",
+    "development-workflow"
+   ]
   },
   {
    "id": "workerd-33",
@@ -281,7 +378,13 @@
     "architecture#where-to-look"
    ],
    "note": "`just generate-types` (build commands; anti-patterns: never edit generated-snapshot); hand-written types in types/defines/*.d.ts (Where to Look).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "coding-conventions",
+    "npm-package-management",
+    "testing",
+    "v8-updates"
+   ]
   },
   {
    "id": "workerd-35",
@@ -294,7 +397,13 @@
     "development-workflow#rust-development"
    ],
    "note": "Rust Development: `just update-rust <package>` updates Rust deps (cargo update equivalent); adding a new crate not covered.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "build-system-commands",
+    "testing",
+    "v8-updates"
+   ]
   },
   {
    "id": "workerd-36",
@@ -307,7 +416,12 @@
     "v8-updates"
    ],
    "note": "Lists steps (sync source, apply/rebase patches, regenerate patches, bump Bazel deps) and conflict guidance; full steps are in docs/v8-updates.md, outside the knowledge base.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "architecture",
+    "backward-compatibility",
+    "instructions-for-ai-code-assistants"
+   ]
   }
  ],
  "dropped": [
