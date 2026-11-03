@@ -1,0 +1,599 @@
+{
+ "corpus": "electron",
+ "about": "Questions written blind from common Electron app-building tasks and merged electron/electron PRs (2026), without seeing the docs; answers labeled separately against the pinned docs.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 40,
+   "keep_drop_agree": 40,
+   "both_answered": 40,
+   "same_doc": 40,
+   "identical": 36,
+   "reconciled": 4
+  }
+ },
+ "cases": [
+  {
+   "id": "electron-01",
+   "pr": null,
+   "task": "Support deep linking so myapp:// links clicked in a web browser open the app",
+   "kind": "how-to",
+   "question": "How do I register my app as the handler for a custom myapp:// URL scheme and receive the clicked URL on Windows and macOS?",
+   "keywords": "deep link custom protocol url",
+   "answers": [
+    "tutorial/launch-app-from-url-in-another-app#main-process-mainjs",
+    "tutorial/launch-app-from-url-in-another-app#packaging",
+    "api/app#appsetasdefaultprotocolclientprotocol-path-args",
+    "api/app#event-open-url-macos"
+   ],
+   "note": "Deep Links tutorial: setAsDefaultProtocolClient, second-instance (Win) / open-url (mac), Info.plist packaging; api/app reference entries.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-02",
+   "pr": null,
+   "task": "Let the renderer UI load the user's settings file through the main process",
+   "kind": "how-to",
+   "question": "With contextIsolation enabled, how should my preload script expose a function to the page that asks the main process for data and returns it?",
+   "keywords": "preload expose function main process",
+   "answers": [
+    "tutorial/ipc#pattern-2-renderer-to-main-two-way",
+    "tutorial/tutorial-3-preload#communicating-between-processes",
+    "tutorial/context-isolation#security-considerations"
+   ],
+   "note": "contextBridge.exposeInMainWorld wrapping ipcRenderer.invoke plus ipcMain.handle; IPC Pattern 2, preload tutorial, context-isolation example.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-03",
+   "pr": null,
+   "task": "Add a system-wide hotkey that brings the app window to the front",
+   "kind": "how-to",
+   "question": "How do I register a keyboard shortcut that fires even when my app is in the background and another app has focus?",
+   "keywords": "global shortcut app not focused",
+   "answers": [
+    "tutorial/keyboard-shortcuts#global-shortcuts",
+    "api/global-shortcut#globalshortcutregisteraccelerator-callback"
+   ],
+   "note": "globalShortcut.register works without app focus; keyboard-shortcuts 'Global shortcuts' section and globalShortcut API reference.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-04",
+   "pr": null,
+   "task": "Replace the native title bar with a custom HTML title bar that matches the app's design",
+   "kind": "how-to",
+   "question": "How do I hide the native title bar but keep the window draggable and still show the OS minimize, maximize and close buttons?",
+   "keywords": "custom title bar draggable window controls",
+   "answers": [
+    "tutorial/custom-title-bar#basic-tutorial"
+   ],
+   "note": "Basic tutorial: titleBarStyle 'hidden', titleBarOverlay for Win/Linux controls (macOS keeps traffic lights), app-region: drag.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-05",
+   "pr": null,
+   "task": "Add automatic updates to an open-source app whose installers are published on GitHub Releases",
+   "kind": "how-to",
+   "question": "What's the easiest way to make my app update itself automatically when new builds are published as GitHub releases?",
+   "keywords": "auto update github releases",
+   "answers": [
+    "tutorial/updates#using-updateelectronjsorg",
+    "tutorial/tutorial-6-publishing-updating#using-updateelectronjsorg",
+    "tutorial/tutorial-6-publishing-updating#instrumenting-your-updater-code"
+   ],
+   "note": "update.electronjs.org via require('update-electron-app')(); requirements and setup in updates guide and tutorial part 6.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-06",
+   "pr": null,
+   "task": "Fix macOS release builds that Gatekeeper refuses to open after download",
+   "kind": "how-to",
+   "question": "What steps are needed to code sign and notarize our macOS build so Gatekeeper stops saying the app can't be opened?",
+   "keywords": "macos notarize code signing gatekeeper",
+   "answers": [
+    "tutorial/code-signing#signing--notarizing-macos-builds",
+    "tutorial/tutorial-5-packaging#important-signing-your-code"
+   ],
+   "note": "macOS signing+notarization: Apple Developer requirements, Forge/Packager osxSign + osxNotarize config; packaging tutorial Forge example.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-07",
+   "pr": null,
+   "task": "Load the bundled frontend from an app:// scheme instead of file:// URLs",
+   "kind": "how-to",
+   "question": "How can I serve bundled HTML and JS over a custom app:// scheme so fetch and storage behave like a normal web origin?",
+   "keywords": "custom protocol serve local files",
+   "answers": [
+    "api/protocol#protocolregisterschemesasprivilegedcustomschemes",
+    "api/protocol#protocolhandlescheme-handler",
+    "api/protocol#protocolregistersourcescheme-source-experimental"
+   ],
+   "note": "registerSchemesAsPrivileged (standard/secure/supportFetchAPI, storage) plus protocol.handle or registerSource serving bundled app:// files.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-08",
+   "pr": null,
+   "task": "Move a CPU-heavy image-processing job off the main process so the UI stops freezing",
+   "kind": "how-to",
+   "question": "How do I run CPU-heavy Node code in a separate process spawned from main and pass messages back and forth with it?",
+   "keywords": "run heavy task separate process",
+   "answers": [
+    "api/utility-process#utilityprocessforkmodulepath-args-options",
+    "api/utility-process#childpostmessagemessage-transfer",
+    "api/utility-process#event-message",
+    "api/parent-port"
+   ],
+   "note": "utilityProcess.fork, child.postMessage, 'message' event; parentPort doc example shows full two-way messaging.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-09",
+   "pr": null,
+   "task": "Set breakpoints in main-process code from VS Code",
+   "kind": "how-to",
+   "question": "How do I attach the VS Code debugger to Electron's main process so breakpoints in my main.js actually get hit?",
+   "keywords": "debug main process vscode breakpoints",
+   "answers": [
+    "tutorial/debugging-vscode#main-process",
+    "tutorial/tutorial-2-first-app#optional-debugging-from-vs-code"
+   ],
+   "note": ".vscode/launch.json node config launching node_modules/.bin/electron, then breakpoints in main.js hit.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-10",
+   "pr": null,
+   "task": "Collect native crash reports from users' machines and send them to the team's crash server",
+   "kind": "how-to",
+   "question": "How do I capture native crash dumps from the main and renderer processes and have them uploaded to our own server?",
+   "keywords": "native crash dumps upload server",
+   "answers": [
+    "tutorial/crash-reporting#setting-up-the-crash-reporter",
+    "tutorial/crash-reporting#on-your-own-server",
+    "api/crash-reporter#crashreporterstartoptions",
+    "api/crash-reporter#crash-report-payload"
+   ],
+   "note": "crashReporter.start({submitURL}) early in main monitors renderers; server receives multipart minidump POST.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-11",
+   "pr": null,
+   "task": "Make the app follow the OS light/dark theme and add a manual theme switch in settings",
+   "kind": "how-to",
+   "question": "How can the app tell whether the OS is in dark mode, react when it changes, and let the user force light or dark?",
+   "keywords": "dark mode system theme toggle",
+   "answers": [
+    "api/native-theme#nativethemeshouldusedarkcolors-readonly",
+    "api/native-theme#event-updated",
+    "api/native-theme#nativethemethemesource",
+    "tutorial/dark-mode#overview",
+    "tutorial/dark-mode#how-does-this-work"
+   ],
+   "note": "nativeTheme shouldUseDarkColors, 'updated' event, themeSource; dark-mode overview, plus toggle/reset code under How does this work.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "electron-12",
+   "pr": null,
+   "task": "Render an HTML overlay without a visible window and feed each frame into a video encoder",
+   "kind": "how-to",
+   "question": "How can I render a web page without showing any window and get every painted frame as a bitmap image?",
+   "keywords": "render offscreen frames bitmap",
+   "answers": [
+    "tutorial/offscreen-rendering",
+    "api/web-contents#event-paint"
+   ],
+   "note": "Offscreen guide: webPreferences.offscreen plus 'paint' event giving NativeImage bitmap; webContents 'paint' event shows same code.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-13",
+   "pr": null,
+   "task": "Make target=_blank links in the app open in the user's default browser",
+   "kind": "how-to",
+   "question": "When a page opens a target=_blank link, how do I send it to the default browser instead of a new Electron window?",
+   "keywords": "open link default browser new window",
+   "answers": [
+    "tutorial/security#how-11"
+   ],
+   "note": "Security #14 How?: setWindowOpenHandler calls shell.openExternal(url) and returns {action:'deny'}.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-14",
+   "pr": null,
+   "task": "Show spelling suggestions when the user right-clicks a misspelled word in the note editor",
+   "kind": "how-to",
+   "question": "How do I build a right-click menu that lists spellchecker suggestions and an 'Add to dictionary' item for misspelled words?",
+   "keywords": "spellcheck suggestions right-click menu",
+   "answers": [
+    "tutorial/spellchecker#how-do-i-put-the-results-of-the-spellchecker-in-my-context-menu"
+   ],
+   "note": "context-menu event: dictionarySuggestions items with replaceMisspelling, plus 'Add to dictionary' via addWordToSpellCheckerDictionary.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-15",
+   "pr": null,
+   "task": "Packaged app can't launch its bundled helper binary or open a data file shipped inside app.asar",
+   "kind": "how-it-works",
+   "question": "How does Electron handle files inside app.asar at runtime — which Node APIs can read them, and what has to be unpacked?",
+   "keywords": "asar unpacked files executable",
+   "answers": [
+    "tutorial/asar-archives"
+   ],
+   "note": "Whole guide: fs/require read archive as virtual dirs, limitations, execFile/dlopen temp extraction, only execFile runs binaries, --unpack.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "electron-16",
+   "pr": null,
+   "task": "Flush unsaved documents to disk before the app quits",
+   "kind": "how-it-works",
+   "question": "In what order do the app's quit-related events fire, and how can I postpone quitting until an async save finishes?",
+   "keywords": "quit event delay async save",
+   "answers": [
+    "api/app#event-before-quit",
+    "api/app#event-will-quit",
+    "api/app#event-quit",
+    "api/app#event-window-all-closed",
+    "api/app#appquit"
+   ],
+   "note": "app quit events and app.quit() give order before-quit, windows close, will-quit, quit; preventDefault() stops termination.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-17",
+   "pr": null,
+   "task": "Migrate the main process and preload scripts from CommonJS require to ES module imports",
+   "kind": "how-it-works",
+   "question": "Can the main process and preload scripts be written as ES modules instead of CommonJS, and what caveats apply?",
+   "keywords": "ES modules ESM main preload",
+   "answers": [
+    "tutorial/esm#summary-esm-support-matrix",
+    "tutorial/esm#main-process",
+    "tutorial/esm#preload-scripts"
+   ],
+   "note": "ESM guide: main via .mjs or type module with await-before-ready caveat; preload needs .mjs, unsandboxed, more caveats.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-18",
+   "pr": null,
+   "task": "Make the app usable with screen readers such as NVDA and VoiceOver",
+   "kind": "how-it-works",
+   "question": "Does Electron expose web page accessibility info to screen readers automatically, or does my app need to enable it somehow?",
+   "keywords": "screen reader accessibility support",
+   "answers": [
+    "tutorial/accessibility",
+    "api/app#appaccessibilitysupportenabled-macos-windows",
+    "api/app#appisaccessibilitysupportenabled-macos-windows",
+    "api/app#appsetaccessibilitysupportenabledenabled-macos-windows"
+   ],
+   "note": "Auto-enabled when assistive tech is detected; can be enabled manually with app.setAccessibilitySupportEnabled or accessibilitySupportEnabled.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-19",
+   "pr": null,
+   "task": "Keep separate logins for multiple accounts, each in its own window, without sharing cookies",
+   "kind": "how-it-works",
+   "question": "How are cookies and storage shared or isolated between windows, and is a window's session data kept on disk across restarts?",
+   "keywords": "session cookies shared between windows persist",
+   "answers": [
+    "api/session#sessionfrompartitionpartition-options",
+    "api/structures/web-preferences",
+    "api/session#sesispersistent"
+   ],
+   "note": "Same partition shares a session; persist: prefix stores on disk, otherwise in-memory; the default session is persistent.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-20",
+   "pr": null,
+   "task": "Show a third-party web dashboard inside one of the app's windows",
+   "kind": "convention",
+   "question": "What does Electron recommend locking down before a window loads remote third-party websites, like Node access and sandboxing?",
+   "keywords": "security load remote website window",
+   "answers": [
+    "tutorial/security#isolation-for-untrusted-content",
+    "tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content",
+    "tutorial/security#3-enable-context-isolation",
+    "tutorial/security#4-enable-process-sandboxing",
+    "tutorial/security#5-handle-session-permission-requests-from-remote-content"
+   ],
+   "note": "Security checklist: no nodeIntegration for remote content, contextIsolation, sandbox, permission handler, isolation for untrusted content.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-21",
+   "pr": null,
+   "task": "App takes several seconds before its first window appears; speed up startup",
+   "kind": "convention",
+   "question": "What are Electron's recommended practices for faster app startup and keeping the main process from blocking the UI?",
+   "keywords": "slow startup performance",
+   "answers": [
+    "tutorial/performance#2-loading-and-running-code-too-soon",
+    "tutorial/performance#3-blocking-the-main-process",
+    "tutorial/performance#1-carelessly-including-modules",
+    "tutorial/performance#7-bundle-your-code",
+    "tutorial/performance#8-call-menusetapplicationmenunull-when-you-do-not-need-a-default-menu"
+   ],
+   "note": "Performance checklist: defer loading/require at startup, avoid blocking main process, lean modules, bundle code, setApplicationMenu(null).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-22",
+   "pr": null,
+   "task": "Harden the shipped binary so it can't be relaunched as a plain Node.js runtime",
+   "kind": "convention",
+   "question": "Which features should be switched off in a production Electron binary so it can't be abused, e.g. ELECTRON_RUN_AS_NODE or --inspect?",
+   "keywords": "disable ELECTRON_RUN_AS_NODE production build",
+   "answers": [
+    "tutorial/fuses#current-fuses",
+    "tutorial/security#19-check-which-fuses-you-can-change"
+   ],
+   "note": "Current fuses lists runAsNode, nodeOptions, nodeCliInspect with disable advice; security checklist item 19 covers same via @electron/fuses.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-23",
+   "pr": null,
+   "task": "Upgrade the app from Electron 33 to the current major release",
+   "kind": "where",
+   "question": "Where can I find what was removed or changed in a breaking way between Electron major versions before upgrading?",
+   "keywords": "breaking changes upgrade major version",
+   "answers": [
+    "breaking-changes"
+   ],
+   "note": "Breaking Changes doc lists removed/changed/deprecated APIs per major version; other docs only link to it.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-24",
+   "pr": null,
+   "task": "Store the user's OAuth refresh token on disk without keeping it in plain text",
+   "kind": "where",
+   "question": "Is there a built-in Electron API to encrypt a secret like an auth token with the OS keychain before writing it to disk?",
+   "keywords": "encrypt token keychain disk",
+   "answers": [
+    "api/safe-storage"
+   ],
+   "note": "safeStorage encryptStringAsync/decryptStringAsync using Keychain/DPAPI/secret-store keys; spread across intro, key providers, methods.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-25",
+   "pr": null,
+   "task": "Make API calls from the main process that respect the user's system proxy settings",
+   "kind": "where",
+   "question": "Which API should the main process use for HTTP requests so they go through Chromium's networking and honor system proxy settings?",
+   "keywords": "http request main process proxy",
+   "answers": [
+    "api/net#net"
+   ],
+   "note": "net module intro: Chromium networking with automatic system proxy config (PAC/WPAD); use net.request/net.fetch. ses.fetch lacks proxy info.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "electron-26",
+   "pr": null,
+   "task": "Window flashes white for a moment before the dark-themed UI renders",
+   "kind": "troubleshooting",
+   "question": "My window flashes white for a moment before the page renders, even though the app uses a dark theme; how do I avoid that?",
+   "keywords": "white flash before page loads",
+   "answers": [
+    "api/browser-window#showing-the-window-gracefully"
+   ],
+   "note": "Create window with show:false and show on ready-to-show, or set backgroundColor near the app's background.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-27",
+   "pr": null,
+   "task": "App crashes on launch after adding the better-sqlite3 native dependency",
+   "kind": "troubleshooting",
+   "question": "Loading a native module fails with 'compiled against a different Node.js version using NODE_MODULE_VERSION'; how do I fix it for Electron?",
+   "keywords": "NODE_MODULE_VERSION native module mismatch",
+   "answers": [
+    "tutorial/using-native-node-modules#installing-modules-and-rebuilding-for-electron",
+    "tutorial/using-native-node-modules#using-npm",
+    "tutorial/using-native-node-modules#manually-building-for-electron"
+   ],
+   "note": "Rebuild for Electron: @electron/rebuild, npm_config_* env vars, or node-gyp with Electron headers; intro quotes the error.",
+   "labeled": "reconciled"
+  },
+  {
+   "id": "electron-28",
+   "pr": null,
+   "task": "Desktop notifications work on macOS but never appear on Windows",
+   "kind": "troubleshooting",
+   "question": "Notifications appear fine on macOS but nothing shows on Windows while running the app in development; what does Windows require?",
+   "keywords": "notifications not showing windows",
+   "answers": [
+    "tutorial/notifications#windows"
+   ],
+   "note": "Windows needs Start Menu shortcut with AppUserModelID; in development pin electron.exe and call app.setAppUserModelId.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-29",
+   "pr": null,
+   "task": "After upgrading Electron, the preload script can no longer require an npm package",
+   "kind": "troubleshooting",
+   "question": "After an Electron upgrade, my preload script fails with 'Unable to load preload script' when requiring an npm module; why and how to fix?",
+   "keywords": "unable to load preload script require",
+   "answers": [
+    "tutorial/sandbox#preload-scripts",
+    "tutorial/sandbox#disabling-the-sandbox-for-a-single-process",
+    "breaking-changes#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default"
+   ],
+   "note": "Preloads sandboxed by default since Electron 20; require only loads electron; bundle the preload or set sandbox:false.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-30",
+   "pr": null,
+   "task": "Tray icon vanishes a minute or so after the app starts",
+   "kind": "troubleshooting",
+   "question": "The tray icon appears at launch but disappears after a minute or two with no errors logged; what causes that?",
+   "keywords": "tray icon disappears after minutes",
+   "answers": [
+    "faq#my-apps-tray-disappeared-after-a-few-minutes"
+   ],
+   "note": "Tray object gets garbage collected; keep the Tray referenced in a global variable.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-31",
+   "pr": 55413,
+   "task": "docs: fix incorrect heading levels",
+   "kind": "convention",
+   "question": "What heading levels does the Electron docs style guide expect for page titles, sections, and individual API methods and events?",
+   "keywords": "docs heading levels style guide",
+   "answers": [
+    "development/style-guide#headings",
+    "development/style-guide#module-methods-and-events",
+    "development/style-guide#classes",
+    "development/style-guide#heading-level",
+    "development/style-guide#events"
+   ],
+   "note": "Single # title, ## chapters; API ## Methods/Events/Class chapters; methods/events ### (module) or #### (class).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-32",
+   "pr": 55402,
+   "task": "chore!: remove deprecated console-message event arguments",
+   "kind": "convention",
+   "question": "Which commit message types does Electron use, and how should a commit that removes a deprecated API be marked as breaking?",
+   "keywords": "commit message type breaking change",
+   "answers": [
+    "development/pull-requests#commit-message-guidelines",
+    "development/pull-requests#breaking-changes",
+    "tutorial/electron-versioning#semantic-commits"
+   ],
+   "note": "Prefix list (fix, feat, docs, ...) and BREAKING CHANGE: at body/footer start; versioning doc repeats feat/fix and BREAKING CHANGE.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-33",
+   "pr": 55471,
+   "task": "chore: batch backport of #55443, #55441, #55442, #55406, #55381",
+   "kind": "convention",
+   "question": "What's the process for backporting fixes that already landed on main to the currently supported release branches?",
+   "keywords": "backport fix release branch",
+   "answers": [
+    "tutorial/electron-versioning#backport-request-process",
+    "tutorial/electron-versioning#stabilization-branches"
+   ],
+   "note": "Backport PRs to supported lines, Releases WG resolves disputes; fixes cherry-picked from main into $MAJOR-x-y branches.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-34",
+   "pr": 55494,
+   "task": "feat: add Menu.setHighlightColors() for Windows",
+   "kind": "how-to",
+   "question": "I'm adding a new Windows-only method to an existing main-process API module; which files need changes, from C++ bindings to typings and docs?",
+   "keywords": "add new API method module",
+   "answers": [
+    "development/creating-api#set-up-objecttemplatebuilder-and-wrappable",
+    "development/creating-api#create-api-documentation",
+    "development/creating-api#add-your-files-to-electrons-project-configuration"
+   ],
+   "note": "New-module checklist: C++ SetMethod binding, docs .md generates electron.d.ts, lib_sources_win in filenames.gni.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-35",
+   "pr": 55327,
+   "task": "fix: cherry-pick 431b8be6a111 from chromium",
+   "kind": "how-to",
+   "question": "How do I add an upstream Chromium commit as a new patch in Electron's patches directory and regenerate the patch files?",
+   "keywords": "cherry-pick chromium commit patch",
+   "answers": [
+    "development/patches#adding-a-new-patch"
+   ],
+   "note": "Commit the change in the upstream checkout, then run script/git-export-patches -o patches/<project>; subject names the patch.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-36",
+   "pr": 55185,
+   "task": "fix: improve asar archive path handling",
+   "kind": "how-to",
+   "question": "How do I run only the asar-related spec files from Electron's test suite instead of the whole thing?",
+   "keywords": "run single spec file tests",
+   "answers": [
+    "development/testing#unit-tests",
+    "development/pull-requests#step-7-test"
+   ],
+   "note": "npm run test -- --files spec/<file> or -g PATTERN; pull-requests shows yarn test -match=<name> for matching spec modules.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-37",
+   "pr": 55532,
+   "task": "docs: explain ChromeDriver arguments during testing",
+   "kind": "how-to",
+   "question": "How do I configure ChromeDriver with Selenium to launch an Electron app binary and pass extra command-line arguments to it?",
+   "keywords": "chromedriver selenium app arguments",
+   "answers": [
+    "tutorial/automated-testing#run-a-chromedriver-server",
+    "tutorial/automated-testing#connect-selenium-to-chromedriver"
+   ],
+   "note": "Run electron-chromedriver; selenium-webdriver goog:chromeOptions binary; extra args not shown for Selenium (only WDIO appArgs).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-38",
+   "pr": 55209,
+   "task": "docs: `?` in preload script globs matches zero or one character",
+   "kind": "how-it-works",
+   "question": "How are URL filter patterns for session-registered preload scripts matched against frame URLs, and which glob wildcards are supported?",
+   "keywords": "preload script url filter glob",
+   "answers": [
+    "api/session#sesregisterpreloadscriptscript",
+    "api/structures/preload-script-registration",
+    "api/structures/preload-script"
+   ],
+   "note": "Session lists match conditions and which frame URL is used; structs: * any sequence, ? zero-or-one (PreloadScript says single char).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-39",
+   "pr": 55254,
+   "task": "feat: support chrome.storage.sync in extensions",
+   "kind": "where",
+   "question": "Where does Electron document which chrome.* extension APIs are supported, so I can add chrome.storage.sync to that list?",
+   "keywords": "supported chrome extension APIs",
+   "answers": [
+    "api/extensions#supported-extensions-apis",
+    "api/extensions#chromestorage"
+   ],
+   "note": "api/extensions.md 'Supported Extensions APIs' lists chrome.* APIs; the chrome.storage subsection is where storage.sync goes.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "electron-40",
+   "pr": 55472,
+   "task": "chore: bump chromium to 159.0.8130.0 (main)",
+   "kind": "troubleshooting",
+   "question": "After the Chromium roll, gclient sync stops with 'Conflict while rebasing this branch'; how do I get my checkout syncing again?",
+   "keywords": "gclient sync conflict rebasing branch",
+   "answers": [
+    "development/build-instructions-gn#sync-complains-about-rebase"
+   ],
+   "note": "Run git am --abort in src then e sync -f, or git checkout --detach HEAD in the repo with a checked-out branch.",
+   "labeled": "agreed"
+  }
+ ],
+ "dropped": []
+}
