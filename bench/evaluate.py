@@ -22,6 +22,7 @@ whole files in rank order, at most ``READS``. A miss costs all of its reads.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import platform
@@ -45,6 +46,7 @@ from .corpora import BENCH_DIR, Corpus
 CASES_DIR = BENCH_DIR / "cases"
 REPO_ROOT = BENCH_DIR.parent
 PHRASINGS = ("question", "keywords")
+SPLITS = ("dev", "test")
 SYSTEMS = ("agentindex", "bm25", "grep")
 SEARCH_LIMIT = 8  # what search_docs and the CLI return by default
 READS = 3  # docs an agent reads, in rank order, before giving up
@@ -53,6 +55,12 @@ CHARS_PER_TOKEN = 4
 CLI_RUNS = 5
 COMMAND = "python3 -m agentindex"
 SEARCH_HINT = f"Read one: {COMMAND} read <id>  (or <id>#<section> for just that section)"
+
+
+def split_of(case_id: str) -> str:
+    """The fixed half of the cases this one is in: "dev" to choose a ranking change on,
+    "test" to confirm the choice on once. Chosen by a hash of the id, so it never moves."""
+    return SPLITS[int(hashlib.sha256(case_id.encode()).hexdigest(), 16) % 2]
 
 
 def tokens(text: str) -> int:
@@ -184,8 +192,9 @@ def pool_candidates(corpora: list[Corpus], depth: int = READS) -> dict[str, list
     return pools
 
 
-def run_benchmark(corpora: list[Corpus], log=print) -> dict:
-    results = [_run_corpus(corpus, log) for corpus in corpora]
+def run_benchmark(corpora: list[Corpus], log=print, split: str | None = None) -> dict:
+    """Run every system on every case, or only on the cases in one ``split``."""
+    results = [_run_corpus(corpus, log, split) for corpus in corpora]
     return {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "environment": {
@@ -200,6 +209,7 @@ def run_benchmark(corpora: list[Corpus], log=print) -> dict:
             "grep_listing": GREP_LISTING,
             "chars_per_token": CHARS_PER_TOKEN,
             "pointer_tokens": tokens(render_template("CLAUDE.md", COMMAND, "knowledge")),
+            "split": split,
         },
         "corpora": results,
         "overall": aggregate([c for r in results for c in r["cases"]]),
@@ -227,8 +237,11 @@ class _open_index:
         self.tmp.cleanup()
 
 
-def _run_corpus(corpus: Corpus, log) -> dict:
+def _run_corpus(corpus: Corpus, log, split: str | None = None) -> dict:
     case_file = load_cases(corpus.name)
+    written = len(case_file.cases) + len(case_file.dropped)
+    if split:
+        case_file.cases = [c for c in case_file.cases if split_of(c.id) == split]
     log(f"{corpus.name}: indexing")
     with _open_index(corpus) as (index, db):
         started = time.perf_counter()
@@ -301,7 +314,7 @@ def _run_corpus(corpus: Corpus, log) -> dict:
         "words": sum(row["words"] for row in docs),
         "tokens_total": tokens(everything),
         "original": corpus.paths[0] if corpus.original else None,
-        "written": len(case_file.cases) + len(case_file.dropped),
+        "written": written,
         "dropped": case_file.dropped,
         "labeling": case_file.labeling,
         "speed": {

@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from .corpora import BENCH_DIR, fetch, is_fetched, load_corpora
+from .evaluate import SPLITS
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -25,8 +26,14 @@ def main(argv: list[str] | None = None) -> int:
             p.add_argument(
                 "--out",
                 type=Path,
-                default=BENCH_DIR,
-                help="directory for results.md and results.json (default: bench/)",
+                help="directory for results.md and results.json (default: bench/, or none"
+                " with --split)",
+            )
+            p.add_argument(
+                "--split",
+                choices=SPLITS,
+                help="only the cases in this half: choose ranking changes on dev, confirm on"
+                " test (prints the summary; writes files only with --out)",
             )
     args = parser.parse_args(argv)
     corpora = load_corpora(args.corpora)
@@ -50,10 +57,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{len(problems)} problems" if problems else "All cases check out.")
         return 1 if problems else 0
 
-    results = run_benchmark(corpora, log=lambda message: print(message, file=sys.stderr))
-    paths = write_results(results, args.out)
+    results = run_benchmark(
+        corpora, log=lambda message: print(message, file=sys.stderr), split=args.split
+    )
     print(render_report(results, summary_only=True))
-    print("\nWrote " + " and ".join(str(p) for p in paths))
+    out = args.out or (None if args.split else BENCH_DIR)
+    if out:
+        paths = write_results(results, out)
+        print("\nWrote " + " and ".join(str(p) for p in paths))
     return 0
 
 

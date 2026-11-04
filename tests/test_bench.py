@@ -191,6 +191,16 @@ class RunTest(BenchTestCase):
         self.assertGreater(speed["cold_index_s"], 0)
         self.assertGreater(speed["cli_ms"], 0)
 
+    def test_split_runs_one_half(self):
+        halves = {case: evaluate.split_of(case) for case in ("one-test", "release-day")}
+        for split in evaluate.SPLITS:
+            results = evaluate.run_benchmark([self.corpus], log=lambda m: None, split=split)
+            corpus = results["corpora"][0]
+            ran = [case["id"] for case in corpus["cases"]]
+            self.assertEqual(ran, [c for c, half in halves.items() if half == split])
+            self.assertEqual(corpus["written"], 3)  # all questions written, not just this half
+            self.assertEqual(results["settings"]["split"], split)
+
     def test_report_renders(self):
         text = report.render_report(self.results)
         self.assertIn("| Fake docs | 2 |", text)
@@ -233,6 +243,12 @@ class MetricsTest(ProjectTestCase):
         self.assertTrue(evaluate._covers(spans, "a", {"a-b"}))
         self.assertFalse(evaluate._covers(spans, "a-b", {"c"}))
         self.assertFalse(evaluate._covers(spans, "missing", {"a"}))
+
+    def test_split_is_fixed_and_about_half(self):
+        self.assertEqual(evaluate.split_of("rustc-01"), evaluate.split_of("rustc-01"))
+        halves = [evaluate.split_of(f"case-{i}") for i in range(400)]
+        self.assertTrue(set(halves) <= set(evaluate.SPLITS))
+        self.assertTrue(160 < halves.count("dev") < 240, halves.count("dev"))
 
     def test_case_answers(self):
         case = Case("x", "q", "k", ["a#one", "a#two", "b"])
