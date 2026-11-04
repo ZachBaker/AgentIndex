@@ -78,6 +78,11 @@ then checked on the other half, which played no part in the choice:
 | Weighted fields, search keywords | 73% | 93% | 0.832 |
 | Equal fields, search keywords | 82% | 94% | 0.890 |
 
+Electron's 40 questions, added after the choice, were a second check. Equal weights ranked
+the answer first for 75% of its natural questions, against 72%, and in the top 3 for 92%,
+against 88%. On keyword queries the two were level in the top 3 (82%), and equal weights
+ranked one fewer answer first (72% against 75%).
+
 `FlatFieldWeightsTest` in `tests/test_search.py` reproduces the CI case in miniature.
 
 This costs two small SQL queries per phrase (docs and sections), which takes milliseconds
@@ -96,6 +101,6 @@ code blocks are kept.
 The weights are at the top of `store.py` (`DOC_WEIGHTS`, `SECTION_WEIGHTS`). Before
 changing them, add the query that ranks badly to `tests/test_search.py` and make sure the
 other cases still pass. Then compare the [benchmark](../development/benchmarks.md) on real
-knowledge bases before and after the change, choosing on one half of its questions and
-checking on the other. Often the better fix is in the docs: a sharper title or summary, or
+knowledge bases before and after the change: choose with `python3 -m bench run --split dev`
+and check the result once with `--split test`. Often the better fix is in the docs: a sharper title or summary, or
 `keywords` with the words people actually search for.

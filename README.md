@@ -56,6 +56,37 @@ If a release breaks, roll back the deploy with `deploy --rollback`.
 - **No dependencies.** Python 3.9+ standard library only. Install it, or vendor the
   `agentindex/` folder into your repo.
 
+## How well it works
+
+Measured on seven real projects' knowledge bases: the Rust compiler dev guide, Node.js's
+contributor docs, Electron's docs, GitLab's development docs, and the AGENTS.md files of
+PostHog, Next.js and Cloudflare workerd. The 215 questions were written from real merged
+PRs by an agent that never saw the docs, labeled by two independent agents, and each asked
+both as a question and as search keywords.
+
+| | AgentIndex | grep, ranking files by matching words |
+|---|---|---|
+| Answer in the top 3, natural questions | **96%** | 73% |
+| Answer in the top 3, search keywords | **93%** | 88% |
+| Answer ranked first, natural questions | **78%** | 46% |
+
+- **Real agents answered as well, with less context.** Given every question, agents using
+  AgentIndex instead of grep were as accurate (99% correct) and added a median 7.4k tokens
+  of context per lookup instead of 8.9k. Compared with reading a whole AGENTS.md, they
+  added 6.8k instead of 15k, with 97% correct instead of 100%.
+- **It matters most for big knowledge bases.** Three of the four doc folders (477k to 2.1M
+  tokens) do not fit in a 200k context window, and a lookup costs 2–4k tokens. A small
+  AGENTS.md (7–12k tokens) costs about as much as two or three lookups, so splitting one
+  pays off only in sessions with few lookups.
+- **It is fast.** A median of 4–86 ms per search and 80–220 ms per CLI call; indexing
+  GitLab's 1.2M words takes 6 s, once.
+- **The scoring formula is not the secret.** SQLite's own `bm25()` over the same index
+  ranks about as well. The gain over grep comes from the index, the query parsing and
+  section-level results.
+
+Full results: [simulated agents](bench/results.md), [real agents](bench/real-agents.md),
+and [how it was measured](knowledge/development/benchmarks.md), with its limits.
+
 ## Quick start
 
 ```bash

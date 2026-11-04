@@ -78,7 +78,8 @@ def _summary(results: dict) -> list[str]:
         " is in brackets."
         " The answering section is judged where the answer is one section of a longer doc"
         " and a relevant doc was in the top 3. What the lookups cost is under"
-        " [context cost](#context-cost); what real agents spent is in [pilot.md](pilot.md)."
+        " [context cost](#context-cost); what real agents spent is in"
+        " [real-agents.md](real-agents.md)."
     )
     return rows + ["", note]
 
@@ -116,8 +117,8 @@ def _cost_table(results: dict) -> list[str]:
         f" is paid in every session; AgentIndex costs a {pointer}-token CLAUDE.md pointer per"
         " session plus each lookup. Lookups are medians over natural questions, and misses"
         " count all their reads. The grep agent here reads whole files, which is an upper"
-        " bound: real agents read the matching parts, and [pilot.md](pilot.md) has what they"
-        " spent.",
+        " bound: real agents read the matching parts, and [real-agents.md](real-agents.md) has"
+        " what they spent.",
         "",
         "| Corpus | Load everything | grep, reading whole files | AgentIndex, per lookup |"
         " Lookups before AgentIndex costs more |",
@@ -229,9 +230,9 @@ def _misses(corpora: list[dict]) -> list[str]:
 
 
 def _marked(values: list[float | None]) -> list[str]:
-    """Percentages, with the highest (and any ties) in bold."""
-    best = max((v for v in values if v is not None), default=None)
-    return [f"**{_pct(v)}**" if v is not None and v == best else _pct(v) for v in values]
+    """Percentages, with the highest in bold, and any that round to the same."""
+    best = _pct(max((v for v in values if v is not None), default=None))
+    return [f"**{_pct(v)}**" if v is not None and _pct(v) == best else _pct(v) for v in values]
 
 
 def _pair_cells(stats: dict) -> list[str]:
