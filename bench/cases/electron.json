@@ -27,7 +27,16 @@
     "api/app#event-open-url-macos"
    ],
    "note": "Deep Links tutorial: setAsDefaultProtocolClient, second-instance (Win) / open-url (mac), Info.plist packaging; api/app reference entries.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/net",
+    "api/protocol",
+    "api/session",
+    "api/structures/custom-scheme",
+    "api/structures/protocol-source",
+    "api/web-contents",
+    "breaking-changes"
+   ]
   },
   {
    "id": "electron-02",
@@ -42,7 +51,16 @@
     "tutorial/context-isolation#security-considerations"
    ],
    "note": "contextBridge.exposeInMainWorld wrapping ipcRenderer.invoke plus ipcMain.handle; IPC Pattern 2, preload tutorial, context-isolation example.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/context-bridge",
+    "api/session",
+    "api/web-contents",
+    "breaking-changes",
+    "tutorial/esm",
+    "tutorial/process-model",
+    "tutorial/security"
+   ]
   },
   {
    "id": "electron-03",
@@ -56,7 +74,15 @@
     "api/global-shortcut#globalshortcutregisteraccelerator-callback"
    ],
    "note": "globalShortcut.register works without app focus; keyboard-shortcuts 'Global shortcuts' section and globalShortcut API reference.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/browser-window",
+    "api/menu-item",
+    "api/structures/shortcut-details",
+    "api/web-contents",
+    "tutorial/tutorial-4-adding-features"
+   ]
   },
   {
    "id": "electron-04",
@@ -69,7 +95,15 @@
     "tutorial/custom-title-bar#basic-tutorial"
    ],
    "note": "Basic tutorial: titleBarStyle 'hidden', titleBarOverlay for Win/Linux controls (macOS keeps traffic lights), app-region: drag.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/base-window",
+    "api/browser-window",
+    "api/structures/base-window-options",
+    "breaking-changes",
+    "tutorial/custom-window-interactions",
+    "tutorial/custom-window-styles"
+   ]
   },
   {
    "id": "electron-05",
@@ -84,7 +118,13 @@
     "tutorial/tutorial-6-publishing-updating#instrumenting-your-updater-code"
    ],
    "note": "update.electronjs.org via require('update-electron-app')(); requirements and setup in updates guide and tutorial part 6.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/auto-updater",
+    "breaking-changes",
+    "tutorial/forge-overview",
+    "tutorial/tutorial-1-prerequisites"
+   ]
   },
   {
    "id": "electron-06",
@@ -98,7 +138,14 @@
     "tutorial/tutorial-5-packaging#important-signing-your-code"
    ],
    "note": "macOS signing+notarization: Apple Developer requirements, Forge/Packager osxSign + osxNotarize config; packaging tutorial Forge example.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/browser-window",
+    "development/pull-requests",
+    "glossary",
+    "tutorial/distribution-overview"
+   ]
   },
   {
    "id": "electron-07",
@@ -113,7 +160,15 @@
     "api/protocol#protocolregistersourcescheme-source-experimental"
    ],
    "note": "registerSchemesAsPrivileged (standard/secure/supportFetchAPI, storage) plus protocol.handle or registerSource serving bundled app:// files.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/session",
+    "api/structures/custom-scheme",
+    "breaking-changes",
+    "tutorial/fuses",
+    "tutorial/security"
+   ]
   },
   {
    "id": "electron-08",
@@ -129,7 +184,18 @@
     "api/parent-port"
    ],
    "note": "utilityProcess.fork, child.postMessage, 'message' event; parentPort doc example shows full two-way messaging.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/structures/jump-list-item",
+    "api/structures/task",
+    "api/web-contents",
+    "breaking-changes",
+    "glossary",
+    "tutorial/message-ports",
+    "tutorial/performance",
+    "tutorial/process-model",
+    "tutorial/windows-taskbar"
+   ]
   },
   {
    "id": "electron-09",
@@ -143,7 +209,15 @@
     "tutorial/tutorial-2-first-app#optional-debugging-from-vs-code"
    ],
    "note": ".vscode/launch.json node config launching node_modules/.bin/electron, then breakpoints in main.js hit.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "breaking-changes",
+    "development/debugging-on-macos",
+    "development/debugging-on-windows",
+    "development/debugging-with-xcode",
+    "tutorial/debugging-main-process",
+    "tutorial/windows-arm"
+   ]
   },
   {
    "id": "electron-10",
@@ -159,7 +233,11 @@
     "api/crash-reporter#crash-report-payload"
    ],
    "note": "crashReporter.start({submitURL}) early in main monitors renderers; server receives multipart minidump POST.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "breaking-changes",
+    "development/debugging-with-symbol-server"
+   ]
   },
   {
    "id": "electron-11",
@@ -176,7 +254,15 @@
     "tutorial/dark-mode#how-does-this-work"
    ],
    "note": "nativeTheme shouldUseDarkColors, 'updated' event, themeSource; dark-mode overview, plus toggle/reset code under How does this work.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "api/app",
+    "api/menu",
+    "api/session",
+    "api/structures/base-window-options",
+    "breaking-changes",
+    "tutorial/custom-title-bar"
+   ]
   },
   {
    "id": "electron-12",
@@ -190,7 +276,16 @@
     "api/web-contents#event-paint"
    ],
    "note": "Offscreen guide: webPreferences.offscreen plus 'paint' event giving NativeImage bitmap; webContents 'paint' event shows same code.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/browser-window",
+    "api/structures/web-preferences",
+    "api/web-frame-main",
+    "api/webview-tag",
+    "breaking-changes",
+    "glossary",
+    "tutorial/examples"
+   ]
   },
   {
    "id": "electron-13",
@@ -203,7 +298,16 @@
     "tutorial/security#how-11"
    ],
    "note": "Security #14 How?: setWindowOpenHandler calls shell.openExternal(url) and returns {action:'deny'}.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/shell",
+    "api/structures/window-open-handler-response",
+    "api/web-contents",
+    "api/webview-tag",
+    "api/window-open",
+    "breaking-changes"
+   ]
   },
   {
    "id": "electron-14",
@@ -216,7 +320,15 @@
     "tutorial/spellchecker#how-do-i-put-the-results-of-the-spellchecker-in-my-context-menu"
    ],
    "note": "context-menu event: dictionarySuggestions items with replaceMisspelling, plus 'Add to dictionary' via addWordToSpellCheckerDictionary.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/web-contents",
+    "api/web-frame",
+    "api/webview-tag",
+    "breaking-changes",
+    "tutorial/context-menu",
+    "tutorial/menus"
+   ]
   },
   {
    "id": "electron-15",
@@ -229,7 +341,15 @@
     "tutorial/asar-archives"
    ],
    "note": "Whole guide: fs/require read archive as virtual dirs, limitations, execFile/dlopen temp extraction, only execFile runs binaries, --unpack.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "api/session",
+    "glossary",
+    "tutorial/application-distribution",
+    "tutorial/asar-integrity",
+    "tutorial/fuses",
+    "tutorial/windows-store-guide"
+   ]
   },
   {
    "id": "electron-16",
@@ -246,7 +366,17 @@
     "api/app#appquit"
    ],
    "note": "app quit events and app.quit() give order before-quit, windows close, will-quit, quit; preventDefault() stops termination.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app-shim-host",
+    "api/auto-updater",
+    "api/browser-window",
+    "api/desktop-capturer",
+    "breaking-changes",
+    "tutorial/progress-bar",
+    "tutorial/tray",
+    "tutorial/using-native-node-modules"
+   ]
   },
   {
    "id": "electron-17",
@@ -261,7 +391,15 @@
     "tutorial/esm#preload-scripts"
    ],
    "note": "ESM guide: main via .mjs or type module with await-before-ready caveat; preload needs .mjs, unsandboxed, more caveats.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "breaking-changes",
+    "tutorial/crash-reporting",
+    "tutorial/process-model",
+    "tutorial/sandbox",
+    "tutorial/tutorial-2-first-app",
+    "tutorial/tutorial-3-preload"
+   ]
   },
   {
    "id": "electron-18",
@@ -277,7 +415,16 @@
     "api/app#appsetaccessibilitysupportenabledenabled-macos-windows"
    ],
    "note": "Auto-enabled when assistive tech is detected; can be enabled manually with app.setAccessibilitySupportEnabled or accessibilitySupportEnabled.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/base-window",
+    "api/browser-window",
+    "api/screen",
+    "api/touch-bar-button",
+    "api/touch-bar-label",
+    "api/web-contents",
+    "tutorial/security"
+   ]
   },
   {
    "id": "electron-19",
@@ -292,7 +439,15 @@
     "api/session#sesispersistent"
    ],
    "note": "Same partition shares a session; persist: prefix stores on disk, otherwise in-memory; the default session is persistent.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/cookies",
+    "api/structures/cookie",
+    "api/web-request",
+    "breaking-changes",
+    "tutorial/window-state-persistence"
+   ]
   },
   {
    "id": "electron-20",
@@ -309,7 +464,16 @@
     "tutorial/security#5-handle-session-permission-requests-from-remote-content"
    ],
    "note": "Security checklist: no nodeIntegration for remote content, contextIsolation, sandbox, permission handler, isolation for untrusted content.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/session",
+    "api/structures/web-preferences",
+    "breaking-changes",
+    "tutorial/accessibility",
+    "tutorial/context-isolation",
+    "tutorial/process-model",
+    "tutorial/web-embeds"
+   ]
   },
   {
    "id": "electron-21",
@@ -326,7 +490,15 @@
     "tutorial/performance#8-call-menusetapplicationmenunull-when-you-do-not-need-a-default-menu"
    ],
    "note": "Performance checklist: defer loading/require at startup, avoid blocking main process, lean modules, bundle code, setApplicationMenu(null).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/content-tracing",
+    "tutorial/automated-testing",
+    "tutorial/esm",
+    "tutorial/fuses",
+    "tutorial/introduction"
+   ]
   },
   {
    "id": "electron-22",
@@ -340,7 +512,15 @@
     "tutorial/security#19-check-which-fuses-you-can-change"
    ],
    "note": "Current fuses lists runAsNode, nodeOptions, nodeCliInspect with disable advice; security checklist item 19 covers same via @electron/fuses.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/command-line-switches",
+    "api/crash-reporter",
+    "api/environment-variables",
+    "api/structures/product",
+    "breaking-changes"
+   ]
   },
   {
    "id": "electron-23",
@@ -350,10 +530,19 @@
    "question": "Where can I find what was removed or changed in a breaking way between Electron major versions before upgrading?",
    "keywords": "breaking changes upgrade major version",
    "answers": [
-    "breaking-changes"
+    "breaking-changes",
+    "tutorial/electron-timelines#breaking-api-changes"
    ],
    "note": "Breaking Changes doc lists removed/changed/deprecated APIs per major version; other docs only link to it.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/base-window",
+    "faq",
+    "tutorial/electron-versioning"
+   ],
+   "pooled": [
+    "tutorial/electron-timelines#breaking-api-changes"
+   ]
   },
   {
    "id": "electron-24",
@@ -363,10 +552,23 @@
    "question": "Is there a built-in Electron API to encrypt a secret like an auth token with the OS keychain before writing it to disk?",
    "keywords": "encrypt token keychain disk",
    "answers": [
-    "api/safe-storage"
+    "api/safe-storage",
+    "breaking-changes#removed-safestorageisencryptionavailable-safestorageencryptstring-and-safestoragedecryptstring",
+    "breaking-changes#deprecated-safestorageisencryptionavailable-safestorageencryptstring-and-safestoragedecryptstring"
    ],
    "note": "safeStorage encryptStringAsync/decryptStringAsync using Keychain/DPAPI/secret-store keys; spread across intro, key providers, methods.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/structures/shared-texture-sync-token",
+    "tutorial/code-signing",
+    "tutorial/fuses",
+    "tutorial/tutorial-6-publishing-updating"
+   ],
+   "pooled": [
+    "breaking-changes#removed-safestorageisencryptionavailable-safestorageencryptstring-and-safestoragedecryptstring",
+    "breaking-changes#deprecated-safestorageisencryptionavailable-safestorageencryptstring-and-safestoragedecryptstring"
+   ]
   },
   {
    "id": "electron-25",
@@ -376,10 +578,24 @@
    "question": "Which API should the main process use for HTTP requests so they go through Chromium's networking and honor system proxy settings?",
    "keywords": "http request main process proxy",
    "answers": [
-    "api/net#net"
+    "api/net#net",
+    "api/session#sesfetchinput-init"
    ],
    "note": "net module intro: Chromium networking with automatic system proxy config (PAC/WPAD); use net.request/net.fetch. ses.fetch lacks proxy info.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "api/app",
+    "api/client-request",
+    "api/command-line-switches",
+    "api/incoming-message",
+    "api/touch-bar-other-items-proxy",
+    "api/web-contents",
+    "api/web-socket",
+    "breaking-changes"
+   ],
+   "pooled": [
+    "api/session#sesfetchinput-init"
+   ]
   },
   {
    "id": "electron-26",
@@ -392,7 +608,18 @@
     "api/browser-window#showing-the-window-gracefully"
    ],
    "note": "Create window with show:false and show on ready-to-show, or set backgroundColor near the app's background.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/command-line-switches",
+    "api/native-theme",
+    "api/structures/base-window-options",
+    "api/structures/gpu-feature-status",
+    "breaking-changes",
+    "tutorial/dark-mode",
+    "tutorial/esm",
+    "tutorial/using-pepper-flash-plugin"
+   ]
   },
   {
    "id": "electron-27",
@@ -407,7 +634,16 @@
     "tutorial/using-native-node-modules#manually-building-for-electron"
    ],
    "note": "Rebuild for Electron: @electron/rebuild, npm_config_* env vars, or node-gyp with Electron headers; intro quotes the error.",
-   "labeled": "reconciled"
+   "labeled": "reconciled",
+   "not_answers": [
+    "api/app",
+    "api/session",
+    "breaking-changes",
+    "faq",
+    "glossary",
+    "tutorial/native-code-and-electron",
+    "tutorial/windows-arm"
+   ]
   },
   {
    "id": "electron-28",
@@ -420,7 +656,14 @@
     "tutorial/notifications#windows"
    ],
    "note": "Windows needs Start Menu shortcut with AppUserModelID; in development pin electron.exe and call app.setAppUserModelId.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/notification",
+    "api/structures/notification-action",
+    "breaking-changes",
+    "tutorial/native-code-and-electron-objc-macos"
+   ]
   },
   {
    "id": "electron-29",
@@ -435,7 +678,17 @@
     "breaking-changes#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default"
    ],
    "note": "Preloads sandboxed by default since Electron 20; require only loads electron; bundle the preload or set sandbox:false.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/session",
+    "api/structures/preload-script",
+    "api/web-contents",
+    "faq",
+    "tutorial/context-isolation",
+    "tutorial/esm",
+    "tutorial/tutorial-3-preload"
+   ]
   },
   {
    "id": "electron-30",
@@ -445,10 +698,19 @@
    "question": "The tray icon appears at launch but disappears after a minute or two with no errors logged; what causes that?",
    "keywords": "tray icon disappears after minutes",
    "answers": [
-    "faq#my-apps-tray-disappeared-after-a-few-minutes"
+    "faq#my-apps-tray-disappeared-after-a-few-minutes",
+    "tutorial/tray#attaching-a-context-menu"
    ],
    "note": "Tray object gets garbage collected; keep the Tray referenced in a global variable.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/tray",
+    "breaking-changes"
+   ],
+   "pooled": [
+    "tutorial/tray#attaching-a-context-menu"
+   ]
   },
   {
    "id": "electron-31",
@@ -465,7 +727,15 @@
     "development/style-guide#events"
    ],
    "note": "Single # title, ## chapters; API ## Methods/Events/Class chapters; methods/events ### (module) or #### (class).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "CLAUDE",
+    "api/system-preferences",
+    "breaking-changes",
+    "development/api-history-migration-guide",
+    "development/coding-style",
+    "tutorial/dark-mode"
+   ]
   },
   {
    "id": "electron-32",
@@ -480,7 +750,16 @@
     "tutorial/electron-versioning#semantic-commits"
    ],
    "note": "Prefix list (fix, feat, docs, ...) and BREAKING CHANGE: at body/footer start; versioning doc repeats feat/fix and BREAKING CHANGE.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "CLAUDE",
+    "api/browser-window",
+    "api/web-contents",
+    "api/webview-tag",
+    "breaking-changes",
+    "development/api-history-migration-guide",
+    "development/patches"
+   ]
   },
   {
    "id": "electron-33",
@@ -494,7 +773,13 @@
     "tutorial/electron-versioning#stabilization-branches"
    ],
    "note": "Backport PRs to supported lines, Releases WG resolves disputes; fixes cherry-picked from main into $MAJOR-x-y branches.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "breaking-changes",
+    "development/build-instructions-gn",
+    "development/pull-requests",
+    "tutorial/electron-timelines"
+   ]
   },
   {
    "id": "electron-34",
@@ -509,7 +794,19 @@
     "development/creating-api#add-your-files-to-electrons-project-configuration"
    ],
    "note": "New-module checklist: C++ SetMethod binding, docs .md generates electron.d.ts, lib_sources_win in filenames.gni.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "breaking-changes",
+    "development/coding-style",
+    "development/source-code-directory-structure",
+    "development/testing",
+    "tutorial/dark-mode",
+    "tutorial/native-code-and-electron",
+    "tutorial/native-code-and-electron-cpp-linux",
+    "tutorial/native-code-and-electron-cpp-win32",
+    "tutorial/native-code-and-electron-objc-macos"
+   ]
   },
   {
    "id": "electron-35",
@@ -522,7 +819,16 @@
     "development/patches#adding-a-new-patch"
    ],
    "note": "Commit the change in the upstream checkout, then run script/git-export-patches -o patches/<project>; subject names the patch.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "breaking-changes",
+    "development/README",
+    "development/build-instructions-gn",
+    "development/chromium-development",
+    "development/pull-requests",
+    "development/source-code-directory-structure",
+    "tutorial/electron-versioning"
+   ]
   },
   {
    "id": "electron-36",
@@ -536,7 +842,14 @@
     "development/pull-requests#step-7-test"
    ],
    "note": "npm run test -- --files spec/<file> or -g PATTERN; pull-requests shows yarn test -match=<name> for matching spec modules.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/session",
+    "api/web-contents",
+    "breaking-changes",
+    "development/source-code-directory-structure",
+    "tutorial/automated-testing"
+   ]
   },
   {
    "id": "electron-37",
@@ -550,7 +863,15 @@
     "tutorial/automated-testing#connect-selenium-to-chromedriver"
    ],
    "note": "Run electron-chromedriver; selenium-webdriver goog:chromeOptions binary; extra args not shown for Selenium (only WDIO appArgs).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/command-line",
+    "api/command-line-switches",
+    "api/environment-variables",
+    "breaking-changes",
+    "tutorial/testing-on-headless-ci"
+   ]
   },
   {
    "id": "electron-38",
@@ -565,7 +886,14 @@
     "api/structures/preload-script"
    ],
    "note": "Session lists match conditions and which frame URL is used; structs: * any sequence, ? zero-or-one (PreloadScript says single char).",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/structures/web-request-filter",
+    "api/web-contents",
+    "breaking-changes",
+    "tutorial/context-isolation",
+    "tutorial/tutorial-3-preload"
+   ]
   },
   {
    "id": "electron-39",
@@ -579,7 +907,14 @@
     "api/extensions#chromestorage"
    ],
    "note": "api/extensions.md 'Supported Extensions APIs' lists chrome.* APIs; the chrome.storage subsection is where storage.sync goes.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/extensions-api",
+    "api/session",
+    "breaking-changes",
+    "tutorial/devtools-extension"
+   ]
   },
   {
    "id": "electron-40",
@@ -592,7 +927,13 @@
     "development/build-instructions-gn#sync-complains-about-rebase"
    ],
    "note": "Run git am --abort in src then e sync -f, or git checkout --detach HEAD in the repo with a checked-out branch.",
-   "labeled": "agreed"
+   "labeled": "agreed",
+   "not_answers": [
+    "api/app",
+    "api/web-contents",
+    "development/patches",
+    "development/pull-requests"
+   ]
   }
  ],
  "dropped": []
