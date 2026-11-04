@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 from .evaluate import PHRASINGS
@@ -61,9 +62,9 @@ def _summary(results: dict) -> list[str]:
     for key, label in (("hit1", "Answer ranked first"), ("hit3", "Answer in the top 3")):
         for phrasing in PHRASINGS:
             stats = overall["retrieval"][phrasing]
-            cells = [_pct(stats[s][key]) for s in ("agentindex", "bm25", "grep")]
+            cells = _marked([stats[s][key] for s in SYSTEM_NAMES])
             low, high = stats["agentindex"][key + "_ci"]
-            cells[0] = f"**{cells[0]}** ({_pct(low)}–{_pct(high)})"
+            cells[0] += f" ({_pct(low)}–{_pct(high)})"
             rows.append(f"| {label}, {PHRASING_NAMES[phrasing]} | " + " | ".join(cells) + " |")
     section = overall["section"]["question"]
     if section["rate"] is not None:
@@ -71,7 +72,8 @@ def _summary(results: dict) -> list[str]:
             f"| Result points at the answering section | **{_pct(section['rate'])}** | – | – |"
         )
     note = (
-        "Percentages are of all cases; AgentIndex's 95% confidence interval is in brackets."
+        "Percentages are of all cases, the best in bold; AgentIndex's 95% confidence interval"
+        " is in brackets."
         " The answering section is judged where the answer is one section of a longer doc"
         " and a relevant doc was in the top 3. What the lookups cost is under"
         " [context cost](#context-cost); what real agents spent is in [pilot.md](pilot.md)."
@@ -85,9 +87,7 @@ def _retrieval_table(corpora: list[dict], phrasing: str) -> list[str]:
         "|---|---|---|---|---|",
     ]
     for corpus in corpora:
-        stats = corpus["retrieval"][phrasing]
-        cells = [f"{_pct(stats[s]['hit1'])} · {_pct(stats[s]['hit3'])}" for s in SYSTEM_NAMES]
-        cells[0] = f"**{cells[0]}**"
+        cells = _pair_cells(corpus["retrieval"][phrasing])
         rows.append(f"| {corpus['title']} | {corpus['n']} | " + " | ".join(cells) + " |")
     return rows
 
@@ -101,8 +101,7 @@ def _kind_table(results: dict) -> list[str]:
     ]
     for kind, stats in results["by_kind"].items():
         question = stats["question"]
-        cells = [f"{_pct(question[s]['hit1'])} · {_pct(question[s]['hit3'])}" for s in SYSTEM_NAMES]
-        cells[0] = f"**{cells[0]}**"
+        cells = _pair_cells(question)
         n = question["agentindex"]["n"]
         rows.append(f"| {kind} | {n} | " + " | ".join(cells) + " |")
     return rows
@@ -131,9 +130,14 @@ def _cost_table(results: dict) -> list[str]:
         total = _num(corpus["tokens_total"])
         if corpus["tokens_total"] > CONTEXT_WINDOW:
             total += " (does not fit)"
+        grep_cost = tokens["grep"]["median"]
+        grep_cell, index_cell = _num(grep_cost), _num(index_cost)
+        if index_cost <= grep_cost:
+            index_cell = f"**{index_cell}**"
+        else:
+            grep_cell = f"**{grep_cell}**"
         rows.append(
-            f"| {corpus['title']} | {total} | {_num(tokens['grep']['median'])} |"
-            f" **{_num(index_cost)}** | {_num(breakeven)} |"
+            f"| {corpus['title']} | {total} | {grep_cell} | {index_cell} | {_num(breakeven)} |"
         )
     rows += ["", f'"Does not fit": more than a {CONTEXT_WINDOW // 1000}k-token context window.']
     return rows
@@ -160,15 +164,27 @@ def _speed_table(results: dict) -> list[str]:
 
 
 def _corpora_table(results: dict) -> list[str]:
+    totals = Counter()
+    for corpus in results["corpora"]:
+        totals.update((corpus.get("labeling") or {}).get("agreement") or {})
+    shared = (
+        "In every question both labelers answered, they named at least one answering doc in common."
+        if totals["same_doc"] == totals["both_answered"]
+        else f"Where both labelers found an answer, they named a common answering doc"
+        f" {_pct(totals['same_doc'] / totals['both_answered'])} of the time."
+    )
     rows = [
         "Each corpus is pinned to a commit and indexed as it is, with no per-corpus tuning."
         " Questions were written from real merged PRs (or common tasks) without looking at the"
         " docs; the answers were labeled separately, and questions the docs do not answer were"
-        " dropped. Two labelers worked independently on every question; the last column is how"
-        " often they named the same answering doc when both found one.",
+        " dropped. Two labelers worked independently on every question, and a third reconciled"
+        " every disagreement. The last two columns are how often the two labelers agreed to keep"
+        " or drop a question, and how often their labels (docs and sections) were identical."
+        f" {shared}",
         "",
-        "| Corpus | Source | Indexed | Questions kept / written | Labelers agreed |",
-        "|---|---|---|---|---|",
+        "| Corpus | Source | Indexed | Questions kept / written | Same keep or drop |"
+        " Identical labels |",
+        "|---|---|---|---|---|---|",
     ]
     for corpus in results["corpora"]:
         how = (
@@ -178,14 +194,12 @@ def _corpora_table(results: dict) -> list[str]:
         )
         source = f"[{corpus['url'].split('/')[3]}/{corpus['url'].split('/')[4]}]({corpus['url']})"
         agreement = (corpus.get("labeling") or {}).get("agreement") or {}
-        agreed = (
-            _pct(agreement["same_doc"] / agreement["both_answered"])
-            if agreement.get("both_answered")
-            else "–"
-        )
+        compared = agreement.get("compared")
+        same_keep = _pct(agreement["keep_drop_agree"] / compared) if compared else "–"
+        identical = _pct(agreement["identical"] / compared) if compared else "–"
         rows.append(
             f"| {corpus['title']} | {source} @ `{corpus['commit'][:10]}` ({corpus['license']}) |"
-            f" {how} | {corpus['n']} / {corpus['written']} | {agreed} |"
+            f" {how} | {corpus['n']} / {corpus['written']} | {same_keep} | {identical} |"
         )
     return rows
 
@@ -210,6 +224,19 @@ def _misses(corpora: list[dict]) -> list[str]:
         if missed:
             lines += [f"**{corpus['title']}** ({len(missed)})", "", *missed, ""]
     return lines
+
+
+def _marked(values: list[float | None]) -> list[str]:
+    """Percentages, with the highest (and any ties) in bold."""
+    best = max((v for v in values if v is not None), default=None)
+    return [f"**{_pct(v)}**" if v is not None and v == best else _pct(v) for v in values]
+
+
+def _pair_cells(stats: dict) -> list[str]:
+    """One "hit@1 · hit@3" cell per system, with the best of each in bold."""
+    first = _marked([stats[s]["hit1"] for s in SYSTEM_NAMES])
+    top3 = _marked([stats[s]["hit3"] for s in SYSTEM_NAMES])
+    return [f"{a} · {b}" for a, b in zip(first, top3)]
 
 
 def _pct(value: float | None) -> str:
