@@ -1,0 +1,873 @@
+{
+ "corpus": "rustc-dev-guide",
+ "about": "Questions written blind from merged rust-lang/rust PRs (June to November 2026), without seeing the guide; answers labeled separately against the pinned guide.",
+ "labeling": {
+  "method": "Two independent labelers per question (one starting from the doc list, one from grep); a third agent reconciled every disagreement on the merits.",
+  "agreement": {
+   "compared": 40,
+   "keep_drop_agree": 39,
+   "both_answered": 36,
+   "same_doc": 36,
+   "identical": 36,
+   "reconciled": 4
+  }
+ },
+ "cases": [
+  {
+   "id": "rustc-01",
+   "pr": "#165227",
+   "task": "Respect `--color=never` when printing `--explain` output to the terminal",
+   "kind": "how-to",
+   "question": "After building with x, how do I run my locally built rustc by hand to check the `--explain` output?",
+   "keywords": "run locally built rustc stage1",
+   "answers": [
+    "building/how-to-build-and-run#creating-a-rustup-toolchain",
+    "building/quickstart"
+   ],
+   "note": "Link the build with `rustup toolchain link stage1 build/host/stage1`, then run `rustc +stage1 ...` (e.g. with --explain).",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/writing-tools-in-bootstrap",
+    "building/optimized-build",
+    "compiler-debugging",
+    "queries/incremental-compilation-in-detail",
+    "rustdoc",
+    "tests/adding",
+    "tests/codegen-backend-tests/cg_gcc",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/running"
+   ]
+  },
+  {
+   "id": "rustc-02",
+   "pr": "#165225",
+   "task": "LoongArch: Restore `feature(stdarch_loongarch)` for bootstrap",
+   "kind": "convention",
+   "question": "When do I need `cfg(bootstrap)` or `cfg(not(bootstrap))` around feature attributes, and which code does the stage0 compiler build?",
+   "keywords": "cfg(bootstrap) stage0 feature attribute",
+   "answers": [
+    "building/bootstrapping/what-bootstrapping-does#complications-of-bootstrapping",
+    "building/bootstrapping/what-bootstrapping-does#stage-0-the-pre-compiled-compiler",
+    "stabilization-guide#removing-existing-uses-of-the-feature-gate"
+   ],
+   "note": "Stage0 builds get --cfg bootstrap, so just-stabilized features use cfg_attr(bootstrap, feature(..)). Stage0 compiles compiler/rustc and src/bootstrap.",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/bootstrap-in-dependencies",
+    "building/bootstrapping/debugging-bootstrap",
+    "feature-gate-check",
+    "overview",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-03",
+   "pr": "#165013",
+   "task": "[tiny] Add missing backticks around lifetime name",
+   "kind": "how-to",
+   "question": "After changing a diagnostic's wording, how do I update every affected UI test .stderr file automatically?",
+   "keywords": "update ui test stderr files",
+   "answers": [
+    "tests/running#editing-and-updating-the-reference-files",
+    "tests/adding#step-5-check-other-tests",
+    "building/quickstart",
+    "tests/ui#output-comparison"
+   ],
+   "note": "Run `./x test tests/ui --bless` to regenerate the .stderr/.stdout/.fixed snapshots after changing diagnostic output.",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/how-to-build-and-run",
+    "diagnostics",
+    "implementing-new-features",
+    "rustc-driver/getting-diagnostics",
+    "tests/compiletest"
+   ],
+   "pooled": [
+    "tests/ui#output-comparison"
+   ]
+  },
+  {
+   "id": "rustc-04",
+   "pr": "#164767",
+   "task": "Add regression tests for transmutability issues",
+   "kind": "how-to",
+   "question": "How can one UI test file be compiled under several different flag sets, each with its own expected stderr?",
+   "keywords": "ui test multiple flag configurations",
+   "answers": [
+    "tests/ui#cfg-revisions",
+    "tests/compiletest#revisions"
+   ],
+   "note": "Use `//@ revisions: a b` with `//@[a] compile-flags: ...`. Each revision gets its own test.a.stderr file.",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/how-to-build-and-run",
+    "building/suggested",
+    "fuzzing",
+    "tests/adding",
+    "tests/directives",
+    "tests/minicore",
+    "tests/misc",
+    "tests/running"
+   ]
+  },
+  {
+   "id": "rustc-05",
+   "pr": "#164920",
+   "task": "Point at prior token on `let` when expression is expected",
+   "kind": "troubleshooting",
+   "question": "After moving an error's span to the previous line, compiletest says my `//~ ERROR` annotation wasn't found. How do annotations target other lines?",
+   "keywords": "ui test error annotation line",
+   "answers": [
+    "tests/ui#error-annotations",
+    "tests/ui#error-annotation-examples",
+    "tests/ui#positioned-below-error-line",
+    "tests/adding#step-3-add-error-annotations"
+   ],
+   "note": "Bullets/examples: `//~^` one caret per line above, `//~v` below, `//~|` previous annotation's line; adding Step 3 shows `//~^`.",
+   "labeled": "reconciled",
+   "not_answers": [
+    "diagnostics",
+    "incrcomp-debugging",
+    "tests/compiletest",
+    "tests/directives"
+   ]
+  },
+  {
+   "id": "rustc-06",
+   "pr": "#164836",
+   "task": "Add regression test for #162109",
+   "kind": "where",
+   "question": "Which directory under tests/ui should a new regression test go in, and should the file be named after the issue number?",
+   "keywords": "regression test directory tests/ui naming",
+   "answers": [
+    "tests/ui#test-organization",
+    "tests/best-practices#test-naming",
+    "tests/best-practices#test-organization"
+   ],
+   "note": "Use a meaningful subdirectory, not tests/ui itself or tests/ui/issues. Name the file descriptively, issue number in comments or as a suffix only.",
+   "labeled": "agreed",
+   "not_answers": [
+    "tests/adding",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/ecosystem",
+    "walkthroughs/test"
+   ]
+  },
+  {
+   "id": "rustc-07",
+   "pr": "#164908",
+   "task": "Add regression test for self referential inherent associated type ICE",
+   "kind": "convention",
+   "question": "If my fix resolves an ICE whose reproducer lives in tests/crashes, what should I do with that test file?",
+   "keywords": "tests/crashes ICE fixed",
+   "answers": [
+    "tests/compiletest#crash-tests",
+    "tests/best-practices#test-naming"
+   ],
+   "note": "Crash tests section: move it to a fitting tests/ui subdirectory, give it a meaningful name, add a doc comment and `Fixes #N` in the PR.",
+   "labeled": "agreed",
+   "not_answers": [
+    "autodiff/debugging",
+    "fuzzing",
+    "tests/directives",
+    "tests/ui",
+    "walkthroughs/test"
+   ],
+   "pooled": [
+    "tests/best-practices#test-naming"
+   ]
+  },
+  {
+   "id": "rustc-08",
+   "pr": "#164888",
+   "task": "Add regression tests for #156380",
+   "kind": "troubleshooting",
+   "question": "tidy fails on my new UI test because some lines exceed the length limit; how do I exempt that file?",
+   "keywords": "tidy line length limit test",
+   "answers": [
+    "conventions#line-length"
+   ],
+   "note": "Line length section: add a `// ignore-tidy-linelength` comment near the top of the file.",
+   "labeled": "agreed",
+   "not_answers": [
+    "contributing-to-guide",
+    "rustdoc-internals/search",
+    "tests/adding",
+    "tests/compiletest",
+    "tests/intro",
+    "tests/running",
+    "tests/ui"
+   ]
+  },
+  {
+   "id": "rustc-10",
+   "pr": "#165254",
+   "task": "Cleanup `rustdoc-html` tests",
+   "kind": "how-to",
+   "question": "In tests/rustdoc-html, how do `//@ has` and `//@ matches` checks work, and how do I target an element with XPath?",
+   "keywords": "rustdoc-html test has matches xpath",
+   "answers": [
+    "rustdoc-internals/rustdoc-html-test-suite#htmldocck-directives",
+    "rustdoc-internals/rustdoc-html-test-suite#has",
+    "rustdoc-internals/rustdoc-html-test-suite#matches",
+    "rustdoc-internals/rustdoc-html-test-suite#limitations"
+   ],
+   "note": "Intro XPath example; `has PATH XPATH PATTERN` normalized text match, `matches` regex; Limitations: XPATH must start with `//`.",
+   "labeled": "reconciled",
+   "not_answers": [
+    "SUMMARY",
+    "rustdoc-internals/rustdoc-gui-test-suite",
+    "rustdoc-internals/rustdoc-json-test-suite",
+    "rustdoc-internals/search",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-11",
+   "pr": "#164457",
+   "task": "Add `vec_visualizer` lldb test",
+   "kind": "how-to",
+   "question": "How do I write a debuginfo test that runs LLDB commands and checks the printed output of a Vec?",
+   "keywords": "debuginfo test lldb commands",
+   "answers": [
+    "tests/compiletest#debuginfo-tests",
+    "debuginfo/testing#the-repr-directive",
+    "debuginfo/testing#converting-existing-tests"
+   ],
+   "note": "compiletest: //@ lldb-command / lldb-check, // #break, -g example; debuginfo/testing: preferred lldb-repr directive plus --bless.",
+   "labeled": "agreed",
+   "not_answers": [
+    "debuginfo/lldb-internals",
+    "debuginfo/lldb-visualizers",
+    "tests/directives"
+   ]
+  },
+  {
+   "id": "rustc-12",
+   "pr": "#165142",
+   "task": "Remove the unused generic Graphviz writer",
+   "kind": "how-to",
+   "question": "How do I dump a function's MIR before and after each pass, including as a graphviz graph, to see what changed?",
+   "keywords": "dump MIR after pass graphviz",
+   "answers": [
+    "mir/debugging"
+   ],
+   "note": "-Z dump-mir=F writes before/after MIR for every pass to mir_dump; -Z dump-mir-graphviz writes .dot graphs.",
+   "labeled": "agreed",
+   "not_answers": [
+    "borrow-check/debugging",
+    "compiler-debugging",
+    "incrcomp-debugging",
+    "mir/dataflow",
+    "mir/optimizations",
+    "overview",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-13",
+   "pr": "#164424",
+   "task": "diagnostic: skip wrong loops when explaining borrow errors",
+   "kind": "how-to",
+   "question": "How do I turn on the compiler's debug! logging for just the borrowck diagnostics module while compiling a test case?",
+   "keywords": "enable debug! tracing logs module",
+   "answers": [
+    "tracing#broad-module-level-filters",
+    "tracing#how-to-keep-or-remove-debug-and-trace-calls-from-the-resulting-binary"
+   ],
+   "note": "RUSTC_LOG=path::to::module=debug rustc file.rs; debug! output requires rust.debug-logging = true in bootstrap.toml.",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/debugging-bootstrap",
+    "compiler-debugging",
+    "overview",
+    "rustc-driver/getting-diagnostics",
+    "tests/ci",
+    "tests/ui",
+    "diagnostics/diagnostic-items"
+   ]
+  },
+  {
+   "id": "rustc-14",
+   "pr": "#165190",
+   "task": "Improve delayed bug comment and message on first_method_vtable_slot",
+   "kind": "troubleshooting",
+   "question": "An ICE reports a delayed bug at the end of compilation; how do I get a backtrace from where it was originally created?",
+   "keywords": "delayed bug backtrace ICE",
+   "answers": [
+    "compiler-debugging#debugging-delayed-bugs"
+   ],
+   "note": "Debugging delayed bugs: -Z eagerly-emit-delayed-bugs plus -Z treat-err-as-bug stops at the delayed bug for a backtrace.",
+   "labeled": "reconciled",
+   "not_answers": [
+    "contributing",
+    "debuginfo/intro",
+    "diagnostics/error-guaranteed",
+    "git",
+    "stabilization-report-template",
+    "ty",
+    "fuzzing"
+   ]
+  },
+  {
+   "id": "rustc-15",
+   "pr": "#164969",
+   "task": "perf: avoid allocating HashSet in is_distinct check on small SwitchInts",
+   "kind": "how-to",
+   "question": "How do I get an official perf benchmark run on my PR to check whether this optimization actually improves compile times?",
+   "keywords": "request perf run PR",
+   "answers": [
+    "tests/perf#manual-perf-runs",
+    "tests/ci#try-builds"
+   ],
+   "note": "An authorized user comments `@bors try @rust-timer queue` on the PR; the try-builds section repeats it.",
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/debugging",
+    "debuginfo/lldb-visualizers",
+    "getting-started",
+    "git",
+    "overview",
+    "profiling",
+    "profiling/with-perf",
+    "profiling/with-rustc-perf",
+    "tests/compiletest",
+    "mir/optimizations"
+   ]
+  },
+  {
+   "id": "rustc-16",
+   "pr": "#164880",
+   "task": "Add context span showing item that can't be annotated",
+   "kind": "how-to",
+   "question": "How do I add an extra labeled span pointing at another item to a diagnostic struct that uses `#[derive(Diagnostic)]`?",
+   "keywords": "derive Diagnostic label span",
+   "answers": [
+    "diagnostics/diagnostic-structs#derivediagnostic"
+   ],
+   "note": "Add a Span field annotated #[label(\"...\")] (prev_span example); Option<Span> makes the label optional.",
+   "labeled": "agreed",
+   "not_answers": [
+    "bug-fix-procedure",
+    "diagnostics",
+    "diagnostics/diagnostic-items",
+    "diagnostics/translation",
+    "macro-expansion",
+    "rustc-driver/getting-diagnostics",
+    "tests/ui",
+    "diagnostics/error-codes"
+   ]
+  },
+  {
+   "id": "rustc-17",
+   "pr": "#165035",
+   "task": "Suggest `gca!` for path const args that use generic params",
+   "kind": "convention",
+   "question": "How do I choose the Applicability for a new suggestion — when is MachineApplicable appropriate versus MaybeIncorrect or HasPlaceholders?",
+   "keywords": "suggestion Applicability MachineApplicable",
+   "answers": [
+    "diagnostics#suggestions"
+   ],
+   "note": "Says be conservative; defines MachineApplicable, HasPlaceholders, MaybeIncorrect and Unspecified applicability levels.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/diagnostic-structs",
+    "guides/editions",
+    "implementing-new-features",
+    "solve/candidate-preference",
+    "tests/ui"
+   ]
+  },
+  {
+   "id": "rustc-18",
+   "pr": "#164761",
+   "task": "[tiny] Properly format return type in lifetime error with backticks",
+   "kind": "convention",
+   "question": "What are the style rules for compiler diagnostic messages, such as backticks around code, capitalization, and trailing punctuation?",
+   "keywords": "diagnostic message style backticks",
+   "answers": [
+    "diagnostics#diagnostic-structure",
+    "diagnostics#diagnostic-output-style-guide"
+   ],
+   "note": "Structure: backticks around code, no capitals or periods; style guide: lowercase start, no trailing punctuation, more rules.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/diagnostic-structs",
+    "diagnostics/error-codes",
+    "diagnostics/translation",
+    "rustc-driver/getting-diagnostics",
+    "tests/ui"
+   ]
+  },
+  {
+   "id": "rustc-19",
+   "pr": "#164695",
+   "task": "[tiny] Include trait definition line when pointing at assoc function in E0308",
+   "kind": "where",
+   "question": "Where do the long explanations for error codes like E0308, the ones `rustc --explain` prints, live in the repository?",
+   "keywords": "error code explanation E0308",
+   "answers": [
+    "diagnostics/error-codes#allocating-a-fresh-code",
+    "diagnostics/error-codes#error-explanations"
+   ],
+   "note": "Markdown files in compiler/rustc_error_codes/src/error_codes/EXXXX.md, registered in the error_codes! macro.",
+   "labeled": "agreed",
+   "not_answers": [
+    "compiler-debugging",
+    "compiler-src",
+    "diagnostics",
+    "diagnostics/error-guaranteed",
+    "profiling/with-perf",
+    "tests/directives"
+   ]
+  },
+  {
+   "id": "rustc-20",
+   "pr": "#164766",
+   "task": "Unstably introduce MVP edition migration lint `unmarked_unchecked_type_aliases` together with bikeshed attribute `#[rustc_unchecked_type_alias]`",
+   "kind": "how-to",
+   "question": "How do I declare a new edition migration lint so it joins the edition compatibility group and `cargo fix --edition` applies it?",
+   "keywords": "edition migration lint declare",
+   "answers": [
+    "guides/editions#migration-lints",
+    "diagnostics#future-incompatible-lints"
+   ],
+   "note": "@future_incompatible with EditionError/EditionSemanticsChange reason joins rust-20xx-compatibility, which cargo fix --edition force-warns.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics/lintstore",
+    "notification-groups/about",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-21",
+   "pr": "#165083",
+   "task": "Gate `z` inline asm template modifier",
+   "kind": "how-to",
+   "question": "How do I add a new unstable feature gate and emit the standard feature-gate error when code uses it without `#![feature]`?",
+   "keywords": "add feature gate error",
+   "answers": [
+    "implementing-new-features#stability-in-code"
+   ],
+   "note": "Steps: add symbol, declare in rustc_feature unstable.rs, check tcx.features(), emit feature_err or gate spans/gate_all!.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "feature-gate-check",
+    "feature-gates",
+    "stability",
+    "stabilization-guide",
+    "tests/compiletest",
+    "tests/ui"
+   ]
+  },
+  {
+   "id": "rustc-22",
+   "pr": "#164643",
+   "task": "Const-stabilize `{BinaryHeap, BTreeMap, BTreeSet, LinkedList, VecDeque)::{len, is_empty}`",
+   "kind": "how-to",
+   "question": "What attributes do I change to const-stabilize a library method that is already stable as a normal function?",
+   "keywords": "const stabilize rustc_const_unstable",
+   "answers": [
+    "stability#rustc_const_unstable",
+    "stability#rustc_const_stable",
+    "stability#stabilizing-a-library-feature"
+   ],
+   "note": "Replace #[rustc_const_unstable] with #[rustc_const_stable(since = \"CURRENT_RUSTC_VERSION\")] (step 4 of library stabilization).",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/bootstrapping/what-bootstrapping-does",
+    "diagnostics",
+    "effects",
+    "feature-gate-check",
+    "guides/editions",
+    "stability-guarantees",
+    "stabilization-guide",
+    "stabilization-report-template"
+   ]
+  },
+  {
+   "id": "rustc-23",
+   "pr": "#164641",
+   "task": "Stabilize `slice_split_once`",
+   "kind": "convention",
+   "question": "When stabilizing a library API, what version should go in `#[stable(since = ...)]` if I don't know the release yet?",
+   "keywords": "stable since version stabilization",
+   "answers": [
+    "stability#stabilizing-a-library-feature"
+   ],
+   "note": "Step 2: change #[unstable] to #[stable(since = \"CURRENT_RUSTC_VERSION\")].",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "implementing-new-features",
+    "stability-guarantees",
+    "stabilization-guide",
+    "stabilization-report-template",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-24",
+   "pr": "#164683",
+   "task": "Add -Zasync-panic flag",
+   "kind": "where",
+   "question": "Where do I declare a new unstable `-Z` command-line flag for rustc, and how do I read its value in the compiler?",
+   "keywords": "add new -Z flag",
+   "answers": [
+    "implementing-new-features#adding-unstable-compiler-flags"
+   ],
+   "note": "Add to UnstableOptions in rustc_session/src/options.rs; read via sess.opts.unstable_opts.<flag>.",
+   "labeled": "agreed",
+   "not_answers": [
+    "autodiff/flags",
+    "cli",
+    "diagnostics/lintstore",
+    "guides/editions",
+    "rustdoc-internals/search",
+    "tests/adding",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/minicore",
+    "tests/ui",
+    "walkthroughs/test",
+    "compiler-debugging"
+   ]
+  },
+  {
+   "id": "rustc-25",
+   "pr": "#165128",
+   "task": "Move `doc(keyword)` and `doc(attribute)` attributes checks from `rustc_passes` to `rustc_attr_parsing`",
+   "kind": "how-to",
+   "question": "How do I move an attribute's validation into rustc_attr_parsing — what parser do I implement for a builtin attribute?",
+   "keywords": "rustc_attr_parsing attribute parser",
+   "answers": [
+    "hir/attribute-parsing#a-step-by-step-guide-of-adding-a-new-inert-attribute-parser"
+   ],
+   "note": "Implement NoArgs/Single/Combine/AttributeParser trait in rustc_attr_parsing, register it; leftover checks in check_attr.rs.",
+   "labeled": "agreed",
+   "not_answers": [
+    "attributes",
+    "diagnostics",
+    "feature-gate-check",
+    "macro-expansion"
+   ]
+  },
+  {
+   "id": "rustc-27",
+   "pr": "#164425",
+   "task": "Declare `SyntaxContext` through `rustc_index::newtype_index!`",
+   "kind": "how-it-works",
+   "question": "What does a SyntaxContext represent for hygiene, and how does it relate to ExpnId and macro expansion marks?",
+   "keywords": "SyntaxContext ExpnId hygiene",
+   "answers": [
+    "macro-expansion#the-macro-definition-hierarchy",
+    "macro-expansion#hygiene-and-hierarchies"
+   ],
+   "note": "SyntaxContext is an ID for a chain of ExpnId marks built with apply_mark; the parent section introduces ExpnId.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "guides/editions",
+    "hir/attribute-parsing",
+    "name-resolution",
+    "stabilization-report-template",
+    "test-implementation"
+   ]
+  },
+  {
+   "id": "rustc-28",
+   "pr": "#165088",
+   "task": "[small] Tweak suggestions in struct literal resolve errors",
+   "kind": "how-it-works",
+   "question": "How is rustc_resolve structured — which paths get resolved during early resolution versus late resolution of function bodies?",
+   "keywords": "rustc_resolve late resolution",
+   "answers": [
+    "name-resolution#name-resolution",
+    "name-resolution#basics"
+   ],
+   "note": "Intro and Basics: imports/macros resolved during expansion; all remaining names in rustc_resolve::late afterwards.",
+   "labeled": "agreed",
+   "not_answers": [
+    "diagnostics",
+    "early-late-parameters",
+    "getting-started",
+    "macro-expansion",
+    "overview",
+    "traits/resolution",
+    "ambig-unambig-ty-and-consts"
+   ]
+  },
+  {
+   "id": "rustc-29",
+   "pr": "#164686",
+   "task": "Add regression test for new solver hang on cyclic projection bound",
+   "kind": "how-it-works",
+   "question": "How does the next-generation trait solver handle cycles between goals, and which cycles count as coinductive rather than errors?",
+   "keywords": "next solver cycle hang",
+   "answers": [
+    "solve/coinduction#how-to-implement-coinduction",
+    "solve/coinduction#future-work",
+    "solve/caching#handling-cycles"
+   ],
+   "note": "Cycles resolved by provisional-result fixpoint; inductive cycles start as overflow; only auto traits, Sized, WF are coinductive.",
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "normalization",
+    "overview",
+    "solve/the-solver",
+    "tests/x86_64-gnu-next-trait-solver-polonius-ci-job",
+    "traits/goals-and-clauses"
+   ]
+  },
+  {
+   "id": "rustc-30",
+   "pr": "#164383",
+   "task": "handle higher-ranked preds in imperfect derives diagnostic",
+   "kind": "how-it-works",
+   "question": "How are higher-ranked predicates represented with Binder, and when is skip_binder safe versus instantiating the bound vars?",
+   "keywords": "Binder skip_binder higher-ranked",
+   "answers": [
+    "ty-module/binders",
+    "ty-module/instantiating-binders"
+   ],
+   "note": "How Binder represents bound vars, and why/how to instantiate before accessing the inside; skip_binder itself is never named.",
+   "labeled": "agreed",
+   "not_answers": [
+    "analysis/well-formed",
+    "appendix/glossary",
+    "coroutine-closures",
+    "traits/hrtb",
+    "traits/implied-bounds"
+   ]
+  },
+  {
+   "id": "rustc-31",
+   "pr": "#165119",
+   "task": "remove unnecessary fast path from borrowck",
+   "kind": "how-it-works",
+   "question": "What are the main phases the MIR borrow checker goes through, and where does region inference fit in?",
+   "keywords": "borrowck phases region inference",
+   "answers": [
+    "borrow-check#major-phases-of-the-borrow-checker"
+   ],
+   "note": "Bullet list of borrowck phases; region inference runs after MIR type check, before borrows-in-scope and error walk.",
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "appendix/glossary",
+    "borrow-check/opaque-types-region-inference-restrictions",
+    "borrow-check/region-inference",
+    "borrow-check/region-inference/lifetime-parameters",
+    "borrow-check/two-phase-borrows",
+    "borrow-check/type-check",
+    "overview",
+    "type-inference"
+   ]
+  },
+  {
+   "id": "rustc-32",
+   "pr": "#164993",
+   "task": "copy_nonoverlapping: dont skip ovelrap check when src is fully uninit",
+   "kind": "how-it-works",
+   "question": "How does the const-eval interpreter represent memory, including tracking which bytes are initialized and pointer provenance?",
+   "keywords": "interpreter memory uninit provenance",
+   "answers": [
+    "const-eval/interpret#memory"
+   ],
+   "note": "Memory section: Allocation bytes, AllocId+offset pointers, relocations store provenance out-of-band, undef_mask tracks initialized bytes.",
+   "labeled": "agreed",
+   "not_answers": [
+    "appendix/glossary",
+    "borrow-check/moves-and-initialization",
+    "const-eval",
+    "debuginfo/debugger-internals",
+    "debuginfo/intro",
+    "debuginfo/lldb-internals",
+    "debuginfo/lldb-visualizers",
+    "memory",
+    "sanitizers",
+    "mir/index"
+   ]
+  },
+  {
+   "id": "rustc-33",
+   "pr": "#164346",
+   "task": "avoid exporting non-instantiable mono items",
+   "kind": "how-it-works",
+   "question": "How does the monomorphization collector decide which mono items to codegen, and how are they partitioned into codegen units?",
+   "keywords": "mono items collector codegen units",
+   "answers": [
+    "backend/monomorph#collection",
+    "backend/monomorph#codegen-unit-cgu-partitioning"
+   ],
+   "note": "Collection section covers collector and collect_and_partition_mono_items; CGU partitioning section covers stable/volatile CGU split.",
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/lowering-mir",
+    "parallel-rustc",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-34",
+   "pr": "#164924",
+   "task": "Remove `TypeKind` from `rustc_codegen_ssa`",
+   "kind": "how-it-works",
+   "question": "How is codegen split between the backend-agnostic rustc_codegen_ssa crate and backends like LLVM, GCC and Cranelift?",
+   "keywords": "rustc_codegen_ssa backend traits",
+   "answers": [
+    "backend/backend-agnostic"
+   ],
+   "note": "Whole doc: rustc_codegen_ssa traits/generics interface implemented by backends; part-5-intro only one-line summary, excluded.",
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "backend/codegen",
+    "backend/lowering-mir",
+    "overview",
+    "part-5-intro",
+    "tests/codegen-backend-tests/cg_gcc",
+    "tests/codegen-backend-tests/intro"
+   ]
+  },
+  {
+   "id": "rustc-35",
+   "pr": "#164953",
+   "task": "Avoid stdlib's `impl Hash for Discriminant` for stable hashing",
+   "kind": "how-it-works",
+   "question": "Why do query results need HashStable, and why isn't std's Hash impl good enough for incremental fingerprints?",
+   "keywords": "HashStable stable hashing",
+   "answers": [
+    "queries/incremental-compilation-in-detail#checking-query-results-for-changes-stablehash-and-fingerprints"
+   ],
+   "note": "Fingerprints section: query results hashed stably (DefId hashed as DefPath) so fingerprints compare across sessions.",
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/libs-and-metadata",
+    "cli",
+    "debugging-support-in-rustc",
+    "overview",
+    "queries/incremental-compilation",
+    "queries/query-evaluation-model-in-detail",
+    "stability",
+    "tests/compiletest"
+   ]
+  },
+  {
+   "id": "rustc-36",
+   "pr": "#165188",
+   "task": "Clippy subtree update",
+   "kind": "how-to",
+   "question": "What's the procedure for pulling the latest changes from the clippy repository into its subtree in rust-lang/rust?",
+   "keywords": "clippy subtree sync",
+   "answers": [
+    "external-repos#synchronizing-a-git-subtree"
+   ],
+   "note": "Clippy is a git subtree: push first, subtree pull with -P prefix, never rebase; exact steps in Clippy guide.",
+   "labeled": "agreed",
+   "not_answers": [
+    "backend/updating-llvm",
+    "contributing",
+    "diagnostics/diagnostic-items",
+    "getting-started",
+    "git",
+    "overview",
+    "rustdoc-internals/rustdoc-html-test-suite",
+    "tests/minicore"
+   ]
+  },
+  {
+   "id": "rustc-37",
+   "pr": "#165058",
+   "task": "Update cargo submodule",
+   "kind": "troubleshooting",
+   "question": "After switching branches, git status shows src/tools/cargo as modified with new commits; how do I reset the submodules properly?",
+   "keywords": "submodule modified git status",
+   "answers": [
+    "git#quick-note-about-submodules",
+    "git#hard-resetting-submodules"
+   ],
+   "note": "Quick note shows exact 'new commits' status, fix is git submodule update; hard-reset covers modified-content variant.",
+   "labeled": "agreed",
+   "not_answers": [
+    "building/new-target",
+    "external-repos",
+    "tests/directives"
+   ]
+  },
+  {
+   "id": "rustc-40",
+   "pr": "#165233",
+   "task": "Remove test-aarch64-apple-* jobs temporarily",
+   "kind": "where",
+   "question": "Where are CI jobs like the aarch64-apple test runners defined, so I can temporarily remove them from merge builds?",
+   "keywords": "CI job definitions aarch64-apple",
+   "answers": [
+    "tests/ci#auto-builds",
+    "tests/ci#modifying-ci-jobs"
+   ],
+   "note": "Auto (merge) jobs are defined in the auto section of jobs.yml; Modifying CI jobs says edit that file.",
+   "labeled": "agreed",
+   "not_answers": [
+    "SUMMARY",
+    "appendix/additional-resources",
+    "autodiff/installation",
+    "building/new-target",
+    "notification-groups/apple",
+    "tests/autodiff-ci-job",
+    "tests/compiletest",
+    "tests/directives",
+    "tests/ecosystem-test-jobs/rust-for-linux",
+    "tests/running",
+    "tests/x86_64-gnu-next-trait-solver-polonius-ci-job"
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "id": "rustc-09",
+   "pr": "#165020",
+   "task": "Bless mir-opt panic-abort tests",
+   "kind": "troubleshooting",
+   "question": "Running the mir-opt tests with --bless only updated the panic-unwind files; how do I regenerate the panic-abort variants too?",
+   "keywords": "mir-opt bless panic-abort",
+   "reason": "compiletest#mir-opt-tests only names EMIT_MIR_FOR_EACH_PANIC_STRATEGY and never says how to bless the panic-abort variants (which targets to use).",
+   "labeled": "agreed"
+  },
+  {
+   "id": "rustc-26",
+   "pr": "#164985",
+   "task": "Only recover if we may for `recover_missing_dot`",
+   "kind": "how-it-works",
+   "question": "How does parser error recovery work, and why are some contexts, like parsing macro arguments, not allowed to recover?",
+   "keywords": "parser recovery may_recover",
+   "reason": "Only one-line mentions of recovery (glossary, overview); nothing explains how parser recovery works or why macro-argument parsing may not recover.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "rustc-38",
+   "pr": "#165243",
+   "task": "Rollup of 23 pull requests",
+   "kind": "convention",
+   "question": "When should a PR be marked rollup=never or rollup=iffy instead of being allowed into a rollup?",
+   "keywords": "bors rollup never",
+   "reason": "No doc mentions rollup=never or rollup=iffy or their criteria; tests/ci#rollups and pr-lifecycle#r-1 only say trivial PRs get rolled up.",
+   "labeled": "agreed"
+  },
+  {
+   "id": "rustc-39",
+   "pr": "#165234",
+   "task": "Rollup of 22 pull requests",
+   "kind": "troubleshooting",
+   "question": "This rollup's merge build failed on a flaky-looking test unrelated to any included PR; how do I get bors to retry it?",
+   "keywords": "flaky test bors retry",
+   "reason": "No doc gives the @bors retry command or how to handle spurious merge failures; tests/ci#merging-prs-serially-with-bors only says in passing that a failed PR must be re-approved.",
+   "labeled": "reconciled"
+  }
+ ]
+}

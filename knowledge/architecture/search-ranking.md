@@ -35,17 +35,15 @@ and the pair `"roll back"`.
 
 ## Scoring documents
 
-Every doc has six indexed fields:
-
-| title | keywords and doc id | tags | summary | headings | body |
-|---|---|---|---|---|---|
-| 3.0 | 2.0 | 1.5 | 1.5 | 1.5 | 1.0 |
+Every doc has six indexed fields, all weighted equally: title, keywords and doc id, tags,
+summary, headings, and body.
 
 For each phrase, `bm25()` runs once per field, with every other field's weight set to
-zero, so each field's term frequency saturates on its own. The per-field results are
-combined with the weights above. FTS5's IDF is divided back out and replaced with a
-smoothed IDF, `ln(1 + (N - n + 0.5) / (n + 0.5))`, where `N` is the number of docs and
-`n` the number containing the phrase. A doc's score is the sum over all phrases.
+zero, so each field's term frequency saturates on its own, and the per-field results are
+added up. A word in a doc's title, summary and headings therefore counts once per field,
+which already favors docs about the topic. FTS5's IDF is divided back out and replaced
+with a smoothed IDF, `ln(1 + (N - n + 0.5) / (n + 0.5))`, where `N` is the number of docs
+and `n` the number containing the phrase. A doc's score is the sum over all phrases.
 
 Plain `bm25()` is not used directly, because it misranked small knowledge bases in two ways:
 
@@ -63,6 +61,30 @@ Plain `bm25()` is not used directly, because it misranked small knowledge bases 
 Both cases are tests in `tests/test_search.py`, which also check that plain `bm25()` still
 gets them wrong, so the tests keep guarding something real.
 
+## Why the fields are weighted equally
+
+Until 0.2.1, titles counted 3 times as much as the body, keywords and ids twice, and tags,
+summaries and headings 1.5 times. On the [benchmark](../development/benchmarks.md)'s real
+knowledge bases that ranked narrow docs named after a query word above the doc that
+answers the question. Asked where CI jobs are defined, the rustc-dev-guide's pages titled
+"Autodiff CI job" and the like beat the CI overview, which matched more of the question
+but only in its body. Equal weights were chosen on half of the benchmark's questions and
+then checked on the other half, which played no part in the choice:
+
+| Held-out half (88 questions) | Answer ranked first | In the top 3 | MRR |
+|---|---|---|---|
+| Weighted fields, natural questions | 70% | 93% | 0.828 |
+| Equal fields, natural questions | 76% | 95% | 0.864 |
+| Weighted fields, search keywords | 73% | 93% | 0.832 |
+| Equal fields, search keywords | 82% | 94% | 0.890 |
+
+Electron's 40 questions, added after the choice, were a second check. Equal weights ranked
+the answer first for 75% of its natural questions, against 72%, and in the top 3 for 92%,
+against 88%. On keyword queries the two were level in the top 3 (82%), and equal weights
+ranked one fewer answer first (72% against 75%).
+
+`FlatFieldWeightsTest` in `tests/test_search.py` reproduces the CI case in miniature.
+
 This costs two small SQL queries per phrase (docs and sections), which takes milliseconds
 on a corpus the size of a knowledge base.
 
@@ -78,5 +100,7 @@ code blocks are kept.
 
 The weights are at the top of `store.py` (`DOC_WEIGHTS`, `SECTION_WEIGHTS`). Before
 changing them, add the query that ranks badly to `tests/test_search.py` and make sure the
-other cases still pass. Often the better fix is in the docs: a sharper title or summary,
-or `keywords` with the words people actually search for.
+other cases still pass. Then compare the [benchmark](../development/benchmarks.md) on real
+knowledge bases before and after the change: choose with `python3 -m bench run --split dev`
+and check the result once with `--split test`. Often the better fix is in the docs: a sharper title or summary, or
+`keywords` with the words people actually search for.

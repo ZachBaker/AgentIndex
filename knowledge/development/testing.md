@@ -31,6 +31,7 @@ Python 3.9 and the newest Python on Linux, and on the newest Python on macOS and
 | `test_cli.py`, `test_http_api.py`, `test_mcp_server.py` | The three interfaces, end to end. The HTTP and MCP tests talk to real servers. |
 | `test_scaffold.py` | `init` and `import`. |
 | `test_knowledge_base.py` | This repo's own docs pass `check --strict`, do not contradict each other, and answer key questions. |
+| `test_bench.py` | The benchmark harness in `bench/`, offline on a toy corpus, and the committed corpus and case files. |
 
 [tests/helpers.py](../../tests/helpers.py) builds throwaway projects in a temporary
 directory: `make_project({"knowledge/a.md": "..."})` writes the files and returns the root.
@@ -39,7 +40,8 @@ directory: `make_project({"knowledge/a.md": "..."})` writes the files and return
 
 - A parsing change needs a unit test with the exact markdown that motivated it.
 - A ranking change needs its motivating query in `test_search.py`, and the existing cases
-  must still pass.
+  must still pass. Also compare the [benchmark](benchmarks.md) on real knowledge bases
+  before and after.
 - A contradiction-detection change needs its motivating pair in `test_conflicts.py`: a
   false positive with a case the rule must still report, or a missed contradiction.
 - A new CLI option, endpoint or tool argument needs a test through that interface.
